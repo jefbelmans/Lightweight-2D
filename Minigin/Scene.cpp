@@ -1,7 +1,8 @@
 #include "Scene.h"
 #include "GameObject.h"
+#include "TextComponent.h"
 
-using namespace dae;
+using namespace LW2D;
 
 unsigned int Scene::m_idCounter = 0;
 

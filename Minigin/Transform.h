@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 
-namespace dae
+namespace LW2D
 {
 	class Transform final
 	{

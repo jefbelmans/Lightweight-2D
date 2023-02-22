@@ -8,7 +8,9 @@
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
+#include "GameTime.h"
 #include "ResourceManager.h"
+#include <iostream>
 
 SDL_Window* g_window{};
 
@@ -40,7 +42,7 @@ void PrintSDLVersion()
 		version.major, version.minor, version.patch);
 }
 
-dae::Minigin::Minigin(const std::string &dataPath)
+LW2D::Minigin::Minigin(const std::string &dataPath)
 {
 	PrintSDLVersion();
 	
@@ -67,7 +69,7 @@ dae::Minigin::Minigin(const std::string &dataPath)
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
-dae::Minigin::~Minigin()
+LW2D::Minigin::~Minigin()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
@@ -75,7 +77,7 @@ dae::Minigin::~Minigin()
 	SDL_Quit();
 }
 
-void dae::Minigin::Run(const std::function<void()>& load)
+void LW2D::Minigin::Run(const std::function<void()>& load)
 {
 	load();
 
@@ -87,6 +89,9 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	bool doContinue = true;
 	while (doContinue)
 	{
+		// Update GameTime before doing anything else
+		sceneManager.GetGameTime()->Update();
+
 		doContinue = input.ProcessInput();
 		sceneManager.Update();
 		renderer.Render();

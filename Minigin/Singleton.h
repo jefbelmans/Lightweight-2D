@@ -1,5 +1,5 @@
 #pragma once
-namespace dae
+namespace LW2D
 {
 	template <typename T>
 	class Singleton

@@ -1,7 +1,7 @@
 #pragma once
 #include "Singleton.h"
 
-namespace dae
+namespace LW2D
 {
 	class InputManager final : public Singleton<InputManager>
 	{

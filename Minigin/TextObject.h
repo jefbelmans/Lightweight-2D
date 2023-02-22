@@ -4,9 +4,9 @@
 #include "GameObject.h"
 #include "Transform.h"
 
-namespace dae
+namespace LW2D
 {
-	class Font;
+	/*class Font;
 	class Texture2D;
 	class TextObject final : public GameObject
 	{
@@ -29,5 +29,5 @@ namespace dae
 		Transform m_transform{};
 		std::shared_ptr<Font> m_font;
 		std::shared_ptr<Texture2D> m_textTexture;
-	};
+	};*/
 }

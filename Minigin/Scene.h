@@ -1,7 +1,7 @@
 #pragma once
 #include "SceneManager.h"
 
-namespace dae
+namespace LW2D
 {
 	class GameObject;
 	class Scene final
