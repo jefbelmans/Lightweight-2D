@@ -89,9 +89,6 @@ void LW2D::Minigin::Run(const std::function<void()>& load)
 	bool doContinue = true;
 	while (doContinue)
 	{
-		// Update GameTime before doing anything else
-		sceneManager.GetGameTime()->Update();
-
 		doContinue = input.ProcessInput();
 		sceneManager.Update();
 		renderer.Render();

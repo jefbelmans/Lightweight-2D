@@ -2,7 +2,6 @@
 #include <string>
 #include <memory>
 #include "GameObject.h"
-#include "Transform.h"
 
 namespace LW2D
 {

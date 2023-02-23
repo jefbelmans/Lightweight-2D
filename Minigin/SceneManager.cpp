@@ -4,6 +4,7 @@
 
 void LW2D::SceneManager::Update()
 {
+	m_pGameTime->Update();
 	for(auto& scene : m_scenes)
 	{
 		scene->Update();

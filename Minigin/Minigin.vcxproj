@@ -177,10 +177,12 @@
   <ItemGroup>
     <ClInclude Include="Component.h" />
     <ClInclude Include="Font.h" />
+    <ClInclude Include="FPSComponent.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Minigin.h" />
+    <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
@@ -194,11 +196,13 @@
   <ItemGroup>
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FPSComponent.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Minigin.cpp" />
+    <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />

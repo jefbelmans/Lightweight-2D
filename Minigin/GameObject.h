@@ -2,9 +2,10 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include "Transform.h"
-#include "Component.h"
 #include <iostream>
+
+#include "Component.h"
+#include "Transform.h"
 
 namespace LW2D
 {
@@ -22,14 +23,16 @@ namespace LW2D
 		void Update();
 		void Render() const;
 
-		template <typename T> std::shared_ptr<T> AddComponent();
+		template<typename T> std::shared_ptr<T> AddComponent();
 		template <typename T> std::shared_ptr<T> GetComponent() const;
 		template <typename T> bool RemoveComponent();
 		template <typename T> bool HasComponent() const;
-		
+
 
 		std::string GetName() const { return m_Name; }
 		void SetName(std::string& name) { m_Name = name; }
+
+		Transform& GetTrasform() { return m_Transform; }
 
 	private:
 		std::string m_Name;
@@ -43,6 +46,7 @@ namespace LW2D
 	{
 		if (std::is_base_of<Component, T>())
 		{
+			
 			m_pComponents.emplace_back(std::make_shared<T>(shared_from_this()));
 			std::cout << "Successfuly added component!" << std::endl;
 
