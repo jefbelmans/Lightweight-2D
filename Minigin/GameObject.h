@@ -8,10 +8,11 @@
 
 namespace LW2D
 {
-	class GameObject final
+	class GameObject final : public std::enable_shared_from_this<GameObject>
 	{
 	public:
 		GameObject() = default;
+		GameObject(std::string name);
 		~GameObject() = default;
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -23,8 +24,9 @@ namespace LW2D
 
 		template <typename T> std::shared_ptr<T> AddComponent();
 		template <typename T> std::shared_ptr<T> GetComponent() const;
-		template <typename T> void RemoveComponent();
-
+		template <typename T> bool RemoveComponent();
+		template <typename T> bool HasComponent() const;
+		
 
 		std::string GetName() const { return m_Name; }
 		void SetName(std::string& name) { m_Name = name; }
@@ -41,28 +43,56 @@ namespace LW2D
 	{
 		if (std::is_base_of<Component, T>())
 		{
-			auto component = std::make_shared<T>();
-			m_pComponents.push_back(component);
+			m_pComponents.emplace_back(std::make_shared<T>(shared_from_this()));
 			std::cout << "Successfuly added component!" << std::endl;
-			return component;
+
+			return std::dynamic_pointer_cast<T, Component>(m_pComponents.back());
 		}
 		
 		std::cout << "Failed to add component!" << std::endl;
-		return std::shared_ptr<T>();
+		return nullptr;
 	}
 
 	template<typename T>
 	inline std::shared_ptr<T> GameObject::GetComponent() const
 	{
-		return *std::find(m_pComponents.begin(), m_pComponents.end(), [](auto component)
-			{
-				return std::is_base_of<component, T>();
-			});
+		for (std::shared_ptr<Component> c : m_pComponents)
+		{
+			auto comp = std::dynamic_pointer_cast<T, Component>(c);
+			if (comp != nullptr)
+				return comp;
+		}
+		return nullptr;
 	}
 
 	template<typename T>
-	inline void GameObject::RemoveComponent()
+	inline bool GameObject::RemoveComponent()
 	{
+		if (m_pComponents.empty()) return false;
 
+		auto it = std::find_if(m_pComponents.begin(), m_pComponents.end(), [&](std::shared_ptr<Component> component)
+			{
+				return std::dynamic_pointer_cast<T, Component>(component) != nullptr;
+			});
+
+		if (it != m_pComponents.end())
+		{
+			m_pComponents.erase(it);
+			return true;
+		}
+
+		return false;
+	}
+	template<typename T>
+	inline bool GameObject::HasComponent() const
+	{
+		if (m_pComponents.empty()) return false;
+
+		auto it = std::find_if(m_pComponents.begin(), m_pComponents.end(), [&](std::shared_ptr<Component> component)
+			{
+				return std::dynamic_pointer_cast<T, Component>(component) != nullptr;
+			});
+
+		return it != m_pComponents.end();
 	}
 }

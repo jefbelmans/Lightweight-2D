@@ -3,6 +3,11 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
+LW2D::GameObject::GameObject(std::string name)
+	: m_Name(name)
+{
+}
+
 void LW2D::GameObject::Update()
 {
 
