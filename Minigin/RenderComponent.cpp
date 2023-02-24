@@ -1,8 +1,10 @@
 #include "RenderComponent.h"
 #include "Renderer.h"
+#include "ResourceManager.h"
+#include "GameObject.h"
 
 LW2D::RenderComponent::RenderComponent(std::weak_ptr<GameObject> go)
-	: Component(go, false, false)
+	: Component(go, false, true)
 {
 }
 
@@ -14,9 +16,12 @@ void LW2D::RenderComponent::Update()
 void LW2D::RenderComponent::Render() const
 {
 	if (!m_DoRender) return;
+
+	auto pos = m_GameObject.lock()->GetTrasform().GetPosition();
+	Renderer::GetInstance().RenderTexture(*m_pTexture.get(), pos.x, pos.y);
 }
 
-void LW2D::RenderComponent::RenderTexture(std::shared_ptr<Texture2D> texture, float posX, float posY) const
+void LW2D::RenderComponent::SetTexture(const std::string& filename)
 {
-	Renderer::GetInstance().RenderTexture(*texture.get(), posX, posY);
+	m_pTexture = ResourceManager::GetInstance().LoadTexture(filename);
 }

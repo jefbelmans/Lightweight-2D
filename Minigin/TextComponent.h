@@ -17,7 +17,7 @@ namespace LW2D
 		void Update() override;
 		void Render() const override;
 
-		void SetFont(std::shared_ptr<Font> font) { m_pFont = font; m_NeedsUpdate = true; }
+		void SetFont(std::shared_ptr<Font> pFont) { m_pFont = pFont; m_NeedsUpdate = true; }
 		void SetText(const std::string& text) { m_Text = text; m_NeedsUpdate = true; }
 		void SetColor(const SDL_Color& color) { m_Color = color; m_NeedsUpdate = true; }
 

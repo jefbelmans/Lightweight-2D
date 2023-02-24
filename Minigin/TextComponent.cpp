@@ -2,7 +2,6 @@
 
 #include <stdexcept>
 
-
 #include "RenderComponent.h"
 #include "Transform.h"
 #include "GameObject.h"
@@ -36,6 +35,7 @@ void LW2D::TextComponent::Update()
 		}
 		SDL_FreeSurface(surf);
 		m_pTexture = std::make_shared<Texture2D>(texture);
+		m_pRenderComponent.lock()->SetTexture(m_pTexture);
 		m_NeedsUpdate = false;
 	}
 }
@@ -43,7 +43,4 @@ void LW2D::TextComponent::Update()
 void LW2D::TextComponent::Render() const
 {
 	if (!m_DoRender || !m_pTexture.get()) return;
-
-	auto& pos = m_GameObject.lock()->GetTrasform().GetPosition();
-	m_pRenderComponent.lock()->RenderTexture(m_pTexture, pos.x, pos.y);
 }

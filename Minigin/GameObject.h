@@ -48,12 +48,12 @@ namespace LW2D
 		{
 			
 			m_pComponents.emplace_back(std::make_shared<T>(shared_from_this()));
-			std::cout << "Successfuly added component!" << std::endl;
+			std::cout << "Successfuly added component!\n";
 
 			return std::dynamic_pointer_cast<T, Component>(m_pComponents.back());
 		}
 		
-		std::cout << "Failed to add component!" << std::endl;
+		std::cout << "Failed to add component!\n";
 		return nullptr;
 	}
 

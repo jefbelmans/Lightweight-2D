@@ -1,7 +1,8 @@
 #pragma once
+
+#include <string>
 #include "Component.h"
 #include "Texture2D.h"
-#include <vector>
 
 namespace LW2D
 {
@@ -14,8 +15,11 @@ namespace LW2D
 		void Update() override;
 		void Render() const override;
 
-		void RenderTexture(std::shared_ptr<Texture2D> texture, float posX, float posY) const;
+		void SetTexture(std::shared_ptr<Texture2D> pTexture) { m_pTexture = pTexture; }
+		void SetTexture(const std::string& filename);
 
+	private:
+		std::shared_ptr<Texture2D> m_pTexture;
 	};
 }
 
