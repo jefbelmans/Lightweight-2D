@@ -17,8 +17,8 @@ void LW2D::RenderComponent::Render() const
 {
 	if (!m_DoRender) return;
 
-	auto pos = m_GameObject.lock()->GetTrasform().GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_pTexture.get(), pos.x, pos.y);
+	const auto& pos = m_GameObject.lock()->GetTrasform().GetPosition();
+	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 }
 
 void LW2D::RenderComponent::SetTexture(const std::string& filename)

@@ -15,7 +15,7 @@ namespace LW2D
 		void Update() override;
 		void Render() const override;
 
-		void SetTexture(std::shared_ptr<Texture2D> pTexture) { m_pTexture = pTexture; }
+		void SetTexture(const std::shared_ptr<Texture2D> pTexture) { m_pTexture = pTexture; }
 		void SetTexture(const std::string& filename);
 
 	private:
