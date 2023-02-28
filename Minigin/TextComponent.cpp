@@ -43,4 +43,5 @@ void LW2D::TextComponent::Update()
 void LW2D::TextComponent::Render() const
 {
 	if (!m_DoRender || !m_pTexture.get()) return;
+	
 }

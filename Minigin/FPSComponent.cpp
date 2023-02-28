@@ -13,6 +13,7 @@ LW2D::FPSComponent::FPSComponent(std::weak_ptr<GameObject> go)
 
 void LW2D::FPSComponent::Update()
 {
+	// Divide 1000 ms (1 second) by the frametime in ms
 	const int fps = static_cast<int>(1000 / m_pGameTime.lock()->GetDeltaTime());
 	m_pTextComponent.lock()->SetText("FPS: " + std::to_string(fps));
 }

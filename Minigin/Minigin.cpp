@@ -85,11 +85,12 @@ void LW2D::Minigin::Run(const std::function<void()>& load)
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 
-	// todo: this update loop could use some work.
 	bool doContinue = true;
 	while (doContinue)
 	{
 		doContinue = input.ProcessInput();
+
+		// Time and delta time gets updated inside the SceneManager's update method
 		sceneManager.Update();
 		renderer.Render();
 	}
