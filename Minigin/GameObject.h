@@ -46,14 +46,10 @@ namespace LW2D
 	{
 		if (std::is_base_of<Component, T>())
 		{
-			
 			m_pComponents.emplace_back(std::make_shared<T>(shared_from_this()));
-			std::cout << "Successfuly added component!\n";
-
 			return std::dynamic_pointer_cast<T, Component>(m_pComponents.back());
 		}
-		
-		std::cout << "Failed to add component!\n";
+
 		return nullptr;
 	}
 
@@ -81,12 +77,13 @@ namespace LW2D
 
 		if (it != m_pComponents.end())
 		{
-			m_pComponents.erase(it);
+			it->get()->MarkForDeletion();
 			return true;
 		}
 
 		return false;
 	}
+
 	template<typename T>
 	inline bool GameObject::HasComponent() const
 	{

@@ -10,7 +10,7 @@
 #include "Texture2D.h"
 
 LW2D::TextComponent::TextComponent(std::weak_ptr<GameObject> go)
-	: Component(go, true, true)
+	: Component(go, true, false)
 	, m_Text("Text")
 	, m_NeedsUpdate(false)
 {
@@ -42,6 +42,6 @@ void LW2D::TextComponent::Update()
 
 void LW2D::TextComponent::Render() const
 {
-	if (!m_DoRender || !m_pTexture.get()) return;
+	if (!m_DoRender) return;
 	
 }

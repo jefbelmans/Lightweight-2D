@@ -15,10 +15,13 @@ namespace LW2D
 
 		bool GetDoUpdate() const { return m_DoUpdate; }
 		bool GetDoRender() const { return m_DoRender; }
+		bool IsMarkedForDeletion() const { return m_MarkedForDeletion; }
+		void MarkForDeletion() { m_MarkedForDeletion = true; }
 
 	protected:
 		bool m_DoUpdate;
 		bool m_DoRender;
+		bool m_MarkedForDeletion;
 
 		std::weak_ptr<GameObject> m_GameObject;
 	};

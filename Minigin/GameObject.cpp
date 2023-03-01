@@ -13,9 +13,15 @@ void LW2D::GameObject::Update()
 {
 	for (auto& component : m_pComponents)
 	{
-		if(component->GetDoUpdate())
+		if(component->GetDoUpdate() && !component->IsMarkedForDeletion())
 			component->Update();
 	}
+
+	std::erase_if(m_pComponents, [](std::shared_ptr<Component> c)
+		{
+			return c->IsMarkedForDeletion();
+		});
+		
 }
 
 void LW2D::GameObject::Render() const

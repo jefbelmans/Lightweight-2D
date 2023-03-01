@@ -10,7 +10,7 @@
 #include "Renderer.h"
 #include "GameTime.h"
 #include "ResourceManager.h"
-#include <iostream>
+#include <thread>
 
 SDL_Window* g_window{};
 
@@ -86,12 +86,19 @@ void LW2D::Minigin::Run(const std::function<void()>& load)
 	auto& input = InputManager::GetInstance();
 
 	bool doContinue = true;
+	const float desiredFrameTime{ 1000.f / 165.f };
+
 	while (doContinue)
 	{
+		sceneManager.GetGameTime()->Update();
 		doContinue = input.ProcessInput();
 
-		// Time and delta time gets updated inside the SceneManager's update method
 		sceneManager.Update();
 		renderer.Render();
+		
+		float sleepTime = desiredFrameTime - sceneManager.GetGameTime()->GetDeltaTime();
+
+		if(sleepTime > 0.f)
+			std::this_thread::sleep_for(std::chrono::duration<float, std::milli>(sleepTime));
 	}
 }

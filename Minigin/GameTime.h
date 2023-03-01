@@ -18,12 +18,13 @@ namespace LW2D
 
 		float GetDeltaTime() const { return  m_DeltaTime; }
 		float GetTime() const { return m_Time; }
+		auto GetCurrTime() const { return m_CurrTime; }
 
 	private:
 		float m_Time{};
 		float m_DeltaTime{};
 
-		float m_MaxDeltaTime{ 0.03f };
+		float m_MaxDeltaTime{ 32.f };
 
 		std::chrono::high_resolution_clock::time_point m_PrevTime{};
 		std::chrono::high_resolution_clock::time_point m_CurrTime{};

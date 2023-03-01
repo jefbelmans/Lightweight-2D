@@ -22,5 +22,3 @@ namespace LW2D
 		std::shared_ptr<Texture2D> m_pTexture;
 	};
 }
-
-
