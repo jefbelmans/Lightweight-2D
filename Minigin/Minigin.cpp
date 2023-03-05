@@ -90,13 +90,14 @@ void LW2D::Minigin::Run(const std::function<void()>& load)
 
 	while (doContinue)
 	{
+		// Update Time before all else
 		sceneManager.GetGameTime()->Update();
 		doContinue = input.ProcessInput();
 
 		sceneManager.Update();
 		renderer.Render();
-		
-		float sleepTime = desiredFrameTime - sceneManager.GetGameTime()->GetDeltaTime();
+
+		const float sleepTime = desiredFrameTime - sceneManager.GetGameTime()->GetDeltaTime();
 
 		if(sleepTime > 0.f)
 			std::this_thread::sleep_for(std::chrono::duration<float, std::milli>(sleepTime));

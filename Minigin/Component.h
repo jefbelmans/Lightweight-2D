@@ -7,22 +7,18 @@ namespace LW2D
 	class Component
 	{
 	public:
-		Component(std::weak_ptr<GameObject> go, bool doUpdate = true, bool doRender = false);
-		virtual void Update() = 0;
-		virtual void Render() const = 0;
+		virtual void Update() {};
+		virtual void Render() const {};
 		
 		virtual std::shared_ptr<GameObject> GetGameObject() const { return m_GameObject.lock(); }
 
-		bool GetDoUpdate() const { return m_DoUpdate; }
-		bool GetDoRender() const { return m_DoRender; }
 		bool IsMarkedForDeletion() const { return m_MarkedForDeletion; }
 		void MarkForDeletion() { m_MarkedForDeletion = true; }
 
 	protected:
-		bool m_DoUpdate;
-		bool m_DoRender;
-		bool m_MarkedForDeletion;
+		Component(std::weak_ptr<GameObject> go);
 
+		bool m_MarkedForDeletion;
 		std::weak_ptr<GameObject> m_GameObject;
 	};
 }

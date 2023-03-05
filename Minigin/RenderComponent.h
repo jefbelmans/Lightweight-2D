@@ -12,7 +12,6 @@ namespace LW2D
 		RenderComponent(std::weak_ptr<GameObject> go);
 		~RenderComponent() = default;
 
-		void Update() override;
 		void Render() const override;
 
 		void SetTexture(const std::shared_ptr<Texture2D> pTexture) { m_pTexture = pTexture; }

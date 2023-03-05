@@ -4,19 +4,12 @@
 #include "GameObject.h"
 
 LW2D::RenderComponent::RenderComponent(std::weak_ptr<GameObject> go)
-	: Component(go, false, true)
+	: Component(go)
 {
-}
-
-void LW2D::RenderComponent::Update()
-{
-	if (!m_DoUpdate) return;
 }
 
 void LW2D::RenderComponent::Render() const
 {
-	if (!m_DoRender) return;
-
 	const auto& pos = m_GameObject.lock()->GetTrasform().GetPosition();
 	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 }

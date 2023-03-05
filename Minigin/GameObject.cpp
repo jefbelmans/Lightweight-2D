@@ -13,7 +13,7 @@ void LW2D::GameObject::Update()
 {
 	for (auto& component : m_pComponents)
 	{
-		if(component->GetDoUpdate() && !component->IsMarkedForDeletion())
+		if(!component->IsMarkedForDeletion())
 			component->Update();
 	}
 
@@ -28,7 +28,6 @@ void LW2D::GameObject::Render() const
 {
 	for (auto& component : m_pComponents)
 	{
-		if(component->GetDoRender())
 			component->Render();
 	}
 }

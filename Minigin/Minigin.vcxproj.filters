@@ -70,7 +70,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FPSComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Components\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +120,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FPSComponent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Components\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

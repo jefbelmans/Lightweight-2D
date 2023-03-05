@@ -10,7 +10,7 @@
 #include "Texture2D.h"
 
 LW2D::TextComponent::TextComponent(std::weak_ptr<GameObject> go)
-	: Component(go, true, false)
+	: Component(go)
 	, m_Text("Text")
 	, m_NeedsUpdate(false)
 {
@@ -19,8 +19,6 @@ LW2D::TextComponent::TextComponent(std::weak_ptr<GameObject> go)
 
 void LW2D::TextComponent::Update()
 {
-	if (!m_DoUpdate) return;
-
 	if (m_NeedsUpdate)
 	{
 		const auto surf = TTF_RenderText_Blended(m_pFont->GetFont(), m_Text.c_str(), m_Color);
@@ -38,10 +36,4 @@ void LW2D::TextComponent::Update()
 		m_pRenderComponent.lock()->SetTexture(m_pTexture);
 		m_NeedsUpdate = false;
 	}
-}
-
-void LW2D::TextComponent::Render() const
-{
-	if (!m_DoRender) return;
-	
 }

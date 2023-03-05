@@ -15,7 +15,6 @@ namespace LW2D
 		TextComponent(std::weak_ptr<GameObject> go);
 		~TextComponent() = default;
 		void Update() override;
-		void Render() const override;
 
 		void SetFont(std::shared_ptr<Font> pFont) { m_pFont = pFont; m_NeedsUpdate = true; }
 		void SetText(const std::string& text) { m_Text = text; m_NeedsUpdate = true; }
