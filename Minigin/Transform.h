@@ -1,15 +1,29 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <memory>
 
 namespace LW2D
 {
+	class GameObject;
 	class Transform final
 	{
 	public:
-		const glm::vec3& GetPosition() const { return m_position; }
-		void SetPosition(float x, float y, float z);
+		const glm::vec3& GetWorldPosition();
+		const glm::vec3& GetLocalPosition() const { return m_LocalPosition; }
+		void SetLocalPosition(float x, float y, float z);
+		void SetLocalPosition(const glm::vec3& pos) { m_LocalPosition = pos; SetPositionDirty(); }
+
+		void SetPositionDirty();
+
+		void SetParent(std::shared_ptr<GameObject> pParent) { m_pGameObject = pParent; }
 
 	private:
-		glm::vec3 m_position;
+		bool m_IsWorldPositionDirty{ false };
+		glm::vec3 m_LocalPosition;
+		glm::vec3 m_WorldPosition;
+
+		std::weak_ptr<GameObject> m_pGameObject;
+
+		void UpdateWorldPosition();
 	};
 }

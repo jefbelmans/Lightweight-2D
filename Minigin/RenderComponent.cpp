@@ -10,7 +10,7 @@ LW2D::RenderComponent::RenderComponent(std::weak_ptr<GameObject> go)
 
 void LW2D::RenderComponent::Render() const
 {
-	const auto& pos = m_GameObject.lock()->GetTrasform().GetPosition();
+	const auto& pos = m_pGameObject.lock()->GetTransform().GetWorldPosition();
 	Renderer::GetInstance().RenderTexture(*m_pTexture, pos.x, pos.y);
 }
 

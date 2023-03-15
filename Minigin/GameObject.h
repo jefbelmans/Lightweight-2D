@@ -23,21 +23,41 @@ namespace LW2D
 		void Update();
 		void Render() const;
 
+		// COMPONENTS
 		template<typename T> std::shared_ptr<T> AddComponent();
 		template <typename T> std::shared_ptr<T> GetComponent() const;
 		template <typename T> bool RemoveComponent();
 		template <typename T> bool HasComponent() const;
 
-
+		// NAME
 		std::string GetName() const { return m_Name; }
 		void SetName(std::string& name) { m_Name = name; }
 
-		Transform& GetTrasform() { return m_Transform; }
+		// TRANSFORM
+		Transform& GetTransform() { return m_Transform; }
+
+		// SCENEGRAPH
+		std::shared_ptr<GameObject> GetParent() const { return m_pParent.lock(); }
+		void SetParent(std::shared_ptr<GameObject> pParent, bool keepWorldPosition = true);
+		bool HasParent() const { return m_pParent.lock() != nullptr; }
+
+		size_t GetChildCount() const { return m_pChildren.size(); }
+		std::vector<std::weak_ptr<GameObject>> GetChildren() const { return m_pChildren; }
+		std::weak_ptr<GameObject> GetChildAt(size_t index) const { return m_pChildren.at(index); }
+
+		bool AddChild(std::shared_ptr<GameObject> pChild);
+		bool RemoveChild(std::shared_ptr<GameObject> pChild);
 
 	private:
+		// GAMEOBJECT PROPERTIES
 		std::string m_Name;
 		Transform m_Transform{};
 
+		// SCENEGRAPH
+		std::weak_ptr<GameObject> m_pParent;
+		std::vector<std::weak_ptr<GameObject>> m_pChildren;
+
+		// COMPONENTS
 		std::vector<std::shared_ptr<Component>> m_pComponents;
 	};
 
