@@ -22,6 +22,12 @@
     <Filter Include="Components\Header Files">
       <UniqueIdentifier>{2480a9a2-9bdd-4ddf-9b91-6805b76a06ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{0e193f0c-a608-45ce-9f22-14a60859bb46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui\Backends">
+      <UniqueIdentifier>{8107924f-be31-49ca-a5a9-44aa55d769eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -72,6 +78,30 @@
     <ClInclude Include="FPSComponent.h">
       <Filter>Components\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_opengl2.h">
+      <Filter>imgui\Backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.h">
+      <Filter>imgui\Backends</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -121,6 +151,27 @@
     </ClCompile>
     <ClCompile Include="FPSComponent.cpp">
       <Filter>Components\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_sdl2.cpp">
+      <Filter>imgui\Backends</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdParty\imgui\backends\imgui_impl_opengl2.cpp">
+      <Filter>imgui\Backends</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

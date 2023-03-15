@@ -13,6 +13,7 @@ namespace LW2D
 		SDL_Renderer* m_renderer{};
 		SDL_Window* m_window{};
 		SDL_Color m_clearColor{};	
+		bool m_showDemo{ true };
 	public:
 		void Init(SDL_Window* window);
 		void Render() const;
