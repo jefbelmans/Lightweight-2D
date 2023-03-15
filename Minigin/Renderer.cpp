@@ -2,9 +2,12 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
-#include "imgui.h"
+#include "CacheTrasher.h"
+
+// IMGUI
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl2.h"
+#include "imgui_plot.h"
 
 int GetOpenGLDriverIndex()
 {
@@ -35,14 +38,14 @@ void LW2D::Renderer::Init(SDL_Window* window)
 	ImGui_ImplOpenGL2_Init();
 }
 
-void LW2D::Renderer::Render() const
+void LW2D::Renderer::Render()
 {
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_renderer);
 
 	SceneManager::GetInstance().Render();
-	
+
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_window);
 	ImGui::NewFrame();
@@ -51,6 +54,80 @@ void LW2D::Renderer::Render() const
 	{
 		ImGui::ShowDemoWindow();
 	}
+
+	ImGui::Begin("Exercise 1");
+	ImGui::InputInt("# samples", &nrSamplesFloat, 1, 10);
+	if (ImGui::Button("Trash the cache!"))
+	{
+		m_floatAvg = CacheTrasher::GetInstance().TakeMeasurement<float>(nrSamplesFloat);
+	}
+
+	// FLOAT GRAPH
+	ImGui::PlotConfig conf;
+	conf.values.xs = m_steps.data();
+	conf.values.ys = m_floatAvg.data();
+	conf.values.count = (int)m_steps.size();
+	conf.values.color = ImColor(255, 165, 0);
+	conf.grid_x.show = false;
+	conf.grid_y.show = true;
+	conf.grid_y.size = 10'000.f;
+	conf.scale.min = 0.f;
+	conf.scale.max = 60'000.f;
+	conf.tooltip.show = true;
+	conf.tooltip.format = "x=%.2f, y=%.2f";
+	conf.frame_size = ImVec2(200, 100);
+	conf.line_thickness = 2.f;
+
+	ImGui::Plot("plot", conf);
+	ImGui::End();
+	
+	ImGui::Begin("Exercise 2");
+	ImGui::InputInt("# samples", &nrSamplesGO, 1, 10);
+
+	if (ImGui::Button("Trash the cache with GameObject3D!"))
+	{
+		m_3DAvg = CacheTrasher::GetInstance().TakeMeasurement<GameObject3D>(nrSamplesGO);
+	}
+
+	// 3D GRAPH
+	conf.values.ys = m_3DAvg.data();
+	conf.values.color = ImColor(32, 255, 32);
+	conf.scale.max = 35'000.f;
+	ImGui::Plot("plot_float", conf);
+
+	if (ImGui::Button("Trash the cache with GameObject3DAlt!"))
+	{
+		m_3DAltAvg = CacheTrasher::GetInstance().TakeMeasurement<GameObject3DAlt>(nrSamplesGO);
+	}
+
+	// 3DALT GRAPH
+	conf.values.ys = m_3DAltAvg.data();
+	conf.values.color = ImColor(0, 255, 255);
+	ImGui::Plot("plot_3D", conf);
+
+	ImGui::Text("Combined:");
+
+	// COMBINED GRAPH
+	const float* data[] = { m_3DAvg.data(), m_3DAltAvg.data() };
+	ImGui::PlotConfig confCombined;
+	confCombined.values.xs = m_steps.data();
+	confCombined.values.count = (int)m_steps.size();
+	confCombined.values.ys_list = data; // use ys_list to draw several lines simultaneously
+	confCombined.values.ys_count = 2;
+	confCombined.values.colors = m_colors;
+	confCombined.scale.min = 0.f;
+	confCombined.scale.max = 35'000.f;
+	confCombined.tooltip.show = true;
+	confCombined.grid_x.show = false;
+	confCombined.grid_y.show = true;
+	confCombined.grid_y.size = 10'000.f;
+	confCombined.tooltip.format = "x=%.2f, y=%.2f";
+	confCombined.frame_size = ImVec2(200, 100);
+
+	ImGui::Plot("plot_3DAlt", confCombined);
+	ImGui::End();
+
+
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
 

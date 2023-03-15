@@ -24,7 +24,7 @@ namespace LW2D
 		void Render() const;
 
 		// COMPONENTS
-		template<typename T> std::shared_ptr<T> AddComponent();
+		template <typename T> std::shared_ptr<T> AddComponent();
 		template <typename T> std::shared_ptr<T> GetComponent() const;
 		template <typename T> bool RemoveComponent();
 		template <typename T> bool HasComponent() const;
