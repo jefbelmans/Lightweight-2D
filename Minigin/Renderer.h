@@ -25,7 +25,7 @@ namespace LW2D
 		std::vector<float> m_3DAltAvg = std::vector<float>(11);
 
 		int nrSamplesFloat{ 10 };
-		int nrSamplesGO{ 100 };
+		int nrSamplesGO{ 10 };
 
 		// GRAPH PROPERTIES
 		const ImU32 m_colors[2] = { ImColor(32, 255, 32), ImColor(0, 255, 255) };

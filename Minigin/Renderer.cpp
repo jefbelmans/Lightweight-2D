@@ -70,9 +70,9 @@ void LW2D::Renderer::Render()
 	conf.values.color = ImColor(255, 165, 0);
 	conf.grid_x.show = false;
 	conf.grid_y.show = true;
-	conf.grid_y.size = 10'000.f;
+	conf.grid_y.size = 500.f;
 	conf.scale.min = 0.f;
-	conf.scale.max = 60'000.f;
+	conf.scale.max = 6'000.f;
 	conf.tooltip.show = true;
 	conf.tooltip.format = "x=%.2f, y=%.2f";
 	conf.frame_size = ImVec2(200, 100);
@@ -92,7 +92,8 @@ void LW2D::Renderer::Render()
 	// 3D GRAPH
 	conf.values.ys = m_3DAvg.data();
 	conf.values.color = ImColor(32, 255, 32);
-	conf.scale.max = 35'000.f;
+	conf.scale.max = 45'000.f;
+	conf.grid_y.size = 5'000.f;
 	ImGui::Plot("plot_float", conf);
 
 	if (ImGui::Button("Trash the cache with GameObject3DAlt!"))
@@ -116,13 +117,14 @@ void LW2D::Renderer::Render()
 	confCombined.values.ys_count = 2;
 	confCombined.values.colors = m_colors;
 	confCombined.scale.min = 0.f;
-	confCombined.scale.max = 35'000.f;
+	confCombined.scale.max = 45'000.f;
 	confCombined.tooltip.show = true;
 	confCombined.grid_x.show = false;
 	confCombined.grid_y.show = true;
-	confCombined.grid_y.size = 10'000.f;
+	confCombined.grid_y.size = 5'000.f;
 	confCombined.tooltip.format = "x=%.2f, y=%.2f";
 	confCombined.frame_size = ImVec2(200, 100);
+	confCombined.line_thickness = 2.0f;
 
 	ImGui::Plot("plot_3DAlt", confCombined);
 	ImGui::End();
