@@ -55,8 +55,8 @@ LW2D::Minigin::Minigin(const std::string &dataPath)
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		960,
-		520,
+		640,
+		480,
 		SDL_WINDOW_OPENGL
 	);
 	if (g_window == nullptr) 
@@ -90,6 +90,7 @@ void LW2D::Minigin::Run(const std::function<void()>& load)
 
 	while (doContinue)
 	{
+		auto t = std::chrono::high_resolution_clock::now();
 		// Update Time before all else
 		sceneManager.GetGameTime()->Update();
 		doContinue = input.ProcessInput();
@@ -97,9 +98,8 @@ void LW2D::Minigin::Run(const std::function<void()>& load)
 		sceneManager.Update();
 		renderer.Render();
 
-		const float sleepTime = desiredFrameTime - sceneManager.GetGameTime()->GetDeltaTime();
-
-		if(sleepTime > 0.f)
-			std::this_thread::sleep_for(std::chrono::duration<float, std::milli>(sleepTime));
+		auto t2 = std::chrono::high_resolution_clock::now() - t;
+		t += std::chrono::milliseconds(static_cast<long long>(desiredFrameTime)) - t2;
+		std::this_thread::sleep_until(t); // Lock FPS
 	}
 }

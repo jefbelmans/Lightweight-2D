@@ -15,20 +15,7 @@ namespace LW2D
 	{
 		SDL_Renderer* m_renderer{};
 		SDL_Window* m_window{};
-		SDL_Color m_clearColor{};	
-		bool m_showDemo{ false };
-
-		// GRAPH DATA
-		std::vector<float> m_steps = { 1, 2, 4, 6, 8, 16, 32, 64, 128, 256, 512, 1024 };
-		std::vector<float> m_floatAvg = std::vector<float>(11);
-		std::vector<float> m_3DAvg = std::vector<float>(11);
-		std::vector<float> m_3DAltAvg = std::vector<float>(11);
-
-		int nrSamplesFloat{ 10 };
-		int nrSamplesGO{ 10 };
-
-		// GRAPH PROPERTIES
-		const ImU32 m_colors[2] = { ImColor(32, 255, 32), ImColor(0, 255, 255) };
+		SDL_Color m_clearColor{};
 
 	public:
 		void Init(SDL_Window* window);
