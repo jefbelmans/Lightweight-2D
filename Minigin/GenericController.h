@@ -6,8 +6,11 @@ namespace LW2D
 	class GenericController final
 	{
 		class GenericControllerImpl;
-		std::unique_ptr<GenericControllerImpl> pImpl;
+		std::unique_ptr<GenericControllerImpl> m_pImpl;
 	public:
+		explicit GenericController(int controllerIndex);
+		~GenericController() = default;
+
 		enum class ControllerButton
 		{
 			DPadUp = 0x0001,
@@ -31,8 +34,5 @@ namespace LW2D
 		bool IsDown(ControllerButton button) const;
 		bool IsUp(ControllerButton button) const;
 		bool IsPressed(ControllerButton button) const;
-
-		explicit GenericController(int controllerIndex);
-		~GenericController();
 	};
 }

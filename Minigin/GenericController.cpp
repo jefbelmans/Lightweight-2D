@@ -20,7 +20,9 @@ public:
     {
         ZeroMemory(&previousState, sizeof(XINPUT_STATE));
         ZeroMemory(&currentState, sizeof(XINPUT_STATE));
+        _controllerIndex = controllerIndex;
     }
+    ~GenericControllerImpl() = default;
 
     void Update()
     {
@@ -38,29 +40,27 @@ public:
     bool IsPressed(unsigned int button) const { return currentState.Gamepad.wButtons & button; }
 };
 
+GenericController::GenericController(int controllerIndex)
+{
+    m_pImpl = std::make_unique<GenericControllerImpl>(controllerIndex);
+}
+
 void GenericController::Update()
 {
+    m_pImpl->Update();
 }
 
 bool GenericController::IsDown(ControllerButton button) const
 {
-    return false;
+    return m_pImpl->IsDownThisFrame(static_cast<unsigned int>(button));
 }
 
 bool GenericController::IsUp(ControllerButton button) const
 {
-    return false;
+    return m_pImpl->IsUpThisFrame(static_cast<unsigned int>(button));
 }
 
 bool GenericController::IsPressed(ControllerButton button) const
 {
-    return false;
-}
-
-GenericController::GenericController(int controllerIndex)
-{
-}
-
-GenericController::~GenericController()
-{
+    return m_pImpl->IsPressed(static_cast<unsigned int>(button));
 }
