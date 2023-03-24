@@ -42,7 +42,12 @@ public:
 
 GenericController::GenericController(int controllerIndex)
 {
-    m_pImpl = std::make_unique<GenericControllerImpl>(controllerIndex);
+    m_pImpl = new GenericControllerImpl(controllerIndex);
+}
+
+LW2D::GenericController::~GenericController()
+{
+    delete m_pImpl;
 }
 
 void GenericController::Update()

@@ -6,10 +6,10 @@ namespace LW2D
 	class GenericController final
 	{
 		class GenericControllerImpl;
-		std::unique_ptr<GenericControllerImpl> m_pImpl;
+		GenericControllerImpl* m_pImpl;
 	public:
 		explicit GenericController(int controllerIndex);
-		~GenericController() = default;
+		~GenericController();
 
 		enum class ControllerButton
 		{

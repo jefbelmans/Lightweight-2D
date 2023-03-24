@@ -15,9 +15,10 @@ namespace LW2D
 	class MoveCommand final : public Command
 	{
 	public:
-		MoveCommand(std::shared_ptr<GameObject> go, float speed)
-			: m_GameObject(go), m_Speed(speed) {};
+		MoveCommand(std::shared_ptr<GameObject> go, const glm::vec3& dir, float speed)
+			: m_GameObject(go), m_Direction(dir), m_Speed(speed) {};
 		virtual void Execute() override;
+		void SetSpeed(float speed) { m_Speed = speed; }
 
 	private:
 		std::shared_ptr<GameObject> m_GameObject;
