@@ -7,10 +7,11 @@
 
 bool LW2D::InputManager::ProcessInput()
 {
-	SDL_Event e;
 	auto controllers = Input::GetInstance().GetControllers();
-	auto keyBoardCommands = Input::GetInstance().GetKeyboardCommands();
+	auto keyboard = Input::GetInstance().GetKeyboard();
+
 	auto controllerCommands = Input::GetInstance().GetControllerCommands();
+	auto keyboardCommands = Input::GetInstance().GetKeyboardCommands();
 
 	// UPDATE CONTROLLERS
 	for (const auto& controller : controllers)
@@ -44,35 +45,45 @@ bool LW2D::InputManager::ProcessInput()
 				kv.second->Execute();
 			}
 			break;
-		default:
-			break;
 		}
 	}
 
+	// UPDATE KEYBOARD
+	keyboard->Update();
+
 	// POLL KEYBOARD
+	SDL_Event e;
 	while (SDL_PollEvent(&e))
 	{
 		if (e.type == SDL_QUIT) return false;
-
-		if (e.type == SDL_KEYDOWN)
-		{
-			
-		}
-		if (e.type == SDL_MOUSEBUTTONDOWN)
-		{
-			
-		}
 
 		// PROCESS IMGUI
 		ImGui_ImplSDL2_ProcessEvent(&e);
 	}
 
-	const Uint8* currentKeyStates = SDL_GetKeyboardState(nullptr);
-	for (const auto& kv : keyBoardCommands)
+	for (const auto& kv : keyboardCommands)
 	{
-		if (currentKeyStates[kv.first.first])
+		auto button = kv.first.first;
+		switch (kv.first.second)
 		{
-			kv.second->Execute();
+		case SDL_KEYDOWN:
+			if (keyboard->IsDown(button))
+			{
+				kv.second->Execute();
+			}
+			break;
+		case SDL_KEYUP:
+			if (keyboard->IsUp(button))
+			{
+				kv.second->Execute();
+			}
+			break;
+		case SDL_KEYMAPCHANGED:
+			if (keyboard->IsPressed(button))
+			{
+				kv.second->Execute();
+			}
+			break;
 		}
 	}
 
