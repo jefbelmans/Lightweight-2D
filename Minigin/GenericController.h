@@ -24,8 +24,8 @@ namespace LW2D
 			LeftShoulder = 0x0100,
 			RightShoulder = 0x0200,
 			ButtonSouth = 0x1000,
-			ButtonWest = 0x2000,
-			ButtonEast = 0x4000,
+			ButtonEast = 0x2000,
+			ButtonWest = 0x4000,
 			ButtonNorth = 0x8000
 		};
 

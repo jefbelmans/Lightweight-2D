@@ -5,6 +5,7 @@
 
 // COMPONENTS
 #include "HealthComponent.h"
+#include "ScoreComponent.h"
 
 void LW2D::MoveCommand::Execute()
 {
@@ -17,4 +18,10 @@ void LW2D::KillCommand::Execute()
 {
 	if(!m_pHealthComponent) throw std::runtime_error("HealthComponent is nullptr");
 	m_pHealthComponent->Kill();
+}
+
+void LW2D::AddScoreCommand::Execute()
+{
+	if (!m_pScoreComponent) throw std::runtime_error("ScoreComponent is nullptr");
+	m_pScoreComponent->AddScore(50);
 }

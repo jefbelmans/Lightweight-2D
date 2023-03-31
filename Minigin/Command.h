@@ -37,4 +37,16 @@ namespace LW2D
 	private:
 		std::shared_ptr<HealthComponent> m_pHealthComponent;
 	};
+
+	class ScoreComponent;
+	class AddScoreCommand final : public Command
+	{
+	public:
+		AddScoreCommand(std::shared_ptr<ScoreComponent> scoreComponent)
+			: m_pScoreComponent(scoreComponent) {};
+		virtual void Execute() override;
+
+	private:
+		std::shared_ptr<ScoreComponent> m_pScoreComponent;
+	};
 }
