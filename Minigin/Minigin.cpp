@@ -11,6 +11,7 @@
 #include "GameTime.h"
 #include "ResourceManager.h"
 #include <thread>
+#include <steam_api.h>
 
 SDL_Window* g_window{};
 
@@ -94,6 +95,9 @@ void LW2D::Minigin::Run(const std::function<void()>& load)
 		// Update Time before all else
 		sceneManager.GetGameTime()->Update();
 		doContinue = input.ProcessInput();
+
+		// Update SteamAPI
+		SteamAPI_RunCallbacks();
 
 		sceneManager.Update();
 		renderer.Render();
