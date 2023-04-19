@@ -18,13 +18,12 @@ public:
 
 	void RemoveListener(const Callback& callback)
 	{
-		for (auto it = m_Listeners.begin(); it != m_Listeners.end(); ++it)
+		auto it = std::find_if(m_Listeners.begin(), m_Listeners.end(), [&](const Callback& cb) {
+			return cb.target_type() == callback.target_type() && cb.target<void(*)(Args...)>() == callback.target<void(*)(Args...)>();
+			});
+		if (it != m_Listeners.end())
 		{
-			if (*it == callback)
-			{
-				m_Listeners.erase(it);
-				return;
-			}
+			m_Listeners.erase(it);
 		}
 	}
 
