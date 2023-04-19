@@ -82,16 +82,17 @@ void LW2D::Minigin::Run(const std::function<void()>& load)
 {
 	load();
 
+	// Enable VSync
+	SDL_GL_SetSwapInterval(1);
+
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 
 	bool doContinue = true;
-	const float desiredFrameTime{ 1000.f / 165.f };
 
 	while (doContinue)
 	{
-		auto t = std::chrono::high_resolution_clock::now();
 		// Update Time before all else
 		sceneManager.GetGameTime()->Update();
 		doContinue = input.ProcessInput();
@@ -101,9 +102,5 @@ void LW2D::Minigin::Run(const std::function<void()>& load)
 
 		sceneManager.Update();
 		renderer.Render();
-
-		auto t2 = std::chrono::high_resolution_clock::now() - t;
-		t += std::chrono::milliseconds(static_cast<long long>(desiredFrameTime)) - t2;
-		std::this_thread::sleep_until(t); // Lock FPS
 	}
 }
