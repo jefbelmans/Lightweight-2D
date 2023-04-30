@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
+#include "../Texture2D.h"
 #include "Component.h"
-#include "Texture2D.h"
 
 namespace LW2D
 {

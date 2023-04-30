@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <functional>
 #include "Singleton.h"
 
 namespace LW2D
@@ -11,11 +12,13 @@ namespace LW2D
 	class SceneManager final : public Singleton<SceneManager>
 	{
 	public:
-		Scene& CreateScene(const std::string& name);
+		Scene& CreateScene(const std::string& name, const std::function<void()>& onGUI);
 		std::shared_ptr<GameTime> GetGameTime() const { return m_pGameTime; }
 
 		void Update();
 		void Render();
+		void OnGUI();
+
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;

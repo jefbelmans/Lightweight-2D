@@ -6,7 +6,7 @@ namespace LW2D
 	class GameObject;
 	class Scene final
 	{
-		friend Scene& SceneManager::CreateScene(const std::string& name);
+		friend Scene& SceneManager::CreateScene(const std::string& name, const std::function<void()>& onGUI);
 	public:
 		void Add(std::shared_ptr<GameObject> object);
 		void Remove(std::shared_ptr<GameObject> object);
@@ -14,6 +14,7 @@ namespace LW2D
 
 		void Update();
 		void Render() const;
+		void OnGUI() const;
 
 		~Scene();
 		Scene(const Scene& other) = delete;
@@ -22,10 +23,11 @@ namespace LW2D
 		Scene& operator=(Scene&& other) = delete;
 
 	private: 
-		explicit Scene(const std::string& name);
+		explicit Scene(const std::string& name, const std::function<void()>& onGUI);
 
 		std::string m_name;
 		std::vector < std::shared_ptr<GameObject>> m_objects{};
+		const std::function<void()> m_GUI;
 
 		static unsigned int m_idCounter; 
 	};

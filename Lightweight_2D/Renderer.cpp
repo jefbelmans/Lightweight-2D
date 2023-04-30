@@ -2,7 +2,6 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 #include "Texture2D.h"
-#include "CacheTrasher.h"
 
 // IMGUI
 #include "backends/imgui_impl_sdl2.h"
@@ -49,6 +48,8 @@ void LW2D::Renderer::Render()
 	ImGui_ImplOpenGL2_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_window);
 	ImGui::NewFrame();
+
+	SceneManager::GetInstance().OnGUI();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());

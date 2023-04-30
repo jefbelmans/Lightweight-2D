@@ -3,11 +3,11 @@
 #include <stdexcept>
 
 #include "RenderComponent.h"
-#include "Transform.h"
-#include "GameObject.h"
-#include "Font.h"
-#include "Renderer.h"
-#include "Texture2D.h"
+#include "../Transform.h"
+#include "../GameObject.h"
+#include "../Font.h"
+#include "../Renderer.h"
+#include "../Texture2D.h"
 
 LW2D::TextComponent::TextComponent(std::weak_ptr<GameObject> go)
 	: Component(go)

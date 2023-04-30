@@ -1,12 +1,12 @@
 #include "Scene.h"
 #include "GameObject.h"
-#include "TextComponent.h"
+#include "EngineComponents/TextComponent.h"
 
 using namespace LW2D;
 
 unsigned int Scene::m_idCounter = 0;
 
-Scene::Scene(const std::string& name) : m_name(name) {}
+Scene::Scene(const std::string& name, const std::function<void()>& onGUI) : m_name(name), m_GUI(onGUI) {}
 
 Scene::~Scene() = default;
 
@@ -41,3 +41,7 @@ void Scene::Render() const
 	}
 }
 
+void LW2D::Scene::OnGUI() const
+{
+	m_GUI();
+}

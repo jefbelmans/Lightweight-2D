@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Game Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Game Components">
+      <UniqueIdentifier>{07eb390f-d35e-45f6-9d52-c9ec4a1b6376}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Game Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponents\HealthComponent.cpp">
+      <Filter>Game Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponents\ScoreComponent.cpp">
+      <Filter>Game Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Commands.cpp">
+      <Filter>Game Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameComponents\HealthComponent.h">
+      <Filter>Game Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\ScoreComponent.h">
+      <Filter>Game Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Commands.h">
+      <Filter>Game Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

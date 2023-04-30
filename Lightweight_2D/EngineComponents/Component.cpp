@@ -1,6 +1,6 @@
 #include "Component.h"
-#include "GameObject.h"
-#include "Transform.h"
+#include "../GameObject.h"
+#include "../Transform.h"
 
 LW2D::Component::Component(std::weak_ptr<GameObject> go)
 	: m_pGameObject(go)

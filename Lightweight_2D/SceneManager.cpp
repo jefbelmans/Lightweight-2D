@@ -18,9 +18,17 @@ void LW2D::SceneManager::Render()
 	}
 }
 
-LW2D::Scene& LW2D::SceneManager::CreateScene(const std::string& name)
+void LW2D::SceneManager::OnGUI()
 {
-	const auto& scene = std::shared_ptr<Scene>(new Scene(name));
+	for (const auto& scene : m_scenes)
+	{
+		scene->OnGUI();
+	}
+}
+
+LW2D::Scene& LW2D::SceneManager::CreateScene(const std::string& name, const std::function<void()>& onGUI)
+{
+	const auto& scene = std::shared_ptr<Scene>(new Scene(name, onGUI));
 	m_scenes.push_back(scene);
 	m_pGameTime = std::make_shared<GameTime>();
 	return *scene;

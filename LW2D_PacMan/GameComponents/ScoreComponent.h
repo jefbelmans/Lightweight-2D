@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "EngineComponents/Component.h"
 #include "Event.h"
 
 namespace LW2D

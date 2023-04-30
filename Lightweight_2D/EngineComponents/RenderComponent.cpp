@@ -1,7 +1,7 @@
 #include "RenderComponent.h"
-#include "Renderer.h"
-#include "ResourceManager.h"
-#include "GameObject.h"
+#include "../Renderer.h"
+#include "../ResourceManager.h"
+#include "../GameObject.h"
 
 LW2D::RenderComponent::RenderComponent(std::weak_ptr<GameObject> go)
 	: Component(go)

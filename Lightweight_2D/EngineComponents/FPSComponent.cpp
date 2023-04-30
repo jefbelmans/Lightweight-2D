@@ -1,8 +1,10 @@
 #include "FPSComponent.h"
-#include "SceneManager.h"
-#include "GameTime.h"
+
+#include "../SceneManager.h"
+#include "../GameTime.h"
+#include "../GameObject.h"
 #include "TextComponent.h"
-#include "GameObject.h"
+
 
 LW2D::FPSComponent::FPSComponent(std::weak_ptr<GameObject> go)
 	: Component(go)

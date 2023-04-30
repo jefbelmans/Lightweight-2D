@@ -4,7 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include "Minigin.h"
+#include "Lightweight_2D.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
@@ -42,7 +42,7 @@ void PrintSDLVersion()
 		version.major, version.minor, version.patch);
 }
 
-LW2D::Minigin::Minigin(const std::string &dataPath)
+LW2D::Lightweight_2D::Lightweight_2D(const std::string &dataPath)
 {
 	PrintSDLVersion();
 	
@@ -69,7 +69,7 @@ LW2D::Minigin::Minigin(const std::string &dataPath)
 	ResourceManager::GetInstance().Init(dataPath);
 }
 
-LW2D::Minigin::~Minigin()
+LW2D::Lightweight_2D::~Lightweight_2D()
 {
 	Renderer::GetInstance().Destroy();
 	SDL_DestroyWindow(g_window);
@@ -77,7 +77,7 @@ LW2D::Minigin::~Minigin()
 	SDL_Quit();
 }
 
-void LW2D::Minigin::Run(const std::function<void()>& load)
+void LW2D::Lightweight_2D::Run(const std::function<void()>& load)
 {
 	load();
 

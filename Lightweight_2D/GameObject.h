@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 
-#include "Component.h"
+#include "EngineComponents/Component.h"
 #include "Transform.h"
 
 namespace LW2D
