@@ -19,6 +19,12 @@ namespace LW2D
 	private:
 		std::weak_ptr<MapComponent> m_pMap;
 		float m_Speed{ 64.f };
-		LW2D::Direction m_Direction{Direction::Down};
+
+		Direction m_Direction{Direction::Down};
+
+		const float m_CoyoteTime{ .5f };
+		float m_CoyoteTimer{ 0.f };
+		bool m_DoChangeDirection{ false };
+		Direction m_PendingDirection{Direction::Down};
 	};
 }

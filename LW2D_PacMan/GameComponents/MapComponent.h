@@ -17,6 +17,10 @@ namespace LW2D
 		void Render() const override;
 		bool IsWall(const Vector2f& pos) const;
 
+		uint8_t GetCellSize() const { return m_CellSize; }
+		uint8_t GetRows() const { return m_Rows; }
+		uint8_t GetCols() const { return m_Cols; }
+
 	private:
 		std::vector<std::vector<Cell>> m_Map{};
 		const uint8_t m_CellSize{16u};

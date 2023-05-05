@@ -57,45 +57,11 @@ bool LW2D::MapComponent::IsWall(const Vector2f& pos) const
 	if (pos.x < 0 || pos.x > m_Cols * m_CellSize || pos.y < 0 || pos.y > m_Rows * m_CellSize)
 		return false;
 
-	float row = (pos.y / m_CellSize);
-	float col = (pos.x / m_CellSize);
+	float row = static_cast<int>(pos.y / m_CellSize);
+	float col = static_cast<int>(pos.x / m_CellSize);
 
-	for (unsigned char a = 0; a < 4; a++)
-	{
-		short x = 0;
-		short y = 0;
-
-		switch (a)
-		{
-			case 0: //top left cell
-			{
-				x = static_cast<short>(floor(col));
-				y = static_cast<short>(floor(row));
-				break;
-			}
-			case 1: //top right cell
-			{
-				x = static_cast<short>(ceil(col));
-				y = static_cast<short>(floor(row));
-				break;
-			}
-			case 2: //bottom left cell
-			{
-				x = static_cast<short>(floor(col));
-				y = static_cast<short>(ceil(row));
-				break;
-			}
-			case 3: //bottom right cell
-			{
-				x = static_cast<short>(ceil(col));
-				y = static_cast<short>(ceil(row));
-				break;
-			}
-		}
-
-		if (m_Map[y][x] == Cell::Wall)
-			return true;
-	}
+	if (m_Map[row][col] == Cell::Wall)
+		return true;
 
 	return false;
 }

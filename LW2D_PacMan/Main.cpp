@@ -73,6 +73,13 @@ void load()
 	textComponent->SetColor(SDL_Color{ 255, 255, 255 });
 	// scene.Add(go);
 
+	// MAP OBJECT
+	go = std::make_shared<LW2D::GameObject>("Map");
+	go->GetTransform().SetParent(go);
+
+	auto map = go->AddComponent<LW2D::MapComponent>();
+	scene.Add(go);
+
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");
 	go->GetTransform().SetParent(go);
@@ -87,13 +94,6 @@ void load()
 
 	go->AddComponent<LW2D::FPSComponent>();
 
-	scene.Add(go);
-
-	// MAP OBJECT
-	go = std::make_shared<LW2D::GameObject>("Map");
-	go->GetTransform().SetParent(go);
-	
-	auto map = go->AddComponent<LW2D::MapComponent>();
 	scene.Add(go);
 #pragma endregion
 
@@ -120,7 +120,7 @@ void load()
 	// HEALTH DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Health Display P1");
 	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(10.f, 200.f, 0.f);
+	go->GetTransform().SetLocalPosition(10.f, 350.f, 0.f);
 
 	go->AddComponent<LW2D::RenderComponent>();
 	textComponent = go->AddComponent<LW2D::TextComponent>();
@@ -139,7 +139,7 @@ void load()
 	// SCORE DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Score Display P1");
 	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(10.f, 220.f, 0.f);
+	go->GetTransform().SetLocalPosition(10.f, 370.f, 0.f);
 
 	go->AddComponent<LW2D::RenderComponent>();
 	textComponent = go->AddComponent<LW2D::TextComponent>();
