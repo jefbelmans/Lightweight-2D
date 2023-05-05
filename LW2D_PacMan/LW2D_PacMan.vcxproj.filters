@@ -22,6 +22,12 @@
     <ClCompile Include="Commands.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameComponents\MapComponent.cpp">
+      <Filter>Game Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameComponents\PacManComponent.cpp">
+      <Filter>Game Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\HealthComponent.h">
@@ -33,5 +39,14 @@
     <ClInclude Include="Commands.h">
       <Filter>Game Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="GameComponents\MapComponent.h">
+      <Filter>Game Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\PacManComponent.h" />
+    <ClInclude Include="Utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LW2D_PacMan.rc" />
   </ItemGroup>
 </Project>

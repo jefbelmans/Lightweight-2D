@@ -161,11 +161,20 @@
     <ClCompile Include="GameComponents\HealthComponent.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameComponents\ScoreComponent.cpp" />
+    <ClCompile Include="GameComponents\MapComponent.cpp" />
+    <ClCompile Include="GameComponents\PacManComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Commands.h" />
     <ClInclude Include="GameComponents\HealthComponent.h" />
     <ClInclude Include="GameComponents\ScoreComponent.h" />
+    <ClInclude Include="GameComponents\MapComponent.h" />
+    <ClInclude Include="GameComponents\PacManComponent.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="Utils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LW2D_PacMan.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -23,15 +23,20 @@
 #include "EngineComponents/FPSComponent.h"
 #include "GameComponents/HealthComponent.h"
 #include "GameComponents/ScoreComponent.h"
+#include "GameComponents/MapComponent.h"
+#include "GameComponents/PacManComponent.h"
 
+std::shared_ptr<LW2D::GameObject> pacMan;
 
 void OnGUI()
 {
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 
 	if(ImGui::Begin("Game Scene", nullptr, window_flags))
 	{
-		ImGui::Dummy(ImVec2{ 100.f,50.f });
+		const auto pos = pacMan->GetTransform().GetWorldPosition();
+		// Display pacmans pos in ImGui text
+		ImGui::Text("PacMan Pos: %.2f, %.2f", pos.x, pos.y);
 		ImGui::End();
 	}
 }
@@ -52,7 +57,7 @@ void load()
 	go->GetTransform().SetParent(go);
 	go->AddComponent<LW2D::RenderComponent>()->SetTexture("logo.tga");
 	go->GetTransform().SetLocalPosition(216.f, 180.f, 0.f);
-	scene.Add(go);
+	// scene.Add(go);
 
 	// TITLE OBJECT
 	go = std::make_shared<LW2D::GameObject>("Title Text");
@@ -66,8 +71,7 @@ void load()
 	textComponent->SetText("Programing 4 Assignment");
 	textComponent->SetFont(font);
 	textComponent->SetColor(SDL_Color{ 255, 255, 255 });
-
-	scene.Add(go);
+	// scene.Add(go);
 
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");
@@ -84,13 +88,25 @@ void load()
 	go->AddComponent<LW2D::FPSComponent>();
 
 	scene.Add(go);
+
+	// MAP OBJECT
+	go = std::make_shared<LW2D::GameObject>("Map");
+	go->GetTransform().SetParent(go);
+	
+	auto map = go->AddComponent<LW2D::MapComponent>();
+	scene.Add(go);
 #pragma endregion
 
 #pragma region Player1
 	// PLAYER1
 	auto p1 = std::make_shared<LW2D::GameObject>("Player 1");
 	p1->GetTransform().SetParent(p1);
-	p1->GetTransform().SetLocalPosition(180.f, 200.f, 0.f);
+	p1->GetTransform().SetLocalPosition(80.f, 16.f, 0.f);
+
+	pacMan = p1;
+
+	auto pacMan = p1->AddComponent<LW2D::PacManComponent>();
+	pacMan->SetMap(map);
 
 	p1->AddComponent<LW2D::RenderComponent>()->SetTexture("PacMan.png");
 
@@ -140,22 +156,29 @@ void load()
 	scoreComponent->GetOnScoreChangedEvent()->AddListener(UpdateScoreDisplayP1);
 
 	const float moveSpeed{ 0.25f };
-	// KEYBOARD
+	
+	// ADD INPUT DEVICES
+	LW2D::Input::GetInstance().AddController(std::make_shared<LW2D::GenericController>(0));
+
 	// MOVE UP
-	auto moveCommand = std::make_shared<LW2D::MoveCommand>(p1, glm::vec3{ 0.f, -1.f, 0.f }, moveSpeed);
+	auto moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Up, moveSpeed);
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_W, SDL_KEYMAPCHANGED), moveCommand);
+	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadUp, LW2D::KeyState::Down), moveCommand);
 
 	// MOVE DOWN
-	moveCommand = std::make_shared<LW2D::MoveCommand>(p1, glm::vec3{ 0.f, 1.f, 0.f }, moveSpeed);
+	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Down, moveSpeed);
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_S, SDL_KEYMAPCHANGED), moveCommand);
+	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadDown, LW2D::KeyState::Down), moveCommand);
 
 	// MOVE LEFT
-	moveCommand = std::make_shared<LW2D::MoveCommand>(p1, glm::vec3{ -1.f, 0.f, 0.f }, moveSpeed);
+	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Left, moveSpeed);
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_A, SDL_KEYMAPCHANGED), moveCommand);
+	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadLeft, LW2D::KeyState::Down), moveCommand);
 
 	// MOVE RIGHT
-	moveCommand = std::make_shared<LW2D::MoveCommand>(p1, glm::vec3{ 1.f, 0.f, 0.f }, moveSpeed);
+	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Right, moveSpeed);
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_D, SDL_KEYMAPCHANGED), moveCommand);
+	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadRight, LW2D::KeyState::Down), moveCommand);
 
 	// KILL P1
 	auto killCommand = std::make_shared<LW2D::KillCommand>(p1->GetComponent<LW2D::HealthComponent>());
@@ -165,84 +188,6 @@ void load()
 	auto addScoreCommand = std::make_shared<LW2D::AddScoreCommand>(p1->GetComponent<LW2D::ScoreComponent>());
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_L, SDL_KEYDOWN), addScoreCommand);
 
-#pragma endregion
-
-#pragma region Player2
-	// PLAYER2
-	auto p2 = std::make_shared<LW2D::GameObject>("Player 2");
-	p2->GetTransform().SetParent(p2);
-	p2->GetTransform().SetLocalPosition(200.f, 200.f, 0.f);
-
-	p2->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
-
-	healthComponent = p2->AddComponent<LW2D::HealthComponent>();
-	healthComponent->SetLives(3);
-
-	scoreComponent = p2->AddComponent<LW2D::ScoreComponent>();
-
-	scene.Add(p2);
-
-	// HEALTH DISPLAY P2
-	go = std::make_shared<LW2D::GameObject>("Health Display P2");
-	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(10.f, 250.f, 0.f);
-
-	go->AddComponent<LW2D::RenderComponent>();
-	textComponent = go->AddComponent<LW2D::TextComponent>();
-	textComponent->SetFont(font);
-	textComponent->SetColor(SDL_Color{ 255, 64, 64 });
-	textComponent->SetText("Lives: 3");
-	scene.Add(go);
-
-	// BIND ONKILL EVENT
-	auto UpdateLivesDisplayP2 = [textComponent](int lives)
-	{
-		textComponent->SetText("Lives: " + std::to_string(lives));
-	};
-	healthComponent->GetOnDeathEvent()->AddListener(UpdateLivesDisplayP2);
-
-	// SCORE DISPLAY P2
-	go = std::make_shared<LW2D::GameObject>("Score Display P2");
-	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(10.f, 270.f, 0.f);
-
-	go->AddComponent<LW2D::RenderComponent>();
-	textComponent = go->AddComponent<LW2D::TextComponent>();
-	textComponent->SetFont(font);
-	textComponent->SetColor(SDL_Color{ 255, 64, 64 });
-	textComponent->SetText("Score: 0");
-	scene.Add(go);
-
-	// BIND ONSCORE EVENT
-	auto UpdateScoreDisplayP2 = [textComponent](int score)
-	{
-		textComponent->SetText("Score: " + std::to_string(score));
-	};
-	scoreComponent->GetOnScoreChangedEvent()->AddListener(UpdateScoreDisplayP2);
-
-	// ADD INPUT DEVICES
-	LW2D::Input::GetInstance().AddController(std::make_shared<LW2D::GenericController>(0));
-
-	// CONTROLLER
-	moveCommand = std::make_shared<LW2D::MoveCommand>(p2, glm::vec3{ 0.f, -1.f, 0.f }, moveSpeed * 2.f);
-	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadUp, LW2D::KeyState::Pressed), moveCommand);
-
-	moveCommand = std::make_shared<LW2D::MoveCommand>(p2, glm::vec3{ 0.f, 1.f, 0.f }, moveSpeed * 2.f);
-	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadDown, LW2D::KeyState::Pressed), moveCommand);
-
-	moveCommand = std::make_shared<LW2D::MoveCommand>(p2, glm::vec3{ -1.f, 0.f, 0.f }, moveSpeed * 2.f);
-	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadLeft, LW2D::KeyState::Pressed), moveCommand);
-
-	moveCommand = std::make_shared<LW2D::MoveCommand>(p2, glm::vec3{ 1.f, 0.f, 0.f }, moveSpeed * 2.f);
-	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadRight, LW2D::KeyState::Pressed), moveCommand);
-
-	// KILL P2
-	killCommand = std::make_shared<LW2D::KillCommand>(p2->GetComponent<LW2D::HealthComponent>());
-	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::ButtonSouth, LW2D::KeyState::Down), killCommand);
-
-	// ADD SCORE P2
-	addScoreCommand = std::make_shared<LW2D::AddScoreCommand>(p2->GetComponent<LW2D::ScoreComponent>());
-	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::ButtonWest, LW2D::KeyState::Down), addScoreCommand);
 #pragma endregion
 
 }

@@ -1,20 +1,20 @@
 #pragma once
 #include "Command.h"
+#include "Utils.h"
 
 namespace LW2D
 {
-	class GameObject;
+	class PacManComponent;
 	class MoveCommand final : public Command
 	{
 	public:
-		MoveCommand(std::shared_ptr<GameObject> go, const glm::vec3& dir, float speed)
-			: m_GameObject(go), m_Direction(dir), m_Speed(speed) {};
+		MoveCommand(std::shared_ptr<PacManComponent> pacman, const LW2D::Direction& dir, float speed)
+			: m_PacMan(pacman), m_Direction(dir), m_Speed(speed) {};
 		virtual void Execute() override;
-		void SetSpeed(float speed) { m_Speed = speed; }
 
 	private:
-		std::shared_ptr<GameObject> m_GameObject;
-		glm::vec3 m_Direction;
+		std::shared_ptr<PacManComponent> m_PacMan;
+		LW2D::Direction m_Direction;
 		float m_Speed;
 	};
 

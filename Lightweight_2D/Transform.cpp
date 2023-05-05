@@ -9,12 +9,31 @@ const glm::vec3& LW2D::Transform::GetWorldPosition()
 	return m_WorldPosition;
 }
 
+void LW2D::Transform::SetPositionDirty()
+{
+	m_IsWorldPositionDirty = true;
+
+	for (std::weak_ptr<GameObject> child : m_pGameObject.lock()->GetChildren())
+	{
+		if (child.expired()) continue;
+
+		child.lock()->GetTransform().SetPositionDirty();
+	}
+}
+
 void LW2D::Transform::SetLocalPosition(const float x, const float y, const float z)
 {
 	m_LocalPosition.x = x;
 	m_LocalPosition.y = y;
 	m_LocalPosition.z = z;
 
+	SetPositionDirty();
+}
+
+void LW2D::Transform::Translate(float x, float y)
+{
+	m_LocalPosition.x += x;
+	m_LocalPosition.y += y;
 	SetPositionDirty();
 }
 
@@ -30,16 +49,4 @@ void LW2D::Transform::UpdateWorldPosition()
 	}
 
 	m_IsWorldPositionDirty = false;
-}
-
-void LW2D::Transform::SetPositionDirty()
-{
-	m_IsWorldPositionDirty = true;
-
-	for (std::weak_ptr<GameObject> child : m_pGameObject.lock()->GetChildren())
-	{
-		if (child.expired()) continue;
-
-		child.lock()->GetTransform().SetPositionDirty();
-	}
 }

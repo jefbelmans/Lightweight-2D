@@ -10,10 +10,13 @@ namespace LW2D
 	public:
 		const glm::vec3& GetWorldPosition();
 		const glm::vec3& GetLocalPosition() const { return m_LocalPosition; }
+
+		void SetPositionDirty();
+
 		void SetLocalPosition(float x, float y, float z);
 		void SetLocalPosition(const glm::vec3& pos) { m_LocalPosition = pos; SetPositionDirty(); }
 
-		void SetPositionDirty();
+		void Translate(float x, float y);
 
 		void SetParent(std::shared_ptr<GameObject> pParent) { m_pGameObject = pParent; }
 
