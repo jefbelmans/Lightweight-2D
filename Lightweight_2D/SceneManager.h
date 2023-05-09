@@ -15,6 +15,7 @@ namespace LW2D
 		Scene& CreateScene(const std::string& name, const std::function<void()>& onGUI);
 		std::shared_ptr<GameTime> GetGameTime() const { return m_pGameTime; }
 
+		void Initialize();
 		void Update();
 		void Render();
 		void OnGUI();

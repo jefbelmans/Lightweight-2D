@@ -52,7 +52,7 @@ LW2D::Lightweight_2D::Lightweight_2D(const std::string &dataPath)
 	}
 
 	g_window = SDL_CreateWindow(
-		"Programming 4 assignment",
+		"Jef Belmans - 2DAE15 - Pac Man - Programming 4 Exam Assignment",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		640,
@@ -77,9 +77,9 @@ LW2D::Lightweight_2D::~Lightweight_2D()
 	SDL_Quit();
 }
 
-void LW2D::Lightweight_2D::Run(const std::function<void()>& load)
+void LW2D::Lightweight_2D::Run(const std::function<void(SDL_Window* pWindow)>& load)
 {
-	load();
+	load(g_window);
 
 	// Enable VSync
 	SDL_GL_SetSwapInterval(1);
@@ -88,8 +88,9 @@ void LW2D::Lightweight_2D::Run(const std::function<void()>& load)
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 
-	bool doContinue = true;
+	sceneManager.Initialize();
 
+	bool doContinue = true;
 	while (doContinue)
 	{
 		// Update Time before all else

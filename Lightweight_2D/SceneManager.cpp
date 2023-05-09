@@ -2,6 +2,14 @@
 #include "Scene.h"
 #include "GameTime.h"
 
+void LW2D::SceneManager::Initialize()
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->Initialize();
+	}
+}
+
 void LW2D::SceneManager::Update()
 {
 	for(auto& scene : m_scenes)

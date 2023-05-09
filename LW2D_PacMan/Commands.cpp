@@ -11,7 +11,7 @@
 void LW2D::MoveCommand::Execute()
 {
 	if (!m_PacMan) throw std::runtime_error("PacManComponent is nullptr");
-	m_PacMan->SetDirection(m_Direction);
+	m_PacMan->SetDirection(m_CurrentDirection);
 }
 
 void LW2D::KillCommand::Execute()

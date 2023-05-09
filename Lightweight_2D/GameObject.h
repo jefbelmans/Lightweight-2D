@@ -20,11 +20,13 @@ namespace LW2D
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
 
+		void Initialize();
 		void Update();
 		void Render() const;
 
 		// COMPONENTS
-		template <typename T> std::shared_ptr<T> AddComponent();
+
+		template <typename T, typename... Args> std::shared_ptr<T> AddComponent(Args&&... args);
 		template <typename T> std::shared_ptr<T> GetComponent() const;
 		template <typename T> bool RemoveComponent();
 		template <typename T> bool HasComponent() const;
@@ -61,13 +63,13 @@ namespace LW2D
 		std::vector<std::shared_ptr<Component>> m_pComponents;
 	};
 
-	template<typename T>
-	inline std::shared_ptr<T> GameObject::AddComponent()
+	template<typename T, typename... Args>
+	std::shared_ptr<T> GameObject::AddComponent(Args&&... args)
 	{
 		if (std::is_base_of<Component, T>())
 		{
-			m_pComponents.emplace_back(std::make_shared<T>(shared_from_this()));
-			return std::dynamic_pointer_cast<T, Component>(m_pComponents.back());
+			m_pComponents.emplace_back(std::make_shared<T>(shared_from_this(), std::forward<Args>(args)...));
+			return std::dynamic_pointer_cast<T>(m_pComponents.back());
 		}
 
 		return nullptr;

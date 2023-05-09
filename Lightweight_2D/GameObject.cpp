@@ -9,6 +9,14 @@ LW2D::GameObject::GameObject(std::string name)
 {
 }
 
+void LW2D::GameObject::Initialize()
+{
+	for (int i = 0; i < m_pComponents.size(); i++)
+	{
+		m_pComponents[i]->Initialize();
+	}
+}
+
 void LW2D::GameObject::Update()
 {
 	for (auto& component : m_pComponents)

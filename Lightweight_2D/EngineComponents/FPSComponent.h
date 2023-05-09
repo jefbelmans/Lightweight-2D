@@ -11,6 +11,7 @@ namespace LW2D
 		FPSComponent(std::weak_ptr<GameObject> go);
 		~FPSComponent() = default;
 
+		void Initialize() override;
 		void Update() override;
 
 		void SetSteadyDisplay(bool steadDisplay) { m_SteadyDisplay = steadDisplay; }

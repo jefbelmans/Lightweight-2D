@@ -12,6 +12,7 @@ namespace LW2D
 		void Remove(std::shared_ptr<GameObject> object);
 		void RemoveAll();
 
+		void Initialize();
 		void Update();
 		void Render() const;
 		void OnGUI() const;

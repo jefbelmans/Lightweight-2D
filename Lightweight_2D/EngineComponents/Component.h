@@ -8,6 +8,7 @@ namespace LW2D
 	class Component
 	{
 	public:
+		virtual void Initialize() {};
 		virtual void Update() {};
 		virtual void Render() const {};
 		
@@ -19,7 +20,7 @@ namespace LW2D
 	protected:
 		Component(std::weak_ptr<GameObject> go);
 
-		bool m_MarkedForDeletion;
+		bool m_MarkedForDeletion{ false };
 		std::weak_ptr<GameObject> m_pGameObject;
 
 		Transform& GetTransform();

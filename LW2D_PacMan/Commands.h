@@ -9,12 +9,12 @@ namespace LW2D
 	{
 	public:
 		MoveCommand(std::shared_ptr<PacManComponent> pacman, const LW2D::Direction& dir, float speed)
-			: m_PacMan(pacman), m_Direction(dir), m_Speed(speed) {};
+			: m_PacMan(pacman), m_CurrentDirection(dir), m_Speed(speed) {};
 		virtual void Execute() override;
 
 	private:
 		std::shared_ptr<PacManComponent> m_PacMan;
-		LW2D::Direction m_Direction;
+		LW2D::Direction m_CurrentDirection;
 		float m_Speed;
 	};
 

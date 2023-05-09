@@ -32,16 +32,20 @@ void OnGUI()
 {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
 
-	if(ImGui::Begin("Game Scene", nullptr, window_flags))
+	if(ImGui::Begin("[DEBUG]", nullptr, window_flags))
 	{
-		const auto pos = pacMan->GetTransform().GetWorldPosition();
-		// Display pacmans pos in ImGui text
+		const auto pos{ pacMan->GetTransform().GetWorldPosition() };
+		const bool isSnapped{ pacMan->GetComponent<LW2D::PacManComponent>()->GetIsSnappedToGrid() };
+
+		// Display PacMans pos in ImGui text
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, isSnapped * 0.9f, !isSnapped * 0.9f, 1.f));
 		ImGui::Text("PacMan Pos: %.2f, %.2f", pos.x, pos.y);
+		ImGui::PopStyleColor();
 		ImGui::End();
 	}
 }
 
-void load()
+void load(SDL_Window* pWindow)
 {
 	auto& scene = LW2D::SceneManager::GetInstance().CreateScene("Demo", OnGUI);
 
@@ -52,27 +56,6 @@ void load()
 	go->AddComponent<LW2D::RenderComponent>()->SetTexture("background.tga");
 	scene.Add(go);
 
-	// LOGO OBJECT
-	go = std::make_shared<LW2D::GameObject>("Logo");
-	go->GetTransform().SetParent(go);
-	go->AddComponent<LW2D::RenderComponent>()->SetTexture("logo.tga");
-	go->GetTransform().SetLocalPosition(216.f, 180.f, 0.f);
-	// scene.Add(go);
-
-	// TITLE OBJECT
-	go = std::make_shared<LW2D::GameObject>("Title Text");
-	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(100.f, 20.f, 0.f);
-
-	go->AddComponent<LW2D::RenderComponent>();
-	auto textComponent = go->AddComponent<LW2D::TextComponent>();
-
-	auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	textComponent->SetText("Programing 4 Assignment");
-	textComponent->SetFont(font);
-	textComponent->SetColor(SDL_Color{ 255, 255, 255 });
-	// scene.Add(go);
-
 	// MAP OBJECT
 	go = std::make_shared<LW2D::GameObject>("Map");
 	go->GetTransform().SetParent(go);
@@ -80,18 +63,16 @@ void load()
 	auto map = go->AddComponent<LW2D::MapComponent>();
 	scene.Add(go);
 
+	// RESIZE WINDOW TO MAP
+	SDL_SetWindowSize(pWindow, map->GetCellSize() * map->GetCols(), map->GetCellSize() * map->GetRows() + 64);
+
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");
 	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(10.f, 10.f, 0.f);
+	go->GetTransform().SetLocalPosition(18.f, 1.f, 0.f);
 
-	go->AddComponent<LW2D::RenderComponent>();
-	textComponent = go->AddComponent<LW2D::TextComponent>();
-
-	font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
-	textComponent->SetFont(font);
-	textComponent->SetColor(SDL_Color{ 255, 255, 255 });
-
+	auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
+	go->AddComponent<LW2D::TextComponent>(font);
 	go->AddComponent<LW2D::FPSComponent>();
 
 	scene.Add(go);
@@ -101,7 +82,7 @@ void load()
 	// PLAYER1
 	auto p1 = std::make_shared<LW2D::GameObject>("Player 1");
 	p1->GetTransform().SetParent(p1);
-	p1->GetTransform().SetLocalPosition(80.f, 16.f, 0.f);
+	p1->GetTransform().SetLocalPosition(160.f, 240.f, 0.f);
 
 	pacMan = p1;
 
@@ -122,38 +103,30 @@ void load()
 	go->GetTransform().SetParent(go);
 	go->GetTransform().SetLocalPosition(10.f, 350.f, 0.f);
 
-	go->AddComponent<LW2D::RenderComponent>();
-	textComponent = go->AddComponent<LW2D::TextComponent>();
-	textComponent->SetFont(font);
-	textComponent->SetColor(SDL_Color{ 64, 255, 64 });
-	textComponent->SetText("Lives: 3");
+	auto textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 3", SDL_Color{64, 255, 64});
 	scene.Add(go);
 
 	// BIND ONKILL EVENT
-	auto UpdateLivesDisplayP1 = [textComponent](int lives)
+	/*auto UpdateLivesDisplayP1 = [textComponent](int lives)
 	{
 		textComponent->SetText("Lives: " + std::to_string(lives));
-	};
-	healthComponent->GetOnDeathEvent()->AddListener(UpdateLivesDisplayP1);
+	};*/
+	// healthComponent->GetOnDeathEvent()->AddListener(UpdateLivesDisplayP1);
 
 	// SCORE DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Score Display P1");
 	go->GetTransform().SetParent(go);
 	go->GetTransform().SetLocalPosition(10.f, 370.f, 0.f);
 
-	go->AddComponent<LW2D::RenderComponent>();
-	textComponent = go->AddComponent<LW2D::TextComponent>();
-	textComponent->SetFont(font);
-	textComponent->SetColor(SDL_Color{ 64, 255, 64 });
-	textComponent->SetText("Score: 0");
+	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Score: 0", SDL_Color{ 64, 255, 64 });
 	scene.Add(go);
 
 	// BIND ONDSCORE EVENT
-	auto UpdateScoreDisplayP1 = [textComponent](int score)
+	/*auto UpdateScoreDisplayP1 = [textComponent](int score)
 	{
 		textComponent->SetText("Score: " + std::to_string(score));
-	};
-	scoreComponent->GetOnScoreChangedEvent()->AddListener(UpdateScoreDisplayP1);
+	};*/
+	// scoreComponent->GetOnScoreChangedEvent()->AddListener(UpdateScoreDisplayP1);
 
 	const float moveSpeed{ 0.25f };
 	
@@ -194,8 +167,8 @@ void load()
 
 int main(int, char* [])
 {
-	std::cout << "\n[CONTROLS CONTROLLER]\n[X/Square]: Add points\n[A/Cross]: Subtract lives\n\n";
-	std::cout << "[CONTROLS KEYBOARDD]\n[L]: Add points\n[K]: Subtract lives\n\n";
+	std::cout << "\n[CONTROLS CONTROLLER]\n[D-Pad]: Change direction\n\n";
+	std::cout << "[CONTROLS KEYBOARDD]\n[WASD]: Change direction\n\n";
 
 	LW2D::Lightweight_2D engine("../Data/");
 	engine.Run(load);

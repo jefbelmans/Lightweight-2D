@@ -54,16 +54,10 @@ void LW2D::MapComponent::Render() const
 
 bool LW2D::MapComponent::IsWall(const Vector2f& pos) const
 {
-	if (pos.x < 0 || pos.x > m_Cols * m_CellSize || pos.y < 0 || pos.y > m_Rows * m_CellSize)
-		return false;
+	int row{ static_cast<int>(pos.y / m_CellSize) };
+	int col{ static_cast<int>(pos.x / m_CellSize) };
 
-	float row = static_cast<int>(pos.y / m_CellSize);
-	float col = static_cast<int>(pos.x / m_CellSize);
-
-	if (m_Map[row][col] == Cell::Wall)
-		return true;
-
-	return false;
+	return m_Map[row][col] == Cell::Wall;
 }
 
 void LW2D::MapComponent::ReadMap(const std::vector<std::string>& map)

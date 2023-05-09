@@ -13,7 +13,14 @@ namespace LW2D
 	{
 	public:
 		TextComponent(std::weak_ptr<GameObject> go);
+		TextComponent(std::weak_ptr<GameObject> go,
+			std::shared_ptr<Font> pFont,
+			const std::string& text = "Text Component",
+			const SDL_Color& color = { 255, 255, 255 });
+
 		~TextComponent() = default;
+
+		void Initialize() override;
 		void Update() override;
 
 		void SetFont(std::shared_ptr<Font> pFont) { m_pFont = pFont; m_NeedsUpdate = true; }
@@ -30,5 +37,7 @@ namespace LW2D
 		SDL_Color m_Color;
 		std::shared_ptr<Font> m_pFont;
 		std::shared_ptr<Texture2D> m_pTexture;
+
+		void UpdateTexture();
 	};
 }

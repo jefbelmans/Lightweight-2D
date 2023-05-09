@@ -11,9 +11,15 @@ LW2D::FPSComponent::FPSComponent(std::weak_ptr<GameObject> go)
 	, m_SteadyDisplay(true)
 	, m_TimeSinceLastDisplay(1000.f)
 	, m_FPS(0)
+{}
+
+void LW2D::FPSComponent::Initialize()
 {
 	m_pGameTime = SceneManager::GetInstance().GetGameTime();
-	m_pTextComponent = go.lock()->GetComponent<TextComponent>();
+	if(m_pGameObject.lock()->HasComponent<TextComponent>())
+		m_pTextComponent = m_pGameObject.lock()->GetComponent<TextComponent>();
+	else
+		m_pTextComponent = m_pGameObject.lock()->AddComponent<TextComponent>();
 }
 
 void LW2D::FPSComponent::Update()
