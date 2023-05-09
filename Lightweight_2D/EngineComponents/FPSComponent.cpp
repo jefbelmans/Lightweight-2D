@@ -1,5 +1,6 @@
 #include "FPSComponent.h"
 
+#include "../ResourceManager.h"
 #include "../SceneManager.h"
 #include "../GameTime.h"
 #include "../GameObject.h"
@@ -19,7 +20,11 @@ void LW2D::FPSComponent::Initialize()
 	if(m_pGameObject.lock()->HasComponent<TextComponent>())
 		m_pTextComponent = m_pGameObject.lock()->GetComponent<TextComponent>();
 	else
-		m_pTextComponent = m_pGameObject.lock()->AddComponent<TextComponent>();
+	{
+		auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
+		m_pTextComponent = m_pGameObject.lock()->AddComponent<TextComponent>(font);
+	}
+		
 }
 
 void LW2D::FPSComponent::Update()

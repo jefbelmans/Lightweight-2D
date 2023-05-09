@@ -8,14 +8,13 @@ namespace LW2D
 	class MoveCommand final : public Command
 	{
 	public:
-		MoveCommand(std::shared_ptr<PacManComponent> pacman, const LW2D::Direction& dir, float speed)
-			: m_PacMan(pacman), m_CurrentDirection(dir), m_Speed(speed) {};
+		MoveCommand(std::shared_ptr<PacManComponent> pacman, const LW2D::Direction& dir)
+			: m_PacMan(pacman), m_MovementDirection(dir){};
 		virtual void Execute() override;
 
 	private:
 		std::shared_ptr<PacManComponent> m_PacMan;
-		LW2D::Direction m_CurrentDirection;
-		float m_Speed;
+		LW2D::Direction m_MovementDirection;
 	};
 
 	class HealthComponent;

@@ -71,8 +71,6 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetParent(go);
 	go->GetTransform().SetLocalPosition(18.f, 1.f, 0.f);
 
-	auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
-	go->AddComponent<LW2D::TextComponent>(font);
 	go->AddComponent<LW2D::FPSComponent>();
 
 	scene.Add(go);
@@ -103,6 +101,7 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetParent(go);
 	go->GetTransform().SetLocalPosition(10.f, 350.f, 0.f);
 
+	auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
 	auto textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 3", SDL_Color{64, 255, 64});
 	scene.Add(go);
 
@@ -121,35 +120,34 @@ void load(SDL_Window* pWindow)
 	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Score: 0", SDL_Color{ 64, 255, 64 });
 	scene.Add(go);
 
-	// BIND ONDSCORE EVENT
-	/*auto UpdateScoreDisplayP1 = [textComponent](int score)
+	// BIND EVENTS
+	auto IncrementScoreP1 = [scoreComponent, textComponent](int score)
 	{
-		textComponent->SetText("Score: " + std::to_string(score));
-	};*/
-	// scoreComponent->GetOnScoreChangedEvent()->AddListener(UpdateScoreDisplayP1);
-
-	const float moveSpeed{ 0.25f };
+		scoreComponent->AddScore(score);
+		textComponent->SetText("Score: " + std::to_string(scoreComponent->GetScore()));
+	};
+	map->GetOnPelletCollectedEvent()->AddListener(IncrementScoreP1);
 	
 	// ADD INPUT DEVICES
 	LW2D::Input::GetInstance().AddController(std::make_shared<LW2D::GenericController>(0));
 
 	// MOVE UP
-	auto moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Up, moveSpeed);
+	auto moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Up);
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_W, SDL_KEYMAPCHANGED), moveCommand);
 	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadUp, LW2D::KeyState::Down), moveCommand);
 
 	// MOVE DOWN
-	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Down, moveSpeed);
+	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Down);
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_S, SDL_KEYMAPCHANGED), moveCommand);
 	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadDown, LW2D::KeyState::Down), moveCommand);
 
 	// MOVE LEFT
-	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Left, moveSpeed);
+	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Left);
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_A, SDL_KEYMAPCHANGED), moveCommand);
 	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadLeft, LW2D::KeyState::Down), moveCommand);
 
 	// MOVE RIGHT
-	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Right, moveSpeed);
+	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Right);
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_D, SDL_KEYMAPCHANGED), moveCommand);
 	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadRight, LW2D::KeyState::Down), moveCommand);
 

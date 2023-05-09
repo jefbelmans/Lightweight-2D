@@ -69,7 +69,12 @@ void LW2D::PacManComponent::Update()
 		transform.SetLocalPosition(floorf(pos.x), floorf(pos.y), 0.f);
 		m_IsSnappedToGrid = true;
 	}
-		
+	
+	// Check if we are on a pellet
+	if (m_pMap.lock()->IsPellet({pos.x, pos.y}))
+	{
+		m_pMap.lock()->CollectPellet({ pos.x, pos.y });
+	}
 }
 
 void LW2D::PacManComponent::SetDirection(LW2D::Direction dir)
