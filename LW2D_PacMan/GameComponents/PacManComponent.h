@@ -31,7 +31,7 @@ namespace LW2D
 		bool m_IsAgainstWall{ false };
 		bool m_IsSnappedToGrid{ false };
 		float m_Speed{ 64.f };
-		Direction m_CurrentDirection{ Direction::Right };
+		Direction m_CurrentDirection{ Direction::Left };
 
 		std::map<LW2D::Direction, glm::vec2> m_DirectionTranslations
 		{
@@ -43,7 +43,7 @@ namespace LW2D
 
 		// Direction change
 		bool m_DoChangeDirection{ false };
-		Direction m_PendingDirection{ Direction::Right };
+		Direction m_PendingDirection{ Direction::Left };
 		const float m_CoyoteTime{ .2f };
 		float m_CoyoteTimer{ 0.f };
 	};

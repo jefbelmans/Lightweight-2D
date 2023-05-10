@@ -113,6 +113,12 @@
     <ClInclude Include="Transform.h">
       <Filter>Engine Components</Filter>
     </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>Engine Files\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>Engine Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -192,6 +198,9 @@
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Engine Components</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>Engine Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
