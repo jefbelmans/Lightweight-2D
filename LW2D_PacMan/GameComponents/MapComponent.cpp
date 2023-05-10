@@ -86,7 +86,7 @@ void LW2D::MapComponent::CollectPellet(const Vector2f& pos)
 
 void LW2D::MapComponent::ReadMap(const std::vector<std::string>& map)
 {
-	int currRow{ 0 };
+	uint8_t currRow{ 0 };
 	m_Map.reserve(map.size());
 	std::for_each(begin(map), end(map), [&](const std::string& line)
 		{
@@ -126,5 +126,5 @@ void LW2D::MapComponent::ReadMap(const std::vector<std::string>& map)
 		});
 
 	m_Rows = currRow;
-	m_Cols = static_cast<int>(m_Map[0].size());
+	m_Cols = static_cast<uint8_t>(m_Map[0].size());
 }

@@ -26,7 +26,7 @@
 #include "GameComponents/MapComponent.h"
 #include "GameComponents/PacManComponent.h"
 
-std::shared_ptr<LW2D::GameObject> pacMan;
+std::shared_ptr<LW2D::GameObject> pacManGO;
 
 void OnGUI()
 {
@@ -34,8 +34,8 @@ void OnGUI()
 
 	if(ImGui::Begin("[DEBUG]", nullptr, window_flags))
 	{
-		const auto pos{ pacMan->GetTransform().GetWorldPosition() };
-		const bool isSnapped{ pacMan->GetComponent<LW2D::PacManComponent>()->GetIsSnappedToGrid() };
+		const auto pos{ pacManGO->GetTransform().GetWorldPosition() };
+		const bool isSnapped{ pacManGO->GetComponent<LW2D::PacManComponent>()->GetIsSnappedToGrid() };
 
 		// Display PacMans pos in ImGui text
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, isSnapped * 0.9f, !isSnapped * 0.9f, 1.f));
@@ -82,7 +82,7 @@ void load(SDL_Window* pWindow)
 	p1->GetTransform().SetParent(p1);
 	p1->GetTransform().SetLocalPosition(160.f, 240.f, 0.f);
 
-	pacMan = p1;
+	pacManGO = p1;
 
 	auto pacMan = p1->AddComponent<LW2D::PacManComponent>();
 	pacMan->SetMap(map);

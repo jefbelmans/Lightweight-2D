@@ -3,7 +3,7 @@ namespace LW2D
 {
 	template <typename T>
 	class Singleton
-	{
+	{ 
 	public:
 		static T& GetInstance()
 		{
