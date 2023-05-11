@@ -11,7 +11,9 @@ namespace LW2D
 	public:
 		virtual ~SoundSystem() = default;
 		virtual void PlaySound(const SoundId id, const float volume) = 0;
+		virtual void StopSound(const SoundId id) = 0;
 		virtual void AddSound(const std::string& path, const SoundId id, bool doLoop = false) = 0;
+
 		virtual void StartUp() = 0;
 		virtual void Shutdown() = 0;
 		virtual bool IsShutdown() = 0;
@@ -21,7 +23,9 @@ namespace LW2D
 	{
 	public:
 		void PlaySound(const SoundId, const float) override {};
+		void StopSound(const SoundId) override {};
 		void AddSound(const std::string&, const SoundId, bool = false) override {};
+
 		void StartUp() override {};
 		void Shutdown() override {};
 		bool IsShutdown() override { return false; };
@@ -34,7 +38,9 @@ namespace LW2D
 		~SDL_SoundSystem() = default;
 
 		void PlaySound(const SoundId id, const float volume) override;
+		void StopSound(const SoundId id) override;
 		void AddSound(const std::string& path, const SoundId id, bool doLoop = false) override;
+
 		void StartUp() override;
 		void Shutdown() override;
 		bool IsShutdown() override;
@@ -50,7 +56,9 @@ namespace LW2D
 		Logging_SoundSystem(SoundSystem* ss) : m_pSS(ss) {};
 
 		void PlaySound(const SoundId id, const float volume) override;
+		void StopSound(const SoundId id) override;
 		void AddSound(const std::string& path, const SoundId id, bool doLoop = false) override;
+
 		void StartUp() override;
 		void Shutdown() override;
 		bool IsShutdown() override;

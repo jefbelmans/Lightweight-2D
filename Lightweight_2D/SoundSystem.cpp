@@ -37,6 +37,13 @@ public:
 
 		m_Sounds.emplace(id, Sound{ "../Data/Audio/" + path, nullptr, false, doLoop });
 	}
+
+	void StopSound(const SoundId id)
+	{
+		if (m_IsShutdown) return;
+
+		Mix_HaltChannel(id % MIX_CHANNELS);
+	}
 	
 	void StartUp()
 	{
@@ -122,7 +129,7 @@ private:
 
 			// Play sound
 			sound.pChunk->volume = static_cast<uint8_t>(m_Pending.front().volume);
-			Mix_PlayChannel((m_Pending.front().id + 1) % MIX_CHANNELS, sound.pChunk, -(int)sound.doLoop);
+			Mix_PlayChannel((m_Pending.front().id) % MIX_CHANNELS, sound.pChunk, -(int)sound.doLoop);
 
 			// Pop from pending queue
 			m_Pending.pop();
@@ -139,6 +146,11 @@ SDL_SoundSystem::SDL_SoundSystem()
 void SDL_SoundSystem::PlaySound(const SoundId id, const float volume)
 {
 	m_pImpl->PlaySound(id, volume);
+}
+
+void LW2D::SDL_SoundSystem::StopSound(const SoundId id)
+{
+	m_pImpl->StopSound(id);
 }
 
 void SDL_SoundSystem::AddSound(const std::string& path, const SoundId id, bool doLoop)
@@ -167,6 +179,12 @@ void Logging_SoundSystem::PlaySound(const SoundId id, const float volume)
 {
 	m_pSS->PlaySound(id, volume);
 	std::cout << "Queued sound with ID [" << id << "] at [" << volume << "] volume\n";
+}
+
+void LW2D::Logging_SoundSystem::StopSound(const SoundId id)
+{
+	m_pSS->StopSound(id);
+	std::cout << "Stopped sound with ID [" << id << "]\n";
 }
 
 void Logging_SoundSystem::AddSound(const std::string& path, const SoundId id, bool doLoop)

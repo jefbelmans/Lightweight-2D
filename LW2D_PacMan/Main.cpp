@@ -61,16 +61,27 @@ void OnGUI()
 			LW2D::ServiceLocator::GetSoundSystem().Shutdown();
 		}
 
-		if (!LW2D::ServiceLocator::GetSoundSystem().IsShutdown() && ImGui::Button("Play Chomp Loop"))
+		if (!LW2D::ServiceLocator::GetSoundSystem().IsShutdown() && ImGui::Button("Play Loop"))
 		{
 			LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)Sounds::PacManEat, 64.f);
+		}
+
+		ImGui::SameLine();
+		if (!LW2D::ServiceLocator::GetSoundSystem().IsShutdown() && ImGui::Button("Stop Loop"))
+		{
+			LW2D::ServiceLocator::GetSoundSystem().StopSound((unsigned short)Sounds::PacManEat);
 		}
 
 		if (!LW2D::ServiceLocator::GetSoundSystem().IsShutdown() && ImGui::Button("Play Death"))
 		{
 			LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)Sounds::PacManDeath, 64.f);
 		}
-		ImGui::PopStyleColor();
+
+		ImGui::SameLine();
+		if (!LW2D::ServiceLocator::GetSoundSystem().IsShutdown() && ImGui::Button("Stop Death"))
+		{
+			LW2D::ServiceLocator::GetSoundSystem().StopSound((unsigned short)Sounds::PacManDeath);
+		}
 
 		ImGui::End();
 	}
