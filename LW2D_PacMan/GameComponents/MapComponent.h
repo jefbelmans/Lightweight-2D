@@ -40,5 +40,6 @@ namespace LW2D
 		std::unique_ptr<Event<int>> m_pOnPelletCollected;
 
 		void ReadMap(const std::vector<std::string>& map);
+		std::pair<int, int> GetRowCol(const Vector2f& pos) const;
 	};
 }

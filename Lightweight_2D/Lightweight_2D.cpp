@@ -47,7 +47,7 @@ void PrintSDLVersion()
 				version.major, version.minor, version.patch);
 
 	version = *Mix_Linked_Version();
-	printf("We are linking against SDL_mixer version %u.%u.%u.\n",
+	printf("We are linking against SDL_mixer version %u.%u.%u.\n\n",
 						version.major, version.minor, version.patch);
 }
 

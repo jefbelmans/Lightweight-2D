@@ -1,6 +1,6 @@
 #include "MapComponent.h"
+
 #include <algorithm>
-#include <SDL.h>
 #include "Renderer.h"
 
 LW2D::MapComponent::MapComponent(std::weak_ptr<GameObject> go)
@@ -61,26 +61,23 @@ void LW2D::MapComponent::Render() const
 
 bool LW2D::MapComponent::IsWall(const Vector2f& pos) const
 {
-	int row{ static_cast<int>(pos.y / m_CellSize) };
-	int col{ static_cast<int>(pos.x / m_CellSize) };
+	const auto rowCol{GetRowCol(pos)};
 
-	return m_Map[row][col] == Cell::Wall;
+	return m_Map[rowCol.first][rowCol.second] == Cell::Wall;
 }
 
 bool LW2D::MapComponent::IsPellet(const Vector2f& pos) const
 {
-	int row{ static_cast<int>(pos.y / m_CellSize) };
-	int col{ static_cast<int>(pos.x / m_CellSize) };
+	const auto rowCol{ GetRowCol(pos) };
 
-	return m_Map[row][col] == Cell::Pellet;
+	return m_Map[rowCol.first][rowCol.second] == Cell::Pellet;
 }
 
 void LW2D::MapComponent::CollectPellet(const Vector2f& pos)
 {
-	int row{ static_cast<int>(pos.y / m_CellSize) };
-	int col{ static_cast<int>(pos.x / m_CellSize) };
+	const auto rowCol{ GetRowCol(pos) };
 
-	m_Map[row][col] = Cell::Empty;
+	m_Map[rowCol.first][rowCol.second] = Cell::Empty;
 	m_pOnPelletCollected->Invoke(m_PelletScore);
 }
 
@@ -127,4 +124,11 @@ void LW2D::MapComponent::ReadMap(const std::vector<std::string>& map)
 
 	m_Rows = currRow;
 	m_Cols = static_cast<uint8_t>(m_Map[0].size());
+}
+
+std::pair<int, int> LW2D::MapComponent::GetRowCol(const Vector2f& pos) const
+{
+	int row{ std::clamp(static_cast<int>(pos.y / m_CellSize), 0, (int)m_Rows - 1) };
+	int col{ std::clamp(static_cast<int>(pos.x / m_CellSize), 0, (int)m_Cols - 1) };
+	return std::make_pair(row, col);
 }
