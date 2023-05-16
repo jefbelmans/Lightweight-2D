@@ -7,7 +7,6 @@
 #include <queue>
 #include <map>
 
-
 using namespace LW2D;
 
 #pragma region pImpl
@@ -208,7 +207,6 @@ void Logging_SoundSystem::Shutdown()
 bool Logging_SoundSystem::IsShutdown()
 {
 	bool isShutdown{ m_pSS->IsShutdown() };
-	std::cout << "SoundSystem is " << (isShutdown ? "shutdown" : "not shutdown") << "\n";
 	return isShutdown;
 }
 #pragma endregion
