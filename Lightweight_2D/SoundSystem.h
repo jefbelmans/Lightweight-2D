@@ -6,10 +6,10 @@ namespace LW2D
 {
 	using SoundId = unsigned short;
 
-	class SoundSystem
+	class ISoundSystem
 	{
 	public:
-		virtual ~SoundSystem() = default;
+		virtual ~ISoundSystem() = default;
 		virtual void PlaySound(const SoundId id, const float volume) = 0;
 		virtual void StopSound(const SoundId id) = 0;
 		virtual void AddSound(const std::string& path, const SoundId id, bool doLoop = false) = 0;
@@ -19,7 +19,7 @@ namespace LW2D
 		virtual bool IsShutdown() = 0;
 	};
 
-	class NullSoundSystem final : public SoundSystem
+	class NullSoundSystem final : public ISoundSystem
 	{
 	public:
 		void PlaySound(const SoundId, const float) override {};
@@ -31,7 +31,7 @@ namespace LW2D
 		bool IsShutdown() override { return false; };
 	};
 
-	class SDL_SoundSystem final : public SoundSystem
+	class SDL_SoundSystem final : public ISoundSystem
 	{
 	public:
 		explicit SDL_SoundSystem();
@@ -50,10 +50,10 @@ namespace LW2D
 		std::unique_ptr<SDL_SoundSystemImpl> m_pImpl;
 	};
 
-	class Logging_SoundSystem final : public SoundSystem
+	class Logging_SoundSystem final : public ISoundSystem
 	{
 	public:
-		Logging_SoundSystem(SoundSystem* ss) : m_pSS(ss) {};
+		Logging_SoundSystem(ISoundSystem* ss) : m_pSS(ss) {};
 
 		void PlaySound(const SoundId id, const float volume) override;
 		void StopSound(const SoundId id) override;
@@ -64,6 +64,6 @@ namespace LW2D
 		bool IsShutdown() override;
 
 	private:
-		std::unique_ptr<SoundSystem> m_pSS;
+		std::unique_ptr<ISoundSystem> m_pSS;
 	};
 }
