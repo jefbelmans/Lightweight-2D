@@ -25,8 +25,12 @@ public:
 	void PlaySound(const SoundId id, const float volume)
 	{
 		if (m_IsShutdown) return;
+		
+		{
+			std::lock_guard<std::mutex> lock(m_CvMutex);
+			m_Pending.push({ id, volume });
+		}
 
-		m_Pending.push({ id, volume });
 		m_Cv.notify_all();
 	}
 
@@ -117,9 +121,16 @@ private:
 			m_Cv.wait(lk, [&] {return !m_Pending.empty() || m_IsShutdown; });
 
 			if (m_IsShutdown) return;
-
+			
 			// Load audio clip if not loaded and play it
-			auto& sound = m_Sounds[m_Pending.front().id];
+			const auto& pendingRequest = m_Pending.front();
+			m_Pending.pop();
+
+			// We only want to lock access to the queue.
+			// So release the lock before loading and playing the sound.
+			lk.unlock();
+
+			auto& sound = m_Sounds[pendingRequest.id];
 			if (!sound.isLoaded)
 			{
 				sound.pChunk = Mix_LoadWAV(sound.path.c_str());
@@ -127,11 +138,8 @@ private:
 			}
 
 			// Play sound
-			sound.pChunk->volume = static_cast<uint8_t>(m_Pending.front().volume);
-			Mix_PlayChannel((m_Pending.front().id) % MIX_CHANNELS, sound.pChunk, -(int)sound.doLoop);
-
-			// Pop from pending queue
-			m_Pending.pop();
+			sound.pChunk->volume = static_cast<uint8_t>(pendingRequest.volume);
+			Mix_PlayChannel((pendingRequest.id) % MIX_CHANNELS, sound.pChunk, -(int)sound.doLoop);
 		}
 	};
 };
