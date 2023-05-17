@@ -130,6 +130,9 @@ private:
 			// So release the lock before loading and playing the sound.
 			lk.unlock();
 
+			// Requested sound is not in the list of sounds
+			if(pendingRequest.id >= m_Sounds.size()) continue;
+
 			auto& sound = m_Sounds[pendingRequest.id];
 			if (!sound.isLoaded)
 			{
