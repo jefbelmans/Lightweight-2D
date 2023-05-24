@@ -18,9 +18,4 @@ namespace LW2D
 		Pellet,
 		PowerPellet
 	};
-
-	struct Vector2f
-	{
-		float x{}, y{};
-	};
 }

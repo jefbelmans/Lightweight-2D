@@ -28,10 +28,12 @@ namespace LW2D
 		std::weak_ptr<MapComponent> m_pMap;
 
 		// Movement
-		bool m_IsAgainstWall{ false };
 		bool m_IsSnappedToGrid{ false };
 		float m_Speed{ 64.f };
 		Direction m_CurrentDirection{ Direction::Left };
+		
+		// Double buffer
+		glm::vec2 m_PreviousPos{};
 
 		std::map<LW2D::Direction, glm::vec2> m_DirectionTranslations
 		{
@@ -44,7 +46,9 @@ namespace LW2D
 		// Direction change
 		bool m_DoChangeDirection{ false };
 		Direction m_PendingDirection{ Direction::Left };
-		const float m_CoyoteTime{ .2f };
+		const float m_CoyoteTime{ .6f };
 		float m_CoyoteTimer{ 0.f };
+
+		void SnapToGrid();
 	};
 }

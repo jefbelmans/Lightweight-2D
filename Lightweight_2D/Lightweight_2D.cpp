@@ -91,7 +91,7 @@ void LW2D::Lightweight_2D::Run(const std::function<void(SDL_Window* pWindow)>& l
 	load(g_window);
 
 	// Enable VSync
-	SDL_GL_SetSwapInterval(1);
+	// SDL_GL_SetSwapInterval(1);
 
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
@@ -108,5 +108,7 @@ void LW2D::Lightweight_2D::Run(const std::function<void(SDL_Window* pWindow)>& l
 
 		sceneManager.Update();
 		renderer.Render();
+
+		SDL_Delay(16);
 	}
 }

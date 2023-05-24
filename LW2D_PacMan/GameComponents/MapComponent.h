@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <glm/vec2.hpp>
 
 #include "EngineComponents/Component.h"
 #include "../Utils.h"
@@ -16,10 +17,10 @@ namespace LW2D
 
 		void Render() const override;
 
-		bool IsWall(const Vector2f& pos) const;
-		bool IsPellet(const Vector2f& pos) const;
+		bool IsWall(const glm::vec2& pos) const;
+		bool IsPellet(const glm::vec2& pos) const;
 
-		void CollectPellet(const Vector2f& pos);
+		void CollectPellet(const glm::vec2& pos);
 
 		// GETTERS
 
@@ -40,6 +41,6 @@ namespace LW2D
 		std::unique_ptr<Event<int>> m_pOnPelletCollected;
 
 		void ReadMap(const std::vector<std::string>& map);
-		std::pair<int, int> GetRowCol(const Vector2f& pos) const;
+		std::pair<int, int> GetRowCol(const glm::vec2& pos) const;
 	};
 }
