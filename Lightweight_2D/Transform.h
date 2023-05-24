@@ -8,13 +8,13 @@ namespace LW2D
 	class Transform final
 	{
 	public:
-		const glm::vec3& GetWorldPosition();
-		const glm::vec3& GetLocalPosition() const { return m_LocalPosition; }
+		const glm::vec2& GetWorldPosition();
+		const glm::vec2& GetLocalPosition() const { return m_LocalPosition; }
 
 		void SetPositionDirty();
 
-		void SetLocalPosition(float x, float y, float z);
-		void SetLocalPosition(const glm::vec3& pos) { m_LocalPosition = pos; SetPositionDirty(); }
+		void SetLocalPosition(float x, float y);
+		void SetLocalPosition(const glm::vec2& pos) { m_LocalPosition = pos; SetPositionDirty(); }
 
 		void Translate(float x, float y);
 
@@ -22,8 +22,8 @@ namespace LW2D
 
 	private:
 		bool m_IsWorldPositionDirty{ false };
-		glm::vec3 m_LocalPosition;
-		glm::vec3 m_WorldPosition;
+		glm::vec2 m_LocalPosition;
+		glm::vec2 m_WorldPosition;
 
 		std::weak_ptr<GameObject> m_pGameObject;
 

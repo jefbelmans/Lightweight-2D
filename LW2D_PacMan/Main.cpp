@@ -111,7 +111,7 @@ void load(SDL_Window* pWindow)
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");
 	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(18.f, 1.f, 0.f);
+	go->GetTransform().SetLocalPosition(18.f, 1.f);
 
 	go->AddComponent<LW2D::FPSComponent>();
 
@@ -122,7 +122,7 @@ void load(SDL_Window* pWindow)
 	// PLAYER1
 	auto p1 = std::make_shared<LW2D::GameObject>("Player 1");
 	p1->GetTransform().SetParent(p1);
-	p1->GetTransform().SetLocalPosition(160.f, 240.f, 0.f);
+	p1->GetTransform().SetLocalPosition(160.f, 240.f);
 
 	pacManGO = p1;
 
@@ -141,7 +141,7 @@ void load(SDL_Window* pWindow)
 	// HEALTH DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Health Display P1");
 	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(10.f, 350.f, 0.f);
+	go->GetTransform().SetLocalPosition(10.f, 350.f);
 
 	auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
 	auto textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 3", SDL_Color{64, 255, 64});
@@ -157,7 +157,7 @@ void load(SDL_Window* pWindow)
 	// SCORE DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Score Display P1");
 	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(10.f, 370.f, 0.f);
+	go->GetTransform().SetLocalPosition(10.f, 370.f);
 
 	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Score: 0", SDL_Color{ 64, 255, 64 });
 	scene.Add(go);

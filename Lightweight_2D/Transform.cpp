@@ -1,7 +1,7 @@
 #include "Transform.h"
 #include "GameObject.h"
 
-const glm::vec3& LW2D::Transform::GetWorldPosition()
+const glm::vec2& LW2D::Transform::GetWorldPosition()
 {
 	if (m_IsWorldPositionDirty)
 		UpdateWorldPosition();
@@ -21,11 +21,10 @@ void LW2D::Transform::SetPositionDirty()
 	}
 }
 
-void LW2D::Transform::SetLocalPosition(const float x, const float y, const float z)
+void LW2D::Transform::SetLocalPosition(const float x, const float y)
 {
 	m_LocalPosition.x = x;
 	m_LocalPosition.y = y;
-	m_LocalPosition.z = z;
 
 	SetPositionDirty();
 }

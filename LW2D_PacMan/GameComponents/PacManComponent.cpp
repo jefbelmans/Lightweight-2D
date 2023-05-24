@@ -45,7 +45,7 @@ void LW2D::PacManComponent::Update()
 	}
 
 	// Update Pac Man's position based on the current direction
-	m_IsAgainstWall = walls[static_cast<int>(m_CurrentDirection)] && (int(pos.x) % cellSize == 0) && (int(pos.y) % cellSize == 0);
+	m_IsAgainstWall = walls[static_cast<int>(m_CurrentDirection)] && (static_cast<int>(pos.x) % cellSize == 0) && (static_cast<int>(pos.y) % cellSize == 0);
 	if(!m_IsAgainstWall)
 	{
 		// Get the translation vector based on the current direction and move Pac Man
@@ -55,18 +55,18 @@ void LW2D::PacManComponent::Update()
 		// Wrap Pac Man around the map
 		if (m_CurrentDirection == LW2D::Direction::Left && pos.x + cellSize <= 0.f)
 		{
-			transform.SetLocalPosition(static_cast<float>(m_pMap.lock()->GetCols() * cellSize), pos.y, 0.f);
+			transform.SetLocalPosition(static_cast<float>(m_pMap.lock()->GetCols() * cellSize), pos.y);
 		}
 		else if (m_CurrentDirection == LW2D::Direction::Right && pos.x > m_pMap.lock()->GetCols() * cellSize)
 		{
-			transform.SetLocalPosition(static_cast<float>(-cellSize), pos.y, 0.f);
+			transform.SetLocalPosition(static_cast<float>(-cellSize), pos.y);
 		}
 		
 		m_IsSnappedToGrid = false;
 	}
 	else if(!m_IsSnappedToGrid)
 	{
-		transform.SetLocalPosition(floorf(pos.x), floorf(pos.y), 0.f);
+		transform.SetLocalPosition(floorf(pos.x), floorf(pos.y));
 		m_IsSnappedToGrid = true;
 	}
 	
