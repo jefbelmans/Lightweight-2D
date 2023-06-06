@@ -24,7 +24,9 @@ namespace LW2D
 		uint8_t GetCellSize() const { return m_CellSize; }
 		uint8_t GetRows() const { return m_Rows; }
 		uint8_t GetCols() const { return m_Cols; }
-		Event<int>* GetOnPelletCollectedEvent() const { return m_pOnPelletCollected.get(); }
+
+		Event<int>* GetOnPelletCollected() const { return m_pOnPelletCollected.get(); }
+		Event<int>* GetOnPowerPelletCollected() const { return m_pOnPowerPelletCollected.get(); }
 
 		std::pair<int, int> GetIndicesFromPos(const glm::vec2& pos) const;
 

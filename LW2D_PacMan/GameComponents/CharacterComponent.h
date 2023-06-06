@@ -25,8 +25,9 @@ namespace LW2D
 		LW2D::Direction GetOppositeDirection() const;
 		auto GetDirectionTranslations() const { return m_DirectionTranslations; }
 		bool GetIsSnappedToGrid() const { return m_IsSnappedToGrid; }
+		bool GetIsAtIntersection() const { return m_IsAtIntersection; }
+		auto GetAvailableDirections() const { return m_AvailableDirections; }
 
-		Event<std::vector<LW2D::Direction>>* GetIsAtIntersection() const { return m_pIsAtIntersection.get(); }
 		Event<>* GetOnRespawn() const { return m_pOnRespawn.get(); }
 
 		// SETTERS
@@ -40,6 +41,7 @@ namespace LW2D
 		std::weak_ptr<MapComponent> m_pMap;
 
 		// Movement
+		bool m_IsAtIntersection{ false };
 		bool m_IsSnappedToGrid{ false };
 		bool m_DoMove{ true };
 		float m_Speed{ 64.f };
@@ -58,6 +60,7 @@ namespace LW2D
 			{LW2D::Direction::Left, {-1.f, 0.f}},
 			{LW2D::Direction::Right, {1.f, 0.f}}
 		};
+		std::vector<LW2D::Direction> m_AvailableDirections{};
 
 		// Direction change
 		bool m_DoChangeDirection{ false };
@@ -68,11 +71,10 @@ namespace LW2D
 		// Respawning
 		const float m_RespawnTime{ 1.f };
 		float m_RespawnTimer{ 0.f };
-		bool m_IsVulnerable{ true };
+		bool m_IsVulnerable{ false };
 
 		// Events
-		std::unique_ptr<Event<std::vector<LW2D::Direction>>> m_pIsAtIntersection;
-		std::unique_ptr<Event<>> m_pOnRespawn;
+std::unique_ptr<Event<>> m_pOnRespawn;
 
 		void SnapToGrid();
 		void CheckForIntersection(const glm::vec2& pos, const std::vector<bool>& walls);

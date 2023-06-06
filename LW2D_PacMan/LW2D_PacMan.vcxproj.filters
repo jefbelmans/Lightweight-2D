@@ -8,6 +8,9 @@
     <Filter Include="Game Components">
       <UniqueIdentifier>{07eb390f-d35e-45f6-9d52-c9ec4a1b6376}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game Files\States">
+      <UniqueIdentifier>{b536a892-53e6-41fb-9073-f93d3d1c9435}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game Files\Main.cpp">
@@ -33,6 +36,15 @@
     </ClCompile>
     <ClCompile Include="GameComponents\GhostComponent.cpp">
       <Filter>Game Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Files\ChaseState.cpp">
+      <Filter>Game Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Files\WanderState.cpp">
+      <Filter>Game Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Game Files\FleeState.cpp">
+      <Filter>Game Files\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +72,18 @@
     </ClInclude>
     <ClInclude Include="GameComponents\GhostComponent.h">
       <Filter>Game Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Files\State.h">
+      <Filter>Game Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Files\ChaseState.h">
+      <Filter>Game Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Files\WanderState.h">
+      <Filter>Game Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Files\FleeState.h">
+      <Filter>Game Files\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

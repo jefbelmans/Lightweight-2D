@@ -9,7 +9,7 @@ namespace LW2D
 {
 	class MapComponent;
 	class CharacterComponent;
-	class PacManComponent : public Component
+	class PacManComponent final : public Component
 	{
 	public:
 		PacManComponent(std::weak_ptr<GameObject> go);

@@ -165,6 +165,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game Files\FleeState.cpp" />
+    <ClCompile Include="Game Files\ChaseState.cpp" />
     <ClCompile Include="Game Files\Commands.cpp" />
     <ClCompile Include="GameComponents\HealthComponent.cpp" />
     <ClCompile Include="GameComponents\GhostComponent.cpp" />
@@ -173,9 +175,13 @@
     <ClCompile Include="GameComponents\MapComponent.cpp" />
     <ClCompile Include="GameComponents\PacManComponent.cpp" />
     <ClCompile Include="GameComponents\CharacterComponent.cpp" />
+    <ClCompile Include="Game Files\WanderState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game Files\FleeState.h" />
+    <ClInclude Include="Game Files\ChaseState.h" />
     <ClInclude Include="Game Files\Commands.h" />
+    <ClInclude Include="Game Files\State.h" />
     <ClInclude Include="GameComponents\HealthComponent.h" />
     <ClInclude Include="GameComponents\ScoreComponent.h" />
     <ClInclude Include="GameComponents\MapComponent.h" />
@@ -184,6 +190,7 @@
     <ClInclude Include="GameComponents\GhostComponent.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Game Files\Utils.h" />
+    <ClInclude Include="Game Files\WanderState.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LW2D_PacMan.rc" />

@@ -162,7 +162,7 @@ void load(SDL_Window* pWindow)
 		scoreComponent->AddScore(score);
 		textComponent->SetText("Score: " + std::to_string(scoreComponent->GetScore()));
 	};
-	map->GetOnPelletCollectedEvent()->AddListener(IncrementScoreP1);
+	map->GetOnPelletCollected()->AddListener(IncrementScoreP1);
 	
 	// ADD INPUT DEVICES
 	LW2D::Input::GetInstance().AddController(std::make_shared<LW2D::GenericController>(0));
@@ -200,7 +200,6 @@ void load(SDL_Window* pWindow)
 	auto charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 145.f, 144.f });
 	charComp->SetSpeed(56.f);
 	auto ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
-	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
 	
 	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
 	scene.Add(ghost);
@@ -212,7 +211,6 @@ void load(SDL_Window* pWindow)
 	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 160.f, 144.f });
 	charComp->SetSpeed(56.f);
 	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
-	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
 
 	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
 	scene.Add(ghost);
@@ -224,7 +222,6 @@ void load(SDL_Window* pWindow)
 	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 176.f, 144.f });
 	charComp->SetSpeed(56.f);
 	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
-	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
 
 	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
 	scene.Add(ghost);
@@ -236,7 +233,6 @@ void load(SDL_Window* pWindow)
 	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 161.f, 128.f });
 	charComp->SetSpeed(56.f);
 	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
-	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
 
 	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
 	scene.Add(ghost);

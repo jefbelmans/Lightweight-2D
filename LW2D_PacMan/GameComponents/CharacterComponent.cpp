@@ -11,7 +11,6 @@ LW2D::CharacterComponent::CharacterComponent(std::weak_ptr<GameObject> go, const
 {
 	GetTransform().SetLocalPosition(m_SpawnPos);
 
-	m_pIsAtIntersection = std::make_unique<Event<std::vector<LW2D::Direction>>>();
 	m_pOnRespawn = std::make_unique<Event<>>();
 
 	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map")->GetComponent<MapComponent>();
@@ -101,12 +100,13 @@ void LW2D::CharacterComponent::CheckForIntersection(const glm::vec2& pos, const 
 
 	bool isVertical = (m_CurrentDirection == Direction::Up || m_CurrentDirection == Direction::Down);
 	bool isHorizontal = (m_CurrentDirection == Direction::Left || m_CurrentDirection == Direction::Right);
-	bool isAtIntersection = ((isVertical && static_cast<int>(pos.y) % cellSize == 0 && (!walls[static_cast<int>(Direction::Left)] || !walls[static_cast<int>(Direction::Right)])) ||
-		(isHorizontal && static_cast<int>(pos.x) % cellSize == 0 && (!walls[static_cast<int>(Direction::Up)] || !walls[static_cast<int>(Direction::Down)])));
+	m_IsAtIntersection = ((isVertical && static_cast<int>(pos.y) % cellSize == 0 && (!walls[static_cast<int>(Direction::Left)] || !walls[static_cast<int>(Direction::Right)])) ||
+		(isHorizontal && static_cast<int>(pos.x) % cellSize == 0 && (!walls[static_cast<int>(Direction::Up)] || !walls[static_cast<int>(Direction::Down)])) ||
+		availableDirections.size() == 1);
 
-	if (isAtIntersection || availableDirections.size() == 1)
+	if (m_IsAtIntersection)
 	{
-		m_pIsAtIntersection->Invoke(availableDirections);
+		m_AvailableDirections = availableDirections;
 	}
 }
 

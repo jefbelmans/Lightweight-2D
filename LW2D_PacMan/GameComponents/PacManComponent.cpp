@@ -20,6 +20,8 @@ LW2D::PacManComponent::PacManComponent(std::weak_ptr<GameObject> go)
 	if (m_pCharacter.lock() == nullptr)
 		throw std::exception("PacManComponent::PacManComponent() > Failed to find CharacterComponent");
 
+	m_pCharacter.lock()->SetIsVulnerable(true);
+
 	// Subscribe to events
 	go.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener(std::bind(&PacManComponent::OnKill, this));
 	go.lock()->GetComponent<HealthComponent>()->GetOnDeathEvent()->AddListener(std::bind(&PacManComponent::OnDeath, this));
