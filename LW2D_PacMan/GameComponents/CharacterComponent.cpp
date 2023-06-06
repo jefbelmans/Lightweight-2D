@@ -32,6 +32,7 @@ void LW2D::CharacterComponent::Update()
 			m_RespawnTimer = 0.0f;
 			GetTransform().SetLocalPosition(m_SpawnPos);
 			m_IsVulnerable = m_DoMove = true;
+			m_CurrentDirection = LW2D::Direction::Right;
 		}
 	}
 }
@@ -122,10 +123,10 @@ void LW2D::CharacterComponent::HandleMovement()
 	// Get walls around character
 	std::vector<bool> walls
 	{
-		m_pMap.lock()->IsWall({pos.x, pos.y - 1}),
-		m_pMap.lock()->IsWall({pos.x, pos.y + cellSize }),
-		m_pMap.lock()->IsWall({pos.x - 1, pos.y }),
-		m_pMap.lock()->IsWall({pos.x + cellSize, pos.y })
+		m_pMap.lock()->GetCellFromPos({pos.x, pos.y - 1}) == Cell::Wall ? true : false,
+		m_pMap.lock()->GetCellFromPos({pos.x, pos.y + cellSize }) == Cell::Wall ? true : false,
+		m_pMap.lock()->GetCellFromPos({pos.x - 1, pos.y }) == Cell::Wall ? true : false,
+		m_pMap.lock()->GetCellFromPos({pos.x + cellSize, pos.y }) == Cell::Wall ? true : false
 	};
 
 	// Wait for intersection before changing direction

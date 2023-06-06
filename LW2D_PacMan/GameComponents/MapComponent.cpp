@@ -7,6 +7,7 @@ LW2D::MapComponent::MapComponent(std::weak_ptr<GameObject> go)
 	: Component(go)
 {
 	m_pOnPelletCollected = std::make_unique<Event<int>>();
+	m_pOnPowerPelletCollected = std::make_unique<Event<int>>();
 
 	std::vector<std::string> map = {
 		" ################### ",
@@ -55,30 +56,31 @@ void LW2D::MapComponent::Render() const
 				SDL_SetRenderDrawColor(pRenderer, 200, 200, 64, 255);
 				SDL_RenderDrawPointF(pRenderer, j * m_CellSize + m_CellSize * 0.5f, i * m_CellSize + m_CellSize * 0.5f);
 			}
+			else if (m_Map[i][j] == Cell::PowerPellet)
+			{
+				SDL_SetRenderDrawColor(pRenderer, 32, 32, 200, 255);
+				SDL_RenderDrawPointF(pRenderer, j * m_CellSize + m_CellSize * 0.5f, i * m_CellSize + m_CellSize * 0.5f);
+			}
 		}
 	}
 }
 
-bool LW2D::MapComponent::IsWall(const glm::vec2& pos) const
-{
-	const auto rowCol{GetIndicesFromPos(pos)};
-
-	return m_Map[rowCol.first][rowCol.second] == Cell::Wall;
-}
-
-bool LW2D::MapComponent::IsPellet(const glm::vec2& pos) const
+LW2D::Cell LW2D::MapComponent::GetCellFromPos(const glm::vec2& pos) const
 {
 	const auto rowCol{ GetIndicesFromPos(pos) };
-
-	return m_Map[rowCol.first][rowCol.second] == Cell::Pellet;
+	return m_Map[rowCol.first][rowCol.second];
 }
 
 void LW2D::MapComponent::CollectPellet(const glm::vec2& pos)
 {
 	const auto rowCol{ GetIndicesFromPos(pos) };
 
+	if (m_Map[rowCol.first][rowCol.second] == Cell::Pellet)
+		m_pOnPelletCollected->Invoke(m_PelletScore);
+	else if (m_Map[rowCol.first][rowCol.second] == Cell::PowerPellet)
+		m_pOnPowerPelletCollected->Invoke(m_PowerPelletScore);
+
 	m_Map[rowCol.first][rowCol.second] = Cell::Empty;
-	m_pOnPelletCollected->Invoke(m_PelletScore);
 }
 
 void LW2D::MapComponent::ReadMap(const std::vector<std::string>& map)

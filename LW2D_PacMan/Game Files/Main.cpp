@@ -121,15 +121,15 @@ void load(SDL_Window* pWindow)
 	auto p1 = std::make_shared<LW2D::GameObject>("Player 1");
 	p1->GetTransform().SetParent(p1);
 
-	pacManGO = p1;
-	auto pacMan = p1->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 160.f, 240.f });
-	p1->AddComponent<LW2D::PacManComponent>();
-
 	p1->AddComponent<LW2D::RenderComponent>()->SetTexture("PacMan.png");
 	auto healthComponent = p1->AddComponent<LW2D::HealthComponent>();
 	healthComponent->SetLives(3);
 	auto scoreComponent = p1->AddComponent<LW2D::ScoreComponent>();
 	scene.Add(p1);
+
+	pacManGO = p1;
+	auto pacMan = p1->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 160.f, 240.f });
+	p1->AddComponent<LW2D::PacManComponent>();
 
 	// HEALTH DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Health Display P1");

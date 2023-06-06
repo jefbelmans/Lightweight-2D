@@ -33,6 +33,7 @@ namespace LW2D
 		void SetMap(std::weak_ptr<MapComponent> map) { m_pMap = map; }
 		void SetDirection(LW2D::Direction dir);
 		void SetSpeed(float speed) { m_Speed = speed; }
+		void SetDoMove(bool doMove) { m_DoMove = doMove; }
 	
 	private:
 		// Cached refs

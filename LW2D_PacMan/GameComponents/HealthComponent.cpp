@@ -10,12 +10,10 @@ LW2D::HealthComponent::HealthComponent(std::weak_ptr<GameObject> go)
 
 void LW2D::HealthComponent::Kill()
 {
-	--m_Lives;
-	if (m_Lives <= 0)
-	{
-		m_Lives = 0;
-		m_pOnDeath->Invoke();
-	}
+	m_Lives = std::max(--m_Lives, 0);
 
 	m_pOnKill->Invoke(m_Lives);
+
+	if (m_Lives <= 0)
+		m_pOnDeath->Invoke();
 }

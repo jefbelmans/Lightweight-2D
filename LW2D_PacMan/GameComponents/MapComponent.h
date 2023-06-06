@@ -17,9 +17,7 @@ namespace LW2D
 
 		void Render() const override;
 
-		bool IsWall(const glm::vec2& pos) const;
-		bool IsPellet(const glm::vec2& pos) const;
-
+		Cell GetCellFromPos(const glm::vec2& pos) const;
 		void CollectPellet(const glm::vec2& pos);
 
 		// GETTERS
@@ -38,8 +36,10 @@ namespace LW2D
 		uint8_t m_Cols{};
 
 		const int m_PelletScore{ 50 };
+		const int m_PowerPelletScore{ 50 };
 
 		std::unique_ptr<Event<int>> m_pOnPelletCollected;
+		std::unique_ptr<Event<int>> m_pOnPowerPelletCollected;
 
 		void ReadMap(const std::vector<std::string>& map);
 	};

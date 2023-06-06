@@ -20,7 +20,11 @@ namespace LW2D
 	private:
 		// Cached refs
 		std::weak_ptr<MapComponent> m_pMap;
+		std::weak_ptr<CharacterComponent> m_pCharacter;
 
-		void OnRespawn();
+		bool m_IsDead{ false };
+
+		void OnKill();
+		void OnDeath();
 	};
 }
