@@ -26,6 +26,7 @@
 #include "GameComponents/ScoreComponent.h"
 #include "GameComponents/MapComponent.h"
 #include "GameComponents/PacManComponent.h"
+#include "GameComponents/CharacterComponent.h"
 
 std::shared_ptr<LW2D::GameObject> pacManGO;
 
@@ -42,7 +43,7 @@ void OnGUI()
 	if(ImGui::Begin("[DEBUG]", nullptr, window_flags))
 	{
 		const auto pos{ pacManGO->GetTransform().GetWorldPosition() };
-		const bool isSnapped{ pacManGO->GetComponent<LW2D::PacManComponent>()->GetIsSnappedToGrid() };
+		const bool isSnapped{ pacManGO->GetComponent<LW2D::CharacterComponent>()->GetIsSnappedToGrid() };
 
 		// Display PacMans pos in ImGui text
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, isSnapped * 0.9f, !isSnapped * 0.9f, 1.f));
@@ -125,17 +126,13 @@ void load(SDL_Window* pWindow)
 	p1->GetTransform().SetLocalPosition(160.f, 240.f);
 
 	pacManGO = p1;
-
-	auto pacMan = p1->AddComponent<LW2D::PacManComponent>();
-	pacMan->SetMap(map);
+	auto pacMan = p1->AddComponent<LW2D::CharacterComponent>();
+	p1->AddComponent<LW2D::PacManComponent>();
 
 	p1->AddComponent<LW2D::RenderComponent>()->SetTexture("PacMan.png");
-
 	auto healthComponent = p1->AddComponent<LW2D::HealthComponent>();
 	healthComponent->SetLives(3);
-
 	auto scoreComponent = p1->AddComponent<LW2D::ScoreComponent>();
-
 	scene.Add(p1);
 
 	// HEALTH DISPLAY P1
@@ -146,13 +143,6 @@ void load(SDL_Window* pWindow)
 	auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
 	auto textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 3", SDL_Color{64, 255, 64});
 	scene.Add(go);
-
-	// BIND ONKILL EVENT
-	/*auto UpdateLivesDisplayP1 = [textComponent](int lives)
-	{
-		textComponent->SetText("Lives: " + std::to_string(lives));
-	};*/
-	// healthComponent->GetOnDeathEvent()->AddListener(UpdateLivesDisplayP1);
 
 	// SCORE DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Score Display P1");
@@ -196,11 +186,6 @@ void load(SDL_Window* pWindow)
 	// KILL P1
 	auto killCommand = std::make_shared<LW2D::KillCommand>(p1->GetComponent<LW2D::HealthComponent>());
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_K, SDL_KEYDOWN), killCommand);
-
-	// ADD SCORE P1
-	auto addScoreCommand = std::make_shared<LW2D::AddScoreCommand>(p1->GetComponent<LW2D::ScoreComponent>());
-	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_L, SDL_KEYDOWN), addScoreCommand);
-
 #pragma endregion
 
 	// Initialize sound system in service locator

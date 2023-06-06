@@ -171,6 +171,7 @@
     <ClCompile Include="GameComponents\ScoreComponent.cpp" />
     <ClCompile Include="GameComponents\MapComponent.cpp" />
     <ClCompile Include="GameComponents\PacManComponent.cpp" />
+    <ClCompile Include="GameComponents\CharacterComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Commands.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="GameComponents\ScoreComponent.h" />
     <ClInclude Include="GameComponents\MapComponent.h" />
     <ClInclude Include="GameComponents\PacManComponent.h" />
+    <ClInclude Include="GameComponents\CharacterComponent.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>

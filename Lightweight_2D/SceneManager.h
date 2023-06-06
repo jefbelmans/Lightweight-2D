@@ -20,9 +20,12 @@ namespace LW2D
 		void Render();
 		void OnGUI();
 
+		std::shared_ptr<Scene> GetActiveScene() const { return m_scenes[m_ActiveSceneIndex]; }
+
 	private:
 		friend class Singleton<SceneManager>;
 		SceneManager() = default;
+		uint8_t m_ActiveSceneIndex{0};
 		std::vector<std::shared_ptr<Scene>> m_scenes;
 		std::shared_ptr<GameTime> m_pGameTime;
 	};

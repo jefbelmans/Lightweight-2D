@@ -6,12 +6,12 @@
 // COMPONENTS
 #include "GameComponents/HealthComponent.h"
 #include "GameComponents/ScoreComponent.h"
-#include "GameComponents/PacManComponent.h"
+#include "GameComponents/CharacterComponent.h"
 
 void LW2D::MoveCommand::Execute()
 {
-	if (!m_PacMan) throw std::runtime_error("PacManComponent is nullptr");
-	m_PacMan->SetDirection(m_MovementDirection);
+	if (!m_pCharacter) throw std::runtime_error("CharacterComponent is nullptr");
+	m_pCharacter->SetDirection(m_MovementDirection);
 }
 
 void LW2D::KillCommand::Execute()

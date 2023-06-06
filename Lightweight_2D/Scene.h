@@ -17,6 +17,8 @@ namespace LW2D
 		void Render() const;
 		void OnGUI() const;
 
+		std::shared_ptr<GameObject> FindObjectByName(const std::string& name) const;
+
 		~Scene();
 		Scene(const Scene& other) = delete;
 		Scene(Scene&& other) = delete;
@@ -27,7 +29,7 @@ namespace LW2D
 		explicit Scene(const std::string& name, const std::function<void()>& onGUI);
 
 		std::string m_name;
-		std::vector < std::shared_ptr<GameObject>> m_objects{};
+		std::vector <std::shared_ptr<GameObject>> m_objects{};
 		const std::function<void()> m_GUI;
 
 		static unsigned int m_idCounter; 

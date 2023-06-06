@@ -4,16 +4,16 @@
 
 namespace LW2D
 {
-	class PacManComponent;
+	class CharacterComponent;
 	class MoveCommand final : public Command
 	{
 	public:
-		MoveCommand(std::shared_ptr<PacManComponent> pacman, const LW2D::Direction& dir)
-			: m_PacMan(pacman), m_MovementDirection(dir){};
+		MoveCommand(std::shared_ptr<CharacterComponent> character, const LW2D::Direction& dir)
+			: m_pCharacter(character), m_MovementDirection(dir){};
 		virtual void Execute() override;
 
 	private:
-		std::shared_ptr<PacManComponent> m_PacMan;
+		std::shared_ptr<CharacterComponent> m_pCharacter;
 		LW2D::Direction m_MovementDirection;
 	};
 
