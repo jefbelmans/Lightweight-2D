@@ -4,9 +4,9 @@
 #include "GameTime.h"
 
 // COMPONENTS
-#include "GameComponents/HealthComponent.h"
-#include "GameComponents/ScoreComponent.h"
-#include "GameComponents/CharacterComponent.h"
+#include "../GameComponents/HealthComponent.h"
+#include "../GameComponents/ScoreComponent.h"
+#include "../GameComponents/CharacterComponent.h"
 
 void LW2D::MoveCommand::Execute()
 {

@@ -22,13 +22,16 @@
 #include "EngineComponents/RenderComponent.h"
 #include "EngineComponents/TextComponent.h"
 #include "EngineComponents/FPSComponent.h"
-#include "GameComponents/HealthComponent.h"
-#include "GameComponents/ScoreComponent.h"
-#include "GameComponents/MapComponent.h"
-#include "GameComponents/PacManComponent.h"
-#include "GameComponents/CharacterComponent.h"
+#include "../GameComponents/HealthComponent.h"
+#include "../GameComponents/ScoreComponent.h"
+#include "../GameComponents/MapComponent.h"
+#include "../GameComponents/PacManComponent.h"
+#include "../GameComponents/GhostComponent.h"
+#include "../GameComponents/CharacterComponent.h"
 
 std::shared_ptr<LW2D::GameObject> pacManGO;
+
+using namespace std::placeholders;
 
 enum class Sounds : unsigned short
 {
@@ -186,6 +189,60 @@ void load(SDL_Window* pWindow)
 	// KILL P1
 	auto killCommand = std::make_shared<LW2D::KillCommand>(p1->GetComponent<LW2D::HealthComponent>());
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_K, SDL_KEYDOWN), killCommand);
+#pragma endregion
+
+#pragma region Ghosts
+	// GHOST1
+	auto ghost = std::make_shared<LW2D::GameObject>("Ghost 1");
+	ghost->GetTransform().SetParent(ghost);
+	ghost->GetTransform().SetLocalPosition(145.f, 144.f);
+
+	auto charComp = ghost->AddComponent<LW2D::CharacterComponent>();
+	charComp->SetSpeed(56.f);
+	auto ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
+	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
+	
+	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
+	scene.Add(ghost);
+
+	// GHOST2
+	ghost = std::make_shared<LW2D::GameObject>("Ghost 2");
+	ghost->GetTransform().SetParent(ghost);
+	ghost->GetTransform().SetLocalPosition(160.f, 144.f);
+
+	charComp = ghost->AddComponent<LW2D::CharacterComponent>();
+	charComp->SetSpeed(56.f);
+	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
+	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
+
+	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
+	scene.Add(ghost);
+
+	// GHOST3
+	ghost = std::make_shared<LW2D::GameObject>("Ghost 3");
+	ghost->GetTransform().SetParent(ghost);
+	ghost->GetTransform().SetLocalPosition(176.f, 144.f);
+
+	charComp = ghost->AddComponent<LW2D::CharacterComponent>();
+	charComp->SetSpeed(56.f);
+	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
+	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
+
+	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
+	scene.Add(ghost);
+
+	// GHOST4
+	ghost = std::make_shared<LW2D::GameObject>("Ghost 4");
+	ghost->GetTransform().SetParent(ghost);
+	ghost->GetTransform().SetLocalPosition(161.f, 128.f);
+
+	charComp = ghost->AddComponent<LW2D::CharacterComponent>();
+	charComp->SetSpeed(56.f);
+	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
+	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
+
+	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
+	scene.Add(ghost);
 #pragma endregion
 
 	// Initialize sound system in service locator

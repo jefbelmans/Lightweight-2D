@@ -8,6 +8,8 @@
 LW2D::CharacterComponent::CharacterComponent(std::weak_ptr<GameObject> go)
 	: Component{ go }
 {
+	m_pIsAtIntersection = std::make_unique<Event<std::vector<LW2D::Direction>>>();
+
 	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map")->GetComponent<MapComponent>();
 	if (m_pMap.lock() == nullptr)
 	{
@@ -73,13 +75,26 @@ void LW2D::CharacterComponent::Update()
 	else
 		SnapToGrid();
 
-	// Check if we are on a pellet
-	if (m_pMap.lock()->IsPellet({ pos.x, pos.y }))
-	{
-		m_pMap.lock()->CollectPellet({ pos.x, pos.y });
-	}
+	CheckForIntersection(pos, walls);
 
 	m_PreviousPos = pos;
+}
+
+LW2D::Direction LW2D::CharacterComponent::GetOppositeDirection() const
+{
+	switch (m_CurrentDirection)
+	{
+	case LW2D::Direction::Up:
+		return LW2D::Direction::Down;
+	case LW2D::Direction::Down:
+		return LW2D::Direction::Up;
+	case LW2D::Direction::Left:
+		return LW2D::Direction::Right;
+	case LW2D::Direction::Right:
+		return LW2D::Direction::Left;
+	default:
+		return LW2D::Direction::Up;
+	}
 }
 
 void LW2D::CharacterComponent::SetDirection(LW2D::Direction dir)
@@ -104,4 +119,25 @@ void LW2D::CharacterComponent::SnapToGrid()
 
 	GetTransform().SetLocalPosition(snappedPosX, snappedPosY);
 	m_IsSnappedToGrid = true;
+}
+
+void LW2D::CharacterComponent::CheckForIntersection(const glm::vec2& pos, const std::vector<bool>& walls)
+{
+	const int cellSize{ m_pMap.lock()->GetCellSize() };
+	std::vector<LW2D::Direction> availableDirections{};
+
+	for (int i = 0; i < m_DirectionTranslations.size(); i++)
+	{
+		if (!walls[i]) availableDirections.emplace_back(static_cast<LW2D::Direction>(i));
+	}
+
+	bool isVertical = (m_CurrentDirection == Direction::Up || m_CurrentDirection == Direction::Down);
+	bool isHorizontal = (m_CurrentDirection == Direction::Left || m_CurrentDirection == Direction::Right);
+	bool isAtIntersection = ((isVertical && static_cast<int>(pos.y) % cellSize == 0 && (!walls[static_cast<int>(Direction::Left)] || !walls[static_cast<int>(Direction::Right)])) ||
+		(isHorizontal && static_cast<int>(pos.x) % cellSize == 0 && (!walls[static_cast<int>(Direction::Up)] || !walls[static_cast<int>(Direction::Down)])));
+
+	if (isAtIntersection || availableDirections.size() == 1)
+	{
+		m_pIsAtIntersection->Invoke(availableDirections);
+	}
 }

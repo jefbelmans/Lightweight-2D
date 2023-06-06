@@ -165,23 +165,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Commands.cpp" />
+    <ClCompile Include="Game Files\Commands.cpp" />
     <ClCompile Include="GameComponents\HealthComponent.cpp" />
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="GameComponents\GhostComponent.cpp" />
+    <ClCompile Include="Game Files\Main.cpp" />
     <ClCompile Include="GameComponents\ScoreComponent.cpp" />
     <ClCompile Include="GameComponents\MapComponent.cpp" />
     <ClCompile Include="GameComponents\PacManComponent.cpp" />
     <ClCompile Include="GameComponents\CharacterComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Commands.h" />
+    <ClInclude Include="Game Files\Commands.h" />
     <ClInclude Include="GameComponents\HealthComponent.h" />
     <ClInclude Include="GameComponents\ScoreComponent.h" />
     <ClInclude Include="GameComponents\MapComponent.h" />
     <ClInclude Include="GameComponents\PacManComponent.h" />
     <ClInclude Include="GameComponents\CharacterComponent.h" />
+    <ClInclude Include="GameComponents\GhostComponent.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Game Files\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LW2D_PacMan.rc" />

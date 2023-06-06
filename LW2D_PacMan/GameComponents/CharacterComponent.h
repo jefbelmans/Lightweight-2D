@@ -2,7 +2,8 @@
 #include <map>
 #include <glm/vec2.hpp>
 #include "EngineComponents/Component.h"
-#include "../Utils.h"
+#include "Event.h"
+#include "../Game Files/Utils.h"
 
 namespace LW2D
 {
@@ -16,11 +17,16 @@ namespace LW2D
 		void Update() override;
 
 		// GETTERS
+		LW2D::Direction GetDirection() const { return m_CurrentDirection; }
+		LW2D::Direction GetOppositeDirection() const;
+		auto GetDirectionTranslations() const { return m_DirectionTranslations; }
 		bool GetIsSnappedToGrid() const { return m_IsSnappedToGrid; }
+		Event<std::vector<LW2D::Direction>>* GetIsAtIntersection() const { return m_pIsAtIntersection.get(); }
 
 		// SETTERS
 		void SetMap(std::weak_ptr<MapComponent> map) { m_pMap = map; }
 		void SetDirection(LW2D::Direction dir);
+		void SetSpeed(float speed) { m_Speed = speed; }
 
 	private:
 		// Cached refs
@@ -49,6 +55,9 @@ namespace LW2D
 		float m_CoyoteTimer{ 0.f };
 
 		void SnapToGrid();
+		void CheckForIntersection(const glm::vec2& pos, const std::vector<bool>& walls);
+
+		std::unique_ptr<Event<std::vector<LW2D::Direction>>> m_pIsAtIntersection;
 	};
 }
 

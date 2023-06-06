@@ -4,6 +4,7 @@
 #include "GameTime.h"
 #include "MapComponent.h"
 #include "Scene.h"
+
 LW2D::PacManComponent::PacManComponent(std::weak_ptr<GameObject> go)
 	: Component{ go }
 {

@@ -10,7 +10,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="Game Files\Main.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
     <ClCompile Include="GameComponents\HealthComponent.cpp">
@@ -19,7 +19,7 @@
     <ClCompile Include="GameComponents\ScoreComponent.cpp">
       <Filter>Game Components</Filter>
     </ClCompile>
-    <ClCompile Include="Commands.cpp">
+    <ClCompile Include="Game Files\Commands.cpp">
       <Filter>Game Files</Filter>
     </ClCompile>
     <ClCompile Include="GameComponents\MapComponent.cpp">
@@ -31,6 +31,9 @@
     <ClCompile Include="GameComponents\CharacterComponent.cpp">
       <Filter>Game Components</Filter>
     </ClCompile>
+    <ClCompile Include="GameComponents\GhostComponent.cpp">
+      <Filter>Game Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameComponents\HealthComponent.h">
@@ -39,7 +42,7 @@
     <ClInclude Include="GameComponents\ScoreComponent.h">
       <Filter>Game Components</Filter>
     </ClInclude>
-    <ClInclude Include="Commands.h">
+    <ClInclude Include="Game Files\Commands.h">
       <Filter>Game Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
@@ -52,8 +55,11 @@
     <ClInclude Include="GameComponents\PacManComponent.h">
       <Filter>Game Components</Filter>
     </ClInclude>
-    <ClInclude Include="Utils.h">
+    <ClInclude Include="Game Files\Utils.h">
       <Filter>Game Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameComponents\GhostComponent.h">
+      <Filter>Game Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
