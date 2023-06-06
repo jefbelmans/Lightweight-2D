@@ -3,21 +3,37 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "../GameComponents/CharacterComponent.h"
+#include "../GameComponents/MapComponent.h"
+#include "../GameComponents/HealthComponent.h"
 
 LW2D::GhostComponent::GhostComponent(std::weak_ptr<GameObject> go)
 	: Component(go)
 {
-	if(go.lock()->HasComponent<CharacterComponent>())
-		m_pCharacter = go.lock()->GetComponent<CharacterComponent>();
-	else
-		m_pCharacter = go.lock()->AddComponent<CharacterComponent>();
+	m_pCharacter = go.lock()->GetComponent<CharacterComponent>();
 
 	m_pPlayer1 = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 1");
 	m_pPlayer2 = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 2");
+
+	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map")->GetComponent<MapComponent>();
 }
 
 void LW2D::GhostComponent::Update()
 {
+	const auto& rowCol = m_pMap.lock()->GetIndicesFromPos(GetTransform().GetWorldPosition());
+	if (!m_pPlayer1.expired())
+	{
+		const auto& player1RowCol = m_pMap.lock()->GetIndicesFromPos(m_pPlayer1.lock()->GetTransform().GetWorldPosition());
+		if (rowCol == player1RowCol && m_pPlayer1.lock()->GetComponent<CharacterComponent>()->GetIsVulnerable())
+			m_pPlayer1.lock()->GetComponent<HealthComponent>()->Kill();
+	}
+		
+	if (!m_pPlayer2.expired())
+	{
+		const auto& player2RowCol = m_pMap.lock()->GetIndicesFromPos(m_pPlayer2.lock()->GetTransform().GetWorldPosition());
+		if (rowCol == player2RowCol && m_pPlayer2.lock()->GetComponent<CharacterComponent>()->GetIsVulnerable())
+			m_pPlayer2.lock()->GetComponent<HealthComponent>()->Kill();
+	}
+	
 }
 
 void LW2D::GhostComponent::ChangeDirection(std::vector<LW2D::Direction> availableDirections)

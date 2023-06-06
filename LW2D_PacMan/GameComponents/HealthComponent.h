@@ -11,7 +11,8 @@ namespace LW2D
 		~HealthComponent() = default;
 		
 		// GETTERS
-		Event<int>* GetOnDeathEvent() const { return m_pOnDeath.get(); }
+		Event<int>* GetOnKillEvent() const { return m_pOnKill.get(); }
+		Event<>* GetOnDeathEvent() const { return m_pOnDeath.get(); }
 
 		// SETTERS
 		void SetLives(int lives) { m_Lives = lives; }
@@ -20,6 +21,7 @@ namespace LW2D
 		
 	private:
 		int m_Lives;
-		std::unique_ptr<Event<int>> m_pOnDeath;
+		std::unique_ptr<Event<int>> m_pOnKill;
+		std::unique_ptr<Event<>> m_pOnDeath;
 	};
 }

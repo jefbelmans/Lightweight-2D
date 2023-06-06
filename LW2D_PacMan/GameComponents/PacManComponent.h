@@ -20,5 +20,7 @@ namespace LW2D
 	private:
 		// Cached refs
 		std::weak_ptr<MapComponent> m_pMap;
+
+		void OnRespawn();
 	};
 }

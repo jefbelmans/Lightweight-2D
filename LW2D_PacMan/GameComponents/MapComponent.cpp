@@ -61,21 +61,21 @@ void LW2D::MapComponent::Render() const
 
 bool LW2D::MapComponent::IsWall(const glm::vec2& pos) const
 {
-	const auto rowCol{GetRowCol(pos)};
+	const auto rowCol{GetIndicesFromPos(pos)};
 
 	return m_Map[rowCol.first][rowCol.second] == Cell::Wall;
 }
 
 bool LW2D::MapComponent::IsPellet(const glm::vec2& pos) const
 {
-	const auto rowCol{ GetRowCol(pos) };
+	const auto rowCol{ GetIndicesFromPos(pos) };
 
 	return m_Map[rowCol.first][rowCol.second] == Cell::Pellet;
 }
 
 void LW2D::MapComponent::CollectPellet(const glm::vec2& pos)
 {
-	const auto rowCol{ GetRowCol(pos) };
+	const auto rowCol{ GetIndicesFromPos(pos) };
 
 	m_Map[rowCol.first][rowCol.second] = Cell::Empty;
 	m_pOnPelletCollected->Invoke(m_PelletScore);
@@ -126,7 +126,7 @@ void LW2D::MapComponent::ReadMap(const std::vector<std::string>& map)
 	m_Cols = static_cast<uint8_t>(m_Map[0].size());
 }
 
-std::pair<int, int> LW2D::MapComponent::GetRowCol(const glm::vec2& pos) const
+std::pair<int, int> LW2D::MapComponent::GetIndicesFromPos(const glm::vec2& pos) const
 {
 	int row{ std::clamp(static_cast<int>(pos.y / m_CellSize), 0, (int)m_Rows - 1) };
 	int col{ std::clamp(static_cast<int>(pos.x / m_CellSize), 0, (int)m_Cols - 1) };

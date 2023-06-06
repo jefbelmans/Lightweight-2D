@@ -17,6 +17,6 @@ namespace LW2D
 		}
 	};
 
-	std::unique_ptr<ISoundSystem> ServiceLocator::m_pSSInstance{};
-	NullSoundSystem ServiceLocator::m_DefaultSS;
+	inline std::unique_ptr<ISoundSystem> ServiceLocator::m_pSSInstance{};
+	inline NullSoundSystem ServiceLocator::m_DefaultSS;
 }

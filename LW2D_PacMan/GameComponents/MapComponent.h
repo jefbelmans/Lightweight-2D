@@ -28,6 +28,8 @@ namespace LW2D
 		uint8_t GetCols() const { return m_Cols; }
 		Event<int>* GetOnPelletCollectedEvent() const { return m_pOnPelletCollected.get(); }
 
+		std::pair<int, int> GetIndicesFromPos(const glm::vec2& pos) const;
+
 	private:
 		std::vector<std::vector<Cell>> m_Map{};
 
@@ -40,6 +42,5 @@ namespace LW2D
 		std::unique_ptr<Event<int>> m_pOnPelletCollected;
 
 		void ReadMap(const std::vector<std::string>& map);
-		std::pair<int, int> GetRowCol(const glm::vec2& pos) const;
 	};
 }

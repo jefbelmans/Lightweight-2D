@@ -4,6 +4,12 @@
 
 namespace LW2D
 {
+	enum class Sounds : unsigned short
+	{
+		PacManDeath = 0,
+		PacManEat
+	};
+
 	using SoundId = unsigned short;
 
 	class ISoundSystem

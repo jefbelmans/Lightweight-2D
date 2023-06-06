@@ -4,6 +4,8 @@
 #include "GameTime.h"
 #include "MapComponent.h"
 #include "Scene.h"
+#include "CharacterComponent.h"
+#include "ServiceLocator.h"
 
 LW2D::PacManComponent::PacManComponent(std::weak_ptr<GameObject> go)
 	: Component{ go }
@@ -13,6 +15,8 @@ LW2D::PacManComponent::PacManComponent(std::weak_ptr<GameObject> go)
 	{
 		throw std::exception("PacManComponent::PacManComponent() > Failed to find MapComponent");
 	}
+
+	go.lock()->GetComponent<CharacterComponent>()->GetOnRespawn()->AddListener(std::bind(&PacManComponent::OnRespawn, this));
 }
 
 void LW2D::PacManComponent::Update()
@@ -24,4 +28,9 @@ void LW2D::PacManComponent::Update()
 	{
 		m_pMap.lock()->CollectPellet({ pos.x, pos.y });
 	}
+}
+
+void LW2D::PacManComponent::OnRespawn()
+{
+	LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)Sounds::PacManDeath, 64.f);
 }

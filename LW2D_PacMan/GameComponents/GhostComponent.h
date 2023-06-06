@@ -6,6 +6,7 @@
 
 namespace LW2D
 {
+	class MapComponent;
 	class CharacterComponent;
 	class GhostComponent final : public Component
 	{
@@ -15,13 +16,13 @@ namespace LW2D
 
 		void Update() override;
 
-		void SetIsVulnerable(bool isVulnerable) { m_IsVulnerable = isVulnerable; }
 		void ChangeDirection(std::vector<LW2D::Direction> availableDirections);
 
 	private:
+		// Cached refs
+		std::weak_ptr<MapComponent> m_pMap;
 		std::weak_ptr<CharacterComponent> m_pCharacter;
 		std::weak_ptr<GameObject> m_pPlayer1;
 		std::weak_ptr<GameObject> m_pPlayer2;
-		bool m_IsVulnerable{ false };
 	};
 }

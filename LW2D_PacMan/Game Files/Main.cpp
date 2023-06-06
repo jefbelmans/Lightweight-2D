@@ -33,12 +33,6 @@ std::shared_ptr<LW2D::GameObject> pacManGO;
 
 using namespace std::placeholders;
 
-enum class Sounds : unsigned short
-{
-	PacManDeath = 0,
-	PacManEat
-};
-
 void OnGUI()
 {
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
@@ -56,8 +50,8 @@ void OnGUI()
 		if (ImGui::Button("Start AudioSystem"))
 		{
 			LW2D::ServiceLocator::GetSoundSystem().StartUp();
-			LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_chomp.wav", (unsigned short)Sounds::PacManEat, true);
-			LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_death.wav", (unsigned short)Sounds::PacManDeath, false);
+			LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_chomp.wav", (unsigned short)LW2D::Sounds::PacManEat, true);
+			LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_death.wav", (unsigned short)LW2D::Sounds::PacManDeath, false);
 		}
 
 		if (ImGui::Button("Shutdown AudioSystem"))
@@ -67,24 +61,24 @@ void OnGUI()
 
 		if (!LW2D::ServiceLocator::GetSoundSystem().IsShutdown() && ImGui::Button("Play Loop"))
 		{
-			LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)Sounds::PacManEat, 64.f);
+			LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)LW2D::Sounds::PacManEat, 64.f);
 		}
 
 		ImGui::SameLine();
 		if (!LW2D::ServiceLocator::GetSoundSystem().IsShutdown() && ImGui::Button("Stop Loop"))
 		{
-			LW2D::ServiceLocator::GetSoundSystem().StopSound((unsigned short)Sounds::PacManEat);
+			LW2D::ServiceLocator::GetSoundSystem().StopSound((unsigned short)LW2D::Sounds::PacManEat);
 		}
 
 		if (!LW2D::ServiceLocator::GetSoundSystem().IsShutdown() && ImGui::Button("Play Death"))
 		{
-			LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)Sounds::PacManDeath, 64.f);
+			LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)LW2D::Sounds::PacManDeath, 64.f);
 		}
 
 		ImGui::SameLine();
 		if (!LW2D::ServiceLocator::GetSoundSystem().IsShutdown() && ImGui::Button("Stop Death"))
 		{
-			LW2D::ServiceLocator::GetSoundSystem().StopSound((unsigned short)Sounds::PacManDeath);
+			LW2D::ServiceLocator::GetSoundSystem().StopSound((unsigned short)LW2D::Sounds::PacManDeath);
 		}
 
 		ImGui::End();
@@ -126,10 +120,9 @@ void load(SDL_Window* pWindow)
 	// PLAYER1
 	auto p1 = std::make_shared<LW2D::GameObject>("Player 1");
 	p1->GetTransform().SetParent(p1);
-	p1->GetTransform().SetLocalPosition(160.f, 240.f);
 
 	pacManGO = p1;
-	auto pacMan = p1->AddComponent<LW2D::CharacterComponent>();
+	auto pacMan = p1->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 160.f, 240.f });
 	p1->AddComponent<LW2D::PacManComponent>();
 
 	p1->AddComponent<LW2D::RenderComponent>()->SetTexture("PacMan.png");
@@ -146,6 +139,14 @@ void load(SDL_Window* pWindow)
 	auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
 	auto textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 3", SDL_Color{64, 255, 64});
 	scene.Add(go);
+
+	// BIND EVENTS
+	auto DecrementHealthP1 = [textComponent](int lives)
+	{
+		textComponent->SetText("Lives: " + std::to_string(lives));
+	};
+	healthComponent->GetOnKillEvent()->AddListener(DecrementHealthP1);
+	healthComponent->GetOnKillEvent()->AddListener(std::bind(&LW2D::CharacterComponent::Respawn, pacMan, _1));
 
 	// SCORE DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Score Display P1");
@@ -195,9 +196,8 @@ void load(SDL_Window* pWindow)
 	// GHOST1
 	auto ghost = std::make_shared<LW2D::GameObject>("Ghost 1");
 	ghost->GetTransform().SetParent(ghost);
-	ghost->GetTransform().SetLocalPosition(145.f, 144.f);
 
-	auto charComp = ghost->AddComponent<LW2D::CharacterComponent>();
+	auto charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 145.f, 144.f });
 	charComp->SetSpeed(56.f);
 	auto ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
 	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
@@ -208,9 +208,8 @@ void load(SDL_Window* pWindow)
 	// GHOST2
 	ghost = std::make_shared<LW2D::GameObject>("Ghost 2");
 	ghost->GetTransform().SetParent(ghost);
-	ghost->GetTransform().SetLocalPosition(160.f, 144.f);
 
-	charComp = ghost->AddComponent<LW2D::CharacterComponent>();
+	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 160.f, 144.f });
 	charComp->SetSpeed(56.f);
 	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
 	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
@@ -221,9 +220,8 @@ void load(SDL_Window* pWindow)
 	// GHOST3
 	ghost = std::make_shared<LW2D::GameObject>("Ghost 3");
 	ghost->GetTransform().SetParent(ghost);
-	ghost->GetTransform().SetLocalPosition(176.f, 144.f);
 
-	charComp = ghost->AddComponent<LW2D::CharacterComponent>();
+	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 176.f, 144.f });
 	charComp->SetSpeed(56.f);
 	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
 	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
@@ -234,9 +232,8 @@ void load(SDL_Window* pWindow)
 	// GHOST4
 	ghost = std::make_shared<LW2D::GameObject>("Ghost 4");
 	ghost->GetTransform().SetParent(ghost);
-	ghost->GetTransform().SetLocalPosition(161.f, 128.f);
 
-	charComp = ghost->AddComponent<LW2D::CharacterComponent>();
+	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 161.f, 128.f });
 	charComp->SetSpeed(56.f);
 	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
 	charComp->GetIsAtIntersection()->AddListener(std::bind(&LW2D::GhostComponent::ChangeDirection, ghostComp, _1));
@@ -252,9 +249,9 @@ void load(SDL_Window* pWindow)
 	LW2D::ServiceLocator::RegisterSoundSystem(new LW2D::SDL_SoundSystem());
 #endif // _DEBUG
 
-	LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_chomp.wav", (unsigned short)Sounds::PacManEat, true);
-	LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_death.wav", (unsigned short)Sounds::PacManDeath, false);
-	LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)Sounds::PacManEat, 64.f);
+	LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_chomp.wav", (unsigned short)LW2D::Sounds::PacManEat, true);
+	LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_death.wav", (unsigned short)LW2D::Sounds::PacManDeath, false);
+	LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)LW2D::Sounds::PacManEat, 64.f);
 	
 }
 
