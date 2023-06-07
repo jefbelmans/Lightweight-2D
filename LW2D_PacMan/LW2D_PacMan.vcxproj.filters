@@ -85,6 +85,9 @@
     <ClInclude Include="Game Files\FleeState.h">
       <Filter>Game Files\States</Filter>
     </ClInclude>
+    <ClInclude Include="Game Files\Blackboard.h">
+      <Filter>Game Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LW2D_PacMan.rc" />

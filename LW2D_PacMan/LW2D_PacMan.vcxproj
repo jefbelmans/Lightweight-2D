@@ -178,6 +178,7 @@
     <ClCompile Include="Game Files\WanderState.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game Files\Blackboard.h" />
     <ClInclude Include="Game Files\FleeState.h" />
     <ClInclude Include="Game Files\ChaseState.h" />
     <ClInclude Include="Game Files\Commands.h" />

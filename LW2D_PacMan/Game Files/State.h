@@ -3,14 +3,14 @@
 
 namespace LW2D
 {
-	class GameObject;
+	class Blackboard;
 	class State
 	{
 	public:
 		virtual ~State() = default;
 
-		virtual State* Update(std::shared_ptr<GameObject> pGo) { return nullptr; };
-		virtual void OnEnter(std::shared_ptr<GameObject> pGo) {};
-		virtual void OnExit(std::shared_ptr<GameObject> pGo) {};
+		virtual State* Update(std::shared_ptr<Blackboard> blackboard) { return nullptr; };
+		virtual void OnEnter(std::shared_ptr<Blackboard> blackboard) {};
+		virtual void OnExit(std::shared_ptr<Blackboard> blackboard) {};
 	};
 }

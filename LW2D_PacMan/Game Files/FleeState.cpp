@@ -6,21 +6,15 @@
 #include "../GameComponents/MapComponent.h"
 #include "../GameComponents/HealthComponent.h"
 #include "../Game Files/WanderState.h"
+#include "../Game Files/Blackboard.h"
 
 #include "SceneManager.h"
 #include "Scene.h"
 #include "GameTime.h"
 
-LW2D::FleeState::FleeState()
+LW2D::State* LW2D::FleeState::Update(std::shared_ptr<Blackboard> blackboard)
 {
-	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map")->GetComponent<MapComponent>();
-	m_pPlayer1 = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 1");
-	m_pPlayer2 = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 2");
-}
-
-LW2D::State* LW2D::FleeState::Update(std::shared_ptr<GameObject> pGo)
-{
-	HandleMovement(pGo);
+	HandleMovement(blackboard);
 
 	m_FleeTimer -= SceneManager::GetInstance().GetGameTime()->GetDeltaTime() / 1000.f;
 	if (m_FleeTimer < 0.f)
@@ -29,28 +23,30 @@ LW2D::State* LW2D::FleeState::Update(std::shared_ptr<GameObject> pGo)
     return nullptr;
 }
 
-void LW2D::FleeState::OnEnter(std::shared_ptr<GameObject> pGo)
+void LW2D::FleeState::OnEnter(std::shared_ptr<Blackboard> blackboard)
 {
 	m_FleeTimer = m_FleeTime;
 	std::cout << "run!!!\n";
 	// TODO: set sprite to flee
 }
 
-void LW2D::FleeState::OnExit(std::shared_ptr<GameObject> pGo)
+void LW2D::FleeState::OnExit(std::shared_ptr<Blackboard> blackboard)
 {
 	std::cout << "pfew!!!\n";
-	pGo->GetComponent<CharacterComponent>()->SetIsVulnerable(false);
+	blackboard->Get<std::shared_ptr<GameObject>>("Agent")->GetComponent<CharacterComponent>()->SetIsVulnerable(true);
 }
 
-void LW2D::FleeState::HandleMovement(std::shared_ptr<GameObject> pGo)
+void LW2D::FleeState::HandleMovement(std::shared_ptr<Blackboard> blackboard)
 {
-	const auto& character = pGo->GetComponent<CharacterComponent>();
+	const auto gameObject = blackboard->Get<std::shared_ptr<GameObject>>("Agent");
+	const auto character = gameObject->GetComponent<CharacterComponent>();
+
 	if (!character->GetIsAtIntersection()) return;
 
-	const auto& pos = pGo->GetTransform().GetWorldPosition();
-	const auto& closestPlayer = pGo->GetComponent<GhostComponent>()->GetClosestPlayer();
+	const auto& pos = gameObject->GetTransform().GetWorldPosition();
+	const auto closestPlayer = blackboard->Get<std::shared_ptr<GameObject>>("ClosestPlayer");
 
-	const glm::vec2& closestPlayerPos = closestPlayer.lock()->GetTransform().GetWorldPosition();
+	const glm::vec2& closestPlayerPos = closestPlayer->GetTransform().GetWorldPosition();
 
 	// Get the direction to the closest player
 	const auto& availableDirections = character->GetAvailableDirections();
@@ -70,21 +66,26 @@ void LW2D::FleeState::HandleMovement(std::shared_ptr<GameObject> pGo)
 	character->SetDirection(furthestDirection);
 }
 
-void LW2D::FleeState::HandlePlayerCollision(std::shared_ptr<GameObject> pGo)
+void LW2D::FleeState::HandlePlayerCollision(std::shared_ptr<Blackboard> blackboard)
 {
+	auto go = blackboard->Get<std::shared_ptr<GameObject>>("Agent");
+	const auto map = blackboard->Get<std::shared_ptr<MapComponent>>("Map");
+	const auto player1 = blackboard->Get<std::shared_ptr<GameObject>>("Player1");
+	const auto player2 = blackboard->Get<std::shared_ptr<GameObject>>("Player2");
+
 	// Kill player if they are on the same tile
-	const auto& rowCol = m_pMap.lock()->GetIndicesFromPos(pGo->GetTransform().GetWorldPosition());
-	if (!m_pPlayer1.expired())
+	const auto& rowCol = map->GetIndicesFromPos(go->GetTransform().GetWorldPosition());
+	if (player1)
 	{
-		const auto& player1RowCol = m_pMap.lock()->GetIndicesFromPos(m_pPlayer1.lock()->GetTransform().GetWorldPosition());
-		if (rowCol == player1RowCol && pGo->GetComponent<CharacterComponent>()->GetIsVulnerable())
-			pGo->GetComponent<HealthComponent>()->Kill();
+		const auto& player1RowCol = map->GetIndicesFromPos(player1->GetTransform().GetWorldPosition());
+		if (rowCol == player1RowCol && go->GetComponent<CharacterComponent>()->GetIsVulnerable())
+			go->GetComponent<HealthComponent>()->Kill();
 	}
 
-	if (!m_pPlayer2.expired())
+	if (player2)
 	{
-		const auto& player2RowCol = m_pMap.lock()->GetIndicesFromPos(m_pPlayer2.lock()->GetTransform().GetWorldPosition());
-		if (rowCol == player2RowCol && pGo->GetComponent<CharacterComponent>()->GetIsVulnerable())
-			pGo->GetComponent<HealthComponent>()->Kill();
+		const auto& player2RowCol = map->GetIndicesFromPos(player2->GetTransform().GetWorldPosition());
+		if (rowCol == player2RowCol && go->GetComponent<CharacterComponent>()->GetIsVulnerable())
+			go->GetComponent<HealthComponent>()->Kill();
 	}
 }
