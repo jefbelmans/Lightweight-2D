@@ -1,5 +1,6 @@
 #pragma once
 #include "SceneManager.h"
+#include "Event.h"
 
 namespace LW2D
 {
@@ -17,7 +18,15 @@ namespace LW2D
 		void Render() const;
 		void OnGUI() const;
 
+		void OnSceneDeactived();
+		void OnSceneActived();
+
+		// Getters
+		Event<>* GetOnSceneDeactived() const { return m_pOnSceneDeactived.get(); }
+		Event<>* GetOnSceneActived() const { return m_pOnSceneActived.get(); }
+
 		std::weak_ptr<GameObject> FindObjectByName(const std::string& name) const;
+		const std::string& GetName() { return m_name; }
 
 		~Scene();
 		Scene(const Scene& other) = delete;
@@ -31,6 +40,9 @@ namespace LW2D
 		std::string m_name;
 		std::vector <std::shared_ptr<GameObject>> m_objects{};
 		const std::function<void()> m_GUI;
+
+		std::unique_ptr<Event<>> m_pOnSceneDeactived;
+		std::unique_ptr<Event<>> m_pOnSceneActived;
 
 		static unsigned int m_idCounter; 
 	};

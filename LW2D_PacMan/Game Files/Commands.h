@@ -40,4 +40,11 @@ namespace LW2D
 	private:
 		std::shared_ptr<ScoreComponent> m_pScoreComponent;
 	};
+
+	class LoadNextSceneCommand final : public Command
+	{
+	public:
+		LoadNextSceneCommand() = default;
+		virtual void Execute() override;
+	};
 }

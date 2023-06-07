@@ -14,19 +14,20 @@
 #include "../Game Files/FleeState.h"
 #include "../Game Files/Blackboard.h"
 
-LW2D::GhostComponent::GhostComponent(std::weak_ptr<GameObject> go)
+LW2D::GhostComponent::GhostComponent(std::weak_ptr<GameObject> go, bool isCPU)
 	: Component(go)
 {
 	m_pOnGhostKilled = std::make_unique<Event<int>>();
-
 	m_pBlackboard = std::make_shared<Blackboard>();
 	m_pCurrentState = std::make_shared<WanderState>();
 
+	// Flee when power pellet is collected
 	MapComponent* map = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>().get();
 	map->GetOnPowerPelletCollected()->AddListener([&](int) {
 			ChangeState(new FleeState());
 		});
 
+	// Kill ghost when player has power pellet
 	go.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener([&](int)
 		{
 			LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)LW2D::Sounds::PacManEatGhost, 64.f);
@@ -34,6 +35,8 @@ LW2D::GhostComponent::GhostComponent(std::weak_ptr<GameObject> go)
 			m_pOnGhostKilled->Invoke(m_GhostKilledScore);
 		});
 
+	// Initialize blackboard
+	m_pBlackboard->Set("IsCPU", isCPU);
 	m_pBlackboard->Set("Player1", SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 1").lock().get());
 	m_pBlackboard->Set("Player2", SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 2").lock().get());
 	m_pBlackboard->Set("Map", map);
@@ -43,7 +46,7 @@ LW2D::GhostComponent::GhostComponent(std::weak_ptr<GameObject> go)
 void LW2D::GhostComponent::Update()
 {
 	CalculateClosestPlayer();
-
+;
 	LW2D::State* state = m_pCurrentState->Update(m_pBlackboard);
 	ChangeState(state);
 }

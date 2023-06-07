@@ -10,8 +10,8 @@ bool LW2D::InputManager::ProcessInput()
 	auto controllers = Input::GetInstance().GetControllers();
 	auto keyboard = Input::GetInstance().GetKeyboard();
 
-	auto controllerCommands = Input::GetInstance().GetControllerCommands();
-	auto keyboardCommands = Input::GetInstance().GetKeyboardCommands();
+	auto& controllerCommands = Input::GetInstance().GetControllerCommands();
+	auto& keyboardCommands = Input::GetInstance().GetKeyboardCommands();
 
 	// UPDATE CONTROLLERS
 	for (const auto& controller : controllers)

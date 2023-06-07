@@ -6,7 +6,11 @@ using namespace LW2D;
 
 unsigned int Scene::m_idCounter = 0;
 
-Scene::Scene(const std::string& name, const std::function<void()>& onGUI) : m_name(name), m_GUI(onGUI) {}
+Scene::Scene(const std::string& name, const std::function<void()>& onGUI) : m_name(name), m_GUI(onGUI) 
+{
+	m_pOnSceneDeactived = std::make_unique<Event<>>();
+	m_pOnSceneActived = std::make_unique<Event<>>();
+}
 
 Scene::~Scene() = default;
 
@@ -64,4 +68,14 @@ std::weak_ptr<GameObject> LW2D::Scene::FindObjectByName(const std::string& name)
 		return *it;
 	else
 		return std::weak_ptr<GameObject>();
+}
+
+void LW2D::Scene::OnSceneDeactived()
+{
+	m_pOnSceneDeactived->Invoke();
+}
+
+void LW2D::Scene::OnSceneActived()
+{
+	m_pOnSceneActived->Invoke();
 }

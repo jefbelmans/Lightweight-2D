@@ -20,6 +20,11 @@ namespace LW2D
 		void Render();
 		void OnGUI();
 
+		void LoadSceneByIndex(uint8_t index);
+		void LoadSceneByName(const std::string& name);
+		void LoadNextScene();
+
+		// Getters
 		std::shared_ptr<Scene> GetActiveScene() const { return m_scenes[m_ActiveSceneIndex]; }
 
 	private:

@@ -22,7 +22,7 @@ LW2D::State* LW2D::FleeState::Update(std::shared_ptr<Blackboard> blackboard)
 	if (m_FleeTimer < 0.f)
 		return new WanderState();
 
-    return HandlePlayerCollision(blackboard);;
+    return HandlePlayerCollision(blackboard);
 }
 
 void LW2D::FleeState::OnEnter(std::shared_ptr<Blackboard> blackboard)
@@ -42,6 +42,8 @@ void LW2D::FleeState::OnExit(std::shared_ptr<Blackboard> blackboard)
 
 void LW2D::FleeState::HandleMovement(std::shared_ptr<Blackboard> blackboard)
 {
+	if (!blackboard->Get<bool>("IsCPU")) return;
+
 	const auto gameObject = blackboard->Get<GameObject*>("Agent");
 	const auto character = gameObject->GetComponent<CharacterComponent>();
 

@@ -14,7 +14,7 @@ namespace LW2D
 	class GhostComponent final : public Component, public std::enable_shared_from_this<GhostComponent>
 	{
 	public:
-		GhostComponent(std::weak_ptr<GameObject> go);
+		GhostComponent(std::weak_ptr<GameObject> go, bool isCPU = true);
 		~GhostComponent() = default;
 
 		void Update() override;

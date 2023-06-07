@@ -22,10 +22,10 @@ namespace LW2D
 	{
 	public:
 		using ControllerKey = std::tuple<unsigned, GenericController::ControllerButton, KeyState>;
-		using ControllerCommands = std::map<ControllerKey, std::shared_ptr<Command>>;
+		using ControllerCommands = std::multimap<ControllerKey, std::shared_ptr<Command>>;
 
 		using KeyboardKey = std::pair <SDL_Scancode, SDL_EventType>;
-		using KeyboardCommands = std::map<KeyboardKey, std::shared_ptr<Command>>;
+		using KeyboardCommands = std::multimap<KeyboardKey, std::shared_ptr<Command>>;
 
 		Input()
 		{

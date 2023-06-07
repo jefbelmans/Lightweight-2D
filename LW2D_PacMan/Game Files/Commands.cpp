@@ -25,3 +25,8 @@ void LW2D::AddScoreCommand::Execute()
 	if (!m_pScoreComponent) throw std::runtime_error("ScoreComponent is nullptr");
 	m_pScoreComponent->AddScore(50);
 }
+
+void LW2D::LoadNextSceneCommand::Execute()
+{
+	SceneManager::GetInstance().LoadNextScene();
+}

@@ -53,6 +53,8 @@ void LW2D::ChaseState::HanlePlayerCollision(std::shared_ptr<Blackboard> blackboa
 
 void LW2D::ChaseState::HandleMovement(std::shared_ptr<Blackboard> blackboard)
 {
+	if (!blackboard->Get<bool>("IsCPU")) return;
+
 	const auto go = blackboard->Get<GameObject*>("Agent");
 	const auto character = go->GetComponent<CharacterComponent>();
 
