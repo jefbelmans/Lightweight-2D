@@ -11,27 +11,23 @@ namespace LW2D
 	class CharacterComponent final : public Component
 	{
 	public:
-		CharacterComponent(std::weak_ptr<GameObject> go, const glm::vec2& spawnPos);
+		CharacterComponent(std::weak_ptr<GameObject> go, const glm::vec2& spawnPos, float respawnTime = 1.f);
 		~CharacterComponent() = default;
 
 		void Update() override;
-
 		void Respawn(int);
-		void SetIsVulnerable(bool isVulnrable) { m_IsVulnerable = isVulnrable; }
-		bool GetIsVulnerable() const { return m_IsVulnerable; }
 
 		// GETTERS
 		LW2D::Direction GetDirection() const { return m_CurrentDirection; }
 		LW2D::Direction GetOppositeDirection() const;
+
 		auto GetDirectionTranslations() const { return m_DirectionTranslations; }
-		bool GetIsSnappedToGrid() const { return m_IsSnappedToGrid; }
-		bool GetIsAtIntersection() const { return m_IsAtIntersection; }
 		auto GetAvailableDirections() const { return m_AvailableDirections; }
 
-		Event<>* GetOnRespawn() const { return m_pOnRespawn.get(); }
+		bool GetIsAtIntersection() const { return m_IsAtIntersection; }
+		bool GetIsRespawning() const { return m_IsRespawning; }
 
 		// SETTERS
-		void SetMap(std::weak_ptr<MapComponent> map) { m_pMap = map; }
 		void SetDirection(LW2D::Direction dir);
 		void SetSpeed(float speed) { m_Speed = speed; }
 		void SetDoMove(bool doMove) { m_DoMove = doMove; }
@@ -71,10 +67,7 @@ namespace LW2D
 		// Respawning
 		const float m_RespawnTime{ 1.f };
 		float m_RespawnTimer{ 0.f };
-		bool m_IsVulnerable{ false };
-
-		// Events
-std::unique_ptr<Event<>> m_pOnRespawn;
+		bool m_IsRespawning{ false };
 
 		void SnapToGrid();
 		void CheckForIntersection(const glm::vec2& pos, const std::vector<bool>& walls);

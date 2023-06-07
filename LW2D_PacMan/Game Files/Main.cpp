@@ -29,8 +29,6 @@
 #include "../GameComponents/GhostComponent.h"
 #include "../GameComponents/CharacterComponent.h"
 
-std::shared_ptr<LW2D::GameObject> pacManGO;
-
 using namespace std::placeholders;
 
 void OnGUI()
@@ -39,14 +37,6 @@ void OnGUI()
 
 	if(ImGui::Begin("[DEBUG]", nullptr, window_flags))
 	{
-		const auto pos{ pacManGO->GetTransform().GetWorldPosition() };
-		const bool isSnapped{ pacManGO->GetComponent<LW2D::CharacterComponent>()->GetIsSnappedToGrid() };
-
-		// Display PacMans pos in ImGui text
-		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.f, isSnapped * 0.9f, !isSnapped * 0.9f, 1.f));
-		ImGui::Text("PacMan Pos: %.2f, %.2f", pos.x, pos.y);
-		ImGui::PopStyleColor();
-
 		if (ImGui::Button("Start AudioSystem"))
 		{
 			LW2D::ServiceLocator::GetSoundSystem().StartUp();
@@ -87,7 +77,7 @@ void OnGUI()
 
 void load(SDL_Window* pWindow)
 {
-	auto& scene = LW2D::SceneManager::GetInstance().CreateScene("Demo", OnGUI);
+	auto& scene = LW2D::SceneManager::GetInstance().CreateScene("Solo", OnGUI);
 
 #pragma region Scene
 	// BACKGROUND OBJECT
@@ -122,12 +112,15 @@ void load(SDL_Window* pWindow)
 	p1->GetTransform().SetParent(p1);
 
 	p1->AddComponent<LW2D::RenderComponent>()->SetTexture("PacMan.png");
+
+	// Health Component
 	auto healthComponent = p1->AddComponent<LW2D::HealthComponent>();
 	healthComponent->SetLives(3);
+
+	// Score Component
 	auto scoreComponent = p1->AddComponent<LW2D::ScoreComponent>();
 	scene.Add(p1);
 
-	pacManGO = p1;
 	auto pacMan = p1->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 160.f, 240.f });
 	p1->AddComponent<LW2D::PacManComponent>();
 
@@ -146,7 +139,6 @@ void load(SDL_Window* pWindow)
 		textComponent->SetText("Lives: " + std::to_string(lives));
 	};
 	healthComponent->GetOnKillEvent()->AddListener(DecrementHealthP1);
-	healthComponent->GetOnKillEvent()->AddListener(std::bind(&LW2D::CharacterComponent::Respawn, pacMan, _1));
 
 	// SCORE DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Score Display P1");
@@ -186,10 +178,6 @@ void load(SDL_Window* pWindow)
 	moveCommand = std::make_shared<LW2D::MoveCommand>(pacMan, LW2D::Direction::Right);
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_D, SDL_KEYMAPCHANGED), moveCommand);
 	LW2D::Input::GetInstance().AddCommand(std::make_tuple(0, LW2D::GenericController::ControllerButton::DPadRight, LW2D::KeyState::Down), moveCommand);
-
-	// KILL P1
-	auto killCommand = std::make_shared<LW2D::KillCommand>(p1->GetComponent<LW2D::HealthComponent>());
-	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_K, SDL_KEYDOWN), killCommand);
 #pragma endregion
 
 #pragma region Ghosts
@@ -197,9 +185,13 @@ void load(SDL_Window* pWindow)
 	auto ghost = std::make_shared<LW2D::GameObject>("Ghost 1");
 	ghost->GetTransform().SetParent(ghost);
 
-	auto charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 145.f, 144.f });
+	ghost->AddComponent<LW2D::HealthComponent>()->SetLives(2);
+
+	auto charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 145.f, 144.f }, 0.f);
 	charComp->SetSpeed(56.f);
+
 	auto ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
+	ghostComp->GetOnGhostKilled()->AddListener(IncrementScoreP1);
 	
 	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
 	scene.Add(ghost);
@@ -208,9 +200,13 @@ void load(SDL_Window* pWindow)
 	ghost = std::make_shared<LW2D::GameObject>("Ghost 2");
 	ghost->GetTransform().SetParent(ghost);
 
-	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 160.f, 144.f });
+	ghost->AddComponent<LW2D::HealthComponent>()->SetLives(2);
+
+	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 160.f, 144.f }, 0.f);
 	charComp->SetSpeed(56.f);
+
 	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
+	ghostComp->GetOnGhostKilled()->AddListener(IncrementScoreP1);
 
 	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
 	scene.Add(ghost);
@@ -219,9 +215,13 @@ void load(SDL_Window* pWindow)
 	ghost = std::make_shared<LW2D::GameObject>("Ghost 3");
 	ghost->GetTransform().SetParent(ghost);
 
-	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 176.f, 144.f });
+	ghost->AddComponent<LW2D::HealthComponent>()->SetLives(2);
+
+	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 176.f, 144.f }, 0.f);
 	charComp->SetSpeed(56.f);
+
 	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
+	ghostComp->GetOnGhostKilled()->AddListener(IncrementScoreP1);
 
 	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
 	scene.Add(ghost);
@@ -230,9 +230,13 @@ void load(SDL_Window* pWindow)
 	ghost = std::make_shared<LW2D::GameObject>("Ghost 4");
 	ghost->GetTransform().SetParent(ghost);
 
-	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 161.f, 128.f });
+	ghost->AddComponent<LW2D::HealthComponent>()->SetLives(2);
+
+	charComp = ghost->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 161.f, 128.f }, 0.f);
 	charComp->SetSpeed(56.f);
+
 	ghostComp = ghost->AddComponent<LW2D::GhostComponent>();
+	ghostComp->GetOnGhostKilled()->AddListener(IncrementScoreP1);
 
 	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
 	scene.Add(ghost);
@@ -247,6 +251,7 @@ void load(SDL_Window* pWindow)
 
 	LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_chomp.wav", (unsigned short)LW2D::Sounds::PacManEat, true);
 	LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_death.wav", (unsigned short)LW2D::Sounds::PacManDeath, false);
+	LW2D::ServiceLocator::GetSoundSystem().AddSound("pacman_eatghost.wav", (unsigned short)LW2D::Sounds::PacManEatGhost, false);
 	LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)LW2D::Sounds::PacManEat, 64.f);
 	
 }

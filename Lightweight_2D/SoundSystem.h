@@ -7,7 +7,8 @@ namespace LW2D
 	enum class Sounds : unsigned short
 	{
 		PacManDeath = 0,
-		PacManEat
+		PacManEat,
+		PacManEatGhost
 	};
 
 	using SoundId = unsigned short;

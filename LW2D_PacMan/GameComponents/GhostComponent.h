@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "EngineComponents/Component.h"
+#include "Event.h"
 
 namespace LW2D
 {
@@ -18,6 +19,9 @@ namespace LW2D
 
 		void Update() override;
 
+		// Getters
+		Event<int>* GetOnGhostKilled() const { return m_pOnGhostKilled.get(); }
+
 	private:
 		// Cached refs
 		std::shared_ptr<Blackboard> m_pBlackboard;
@@ -25,6 +29,11 @@ namespace LW2D
 		// States
 		std::shared_ptr<State> m_pCurrentState;
 
+		// Events
+		const int m_GhostKilledScore{ 100 };
+		std::unique_ptr<Event<int>> m_pOnGhostKilled;
+
 		void CalculateClosestPlayer();
+		void ChangeState(State* newState);
 	};
 }

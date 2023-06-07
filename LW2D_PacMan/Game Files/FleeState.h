@@ -16,10 +16,10 @@ namespace LW2D
 		void OnExit(std::shared_ptr<Blackboard> blackboard) override;
 
 	private:
-		const float m_FleeTime{ 4.f };
+		const float m_FleeTime{ 5.f };
 		float m_FleeTimer{};
 
 		void HandleMovement(std::shared_ptr<Blackboard> blackboard);
-		void HandlePlayerCollision(std::shared_ptr<Blackboard> blackboard);
+		State* HandlePlayerCollision(std::shared_ptr<Blackboard> blackboard);
 	};
 }

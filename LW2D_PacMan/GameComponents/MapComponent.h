@@ -37,7 +37,7 @@ namespace LW2D
 		uint8_t m_Rows{};
 		uint8_t m_Cols{};
 
-		const int m_PelletScore{ 50 };
+		const int m_PelletScore{ 10 };
 		const int m_PowerPelletScore{ 50 };
 
 		std::unique_ptr<Event<int>> m_pOnPelletCollected;

@@ -1,36 +1,38 @@
 #include "CharacterComponent.h"
 #include "GameObject.h"
-#include "SceneManager.h"
 #include "GameTime.h"
-#include "MapComponent.h"
+#include "SceneManager.h"
 #include "Scene.h"
 
-LW2D::CharacterComponent::CharacterComponent(std::weak_ptr<GameObject> go, const glm::vec2& spawnPos)
+#include "MapComponent.h"
+#include "HealthComponent.h"
+
+LW2D::CharacterComponent::CharacterComponent(std::weak_ptr<GameObject> go, const glm::vec2& spawnPos, float respawnTime)
 	: Component{ go }
 	, m_SpawnPos{ spawnPos }
+	, m_RespawnTime{ respawnTime }
 {
 	GetTransform().SetLocalPosition(m_SpawnPos);
 
-	m_pOnRespawn = std::make_unique<Event<>>();
-
 	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>();
-	if (m_pMap.lock() == nullptr)
-	{
-		throw std::exception("CharacterComponent::CharacterComponent() > Failed to find MapComponent");
-	}
+
+	go.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener(std::bind(&CharacterComponent::Respawn, this, std::placeholders::_1));
 }
 
 void LW2D::CharacterComponent::Update()
 {
 	HandleMovement();
-	if (m_RespawnTimer > 0.f)
+
+	// Handle respawning
+	if (m_IsRespawning)
 	{
 		m_RespawnTimer -= SceneManager::GetInstance().GetGameTime()->GetDeltaTime() / 1000;
 		if (m_RespawnTimer <= 0.f)
 		{
 			m_RespawnTimer = 0.0f;
 			GetTransform().SetLocalPosition(m_SpawnPos);
-			m_IsVulnerable = m_DoMove = true;
+			m_IsRespawning = false;
+			m_DoMove = true;
 			m_CurrentDirection = LW2D::Direction::Right;
 		}
 	}
@@ -42,8 +44,8 @@ void LW2D::CharacterComponent::Respawn(int lives)
 	if (lives > 0)
 	{
 		m_RespawnTimer = m_RespawnTime;
-		m_IsVulnerable = m_DoMove = false;
-		m_pOnRespawn->Invoke();
+		m_IsRespawning = true;
+		m_DoMove = false;
 	}
 }
 

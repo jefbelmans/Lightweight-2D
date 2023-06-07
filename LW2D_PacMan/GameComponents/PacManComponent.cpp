@@ -13,14 +13,7 @@ LW2D::PacManComponent::PacManComponent(std::weak_ptr<GameObject> go)
 {
 	// Get cached refs
 	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>();
-	if (m_pMap.lock() == nullptr)
-		throw std::exception("PacManComponent::PacManComponent() > Failed to find MapComponent");
-
 	m_pCharacter = go.lock()->GetComponent<CharacterComponent>();
-	if (m_pCharacter.lock() == nullptr)
-		throw std::exception("PacManComponent::PacManComponent() > Failed to find CharacterComponent");
-
-	m_pCharacter.lock()->SetIsVulnerable(true);
 
 	// Subscribe to events
 	go.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener(std::bind(&PacManComponent::OnKill, this));

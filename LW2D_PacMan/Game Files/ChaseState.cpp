@@ -17,12 +17,11 @@ LW2D::State* LW2D::ChaseState::Update(std::shared_ptr<Blackboard> blackboard)
 	HanlePlayerCollision(blackboard);
 	HandleMovement(blackboard);
 
-	const auto go = blackboard->Get<std::weak_ptr<GameObject>>("Agent");
-	const auto closestPlayer = blackboard->Get<std::weak_ptr<GameObject>>("ClosestPlayer");
+	const auto go = blackboard->Get<GameObject*>("Agent");
+	const auto closestPlayer = blackboard->Get<GameObject*>("ClosestPlayer");
 
-	if (go.lock()->GetComponent<CharacterComponent>()->GetIsVulnerable())
-		return new FleeState();
-	else if (glm::distance(closestPlayer.lock()->GetTransform().GetWorldPosition(), go.lock()->GetTransform().GetWorldPosition()) > m_ChangeToWanderDistance)
+	if (glm::distance(closestPlayer->GetTransform().GetWorldPosition(), go->GetTransform().GetWorldPosition()) > m_ChangeToWanderDistance 
+		|| closestPlayer->GetComponent<HealthComponent>()->IsDead())
 		return new WanderState();
 
 	return nullptr;
@@ -30,39 +29,39 @@ LW2D::State* LW2D::ChaseState::Update(std::shared_ptr<Blackboard> blackboard)
 
 void LW2D::ChaseState::HanlePlayerCollision(std::shared_ptr<Blackboard> blackboard)
 {
-	const auto go = blackboard->Get<std::weak_ptr<GameObject>>("Agent");
-	const auto map = blackboard->Get<std::weak_ptr<MapComponent>>("Map");
-	const auto player1 = blackboard->Get<std::weak_ptr<GameObject>>("Player1");
-	const auto player2 = blackboard->Get<std::weak_ptr<GameObject>>("Player2");
+	const auto go = blackboard->Get<GameObject*>("Agent");
+	const auto map = blackboard->Get<MapComponent*>("Map");
+	const auto player1 = blackboard->Get<GameObject*>("Player1");
+	const auto player2 = blackboard->Get<GameObject*>("Player2");
 
 	// Kill player if they are on the same tile
-	const auto& rowCol = map.lock()->GetIndicesFromPos(go.lock()->GetTransform().GetWorldPosition());
-	if (!player1.expired())
+	const auto& rowCol = map->GetIndicesFromPos(go->GetTransform().GetWorldPosition());
+	if (player1)
 	{
-		const auto& player1RowCol = map.lock()->GetIndicesFromPos(player1.lock()->GetTransform().GetWorldPosition());
-		if (rowCol == player1RowCol && player1.lock()->GetComponent<CharacterComponent>()->GetIsVulnerable())
-			player1.lock()->GetComponent<HealthComponent>()->Kill();
+		const auto& player1RowCol = map->GetIndicesFromPos(player1->GetTransform().GetWorldPosition());
+		if (rowCol == player1RowCol && !player1->GetComponent<CharacterComponent>()->GetIsRespawning())
+			player1->GetComponent<HealthComponent>()->Kill();
 	}
 
-	if (!player2.expired())
+	if (player2)
 	{
-		const auto& player2RowCol = map.lock()->GetIndicesFromPos(player2.lock()->GetTransform().GetWorldPosition());
-		if (rowCol == player2RowCol && player2.lock()->GetComponent<CharacterComponent>()->GetIsVulnerable())
-			player2.lock()->GetComponent<HealthComponent>()->Kill();
+		const auto& player2RowCol = map->GetIndicesFromPos(player2->GetTransform().GetWorldPosition());
+		if (rowCol == player2RowCol && !player2->GetComponent<CharacterComponent>()->GetIsRespawning())
+			player2->GetComponent<HealthComponent>()->Kill();
 	}
 }
 
 void LW2D::ChaseState::HandleMovement(std::shared_ptr<Blackboard> blackboard)
 {
-	const auto go = blackboard->Get<std::weak_ptr<GameObject>>("Agent");
-	const auto character = go.lock()->GetComponent<CharacterComponent>();
+	const auto go = blackboard->Get<GameObject*>("Agent");
+	const auto character = go->GetComponent<CharacterComponent>();
 
 	if (!character->GetIsAtIntersection()) return;
 
-	const auto& pos = go.lock()->GetTransform().GetWorldPosition();
-	const auto closestPlayer = blackboard->Get<std::weak_ptr<GameObject>>("ClosestPlayer");
+	const auto& pos = go->GetTransform().GetWorldPosition();
+	const auto closestPlayer = blackboard->Get<GameObject*>("ClosestPlayer");
 
-	const glm::vec2& closestPlayerPos = closestPlayer.lock()->GetTransform().GetWorldPosition();
+	const glm::vec2& closestPlayerPos = closestPlayer->GetTransform().GetWorldPosition();
 
 	// Get the direction to the closest player
 	const auto& availableDirections = character->GetAvailableDirections();
