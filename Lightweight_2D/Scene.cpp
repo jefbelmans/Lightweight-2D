@@ -54,7 +54,7 @@ void LW2D::Scene::OnGUI() const
 	m_GUI();
 }
 
-std::shared_ptr<GameObject> LW2D::Scene::FindObjectByName(const std::string& name) const
+std::weak_ptr<GameObject> LW2D::Scene::FindObjectByName(const std::string& name) const
 {
 	auto it = std::find_if(begin(m_objects), end(m_objects), [name](const std::shared_ptr<GameObject>& go) {
 		return go->GetName() == name;
@@ -63,5 +63,5 @@ std::shared_ptr<GameObject> LW2D::Scene::FindObjectByName(const std::string& nam
 	if (it != end(m_objects))
 		return *it;
 	else
-		return nullptr;
+		return std::weak_ptr<GameObject>();
 }

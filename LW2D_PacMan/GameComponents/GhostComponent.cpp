@@ -18,9 +18,9 @@ LW2D::GhostComponent::GhostComponent(std::weak_ptr<GameObject> go)
 
 	m_pBlackboard->Set("Player1", SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 1"));
 	m_pBlackboard->Set("Player2", SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 2"));
-	m_pBlackboard->Set("Map", SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map")->GetComponent<MapComponent>());
-	m_pBlackboard->Set("ClosestPlayer", std::shared_ptr<GameObject>());
-	m_pBlackboard->Set("Agent", GetGameObject());
+	m_pBlackboard->Set("Map", std::weak_ptr<MapComponent>(SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>()));
+	m_pBlackboard->Set("ClosestPlayer", std::weak_ptr<GameObject>());
+	m_pBlackboard->Set("Agent", std::weak_ptr<GameObject>(GetGameObject()));
 }
 
 void LW2D::GhostComponent::Update()
@@ -39,22 +39,22 @@ void LW2D::GhostComponent::Update()
 void LW2D::GhostComponent::CalculateClosestPlayer()
 {
 	const auto& pos = GetTransform().GetWorldPosition();
-	auto closestPlayer = m_pBlackboard->Get<std::shared_ptr<GameObject>>("ClosestPlayer");
-	const auto player1 = m_pBlackboard->Get<std::shared_ptr<GameObject>>("Player1");
-	const auto player2 = m_pBlackboard->Get<std::shared_ptr<GameObject>>("Player2");
+	auto closestPlayer = m_pBlackboard->Get<std::weak_ptr<GameObject>>("ClosestPlayer");
+	const auto player1 = m_pBlackboard->Get<std::weak_ptr<GameObject>>("Player1");
+	const auto player2 = m_pBlackboard->Get<std::weak_ptr<GameObject>>("Player2");
 
 	// Closest player
-	if (player1 && !player2)
+	if (!player1.expired() && player2.expired())
 	{
 		closestPlayer = player1;
 	}
-	else if (!player1 && player2)
+	else if (player1.expired() && !player2.expired())
 	{
 		closestPlayer = player2;
 	}
-	else if (!player1 && !player2)
+	else if (!player1.expired() && !player2.expired())
 	{
-		if (glm::distance(player1->GetTransform().GetWorldPosition(), pos) < glm::distance(player2->GetTransform().GetWorldPosition(), pos))
+		if (glm::distance(player1.lock()->GetTransform().GetWorldPosition(), pos) < glm::distance(player2.lock()->GetTransform().GetWorldPosition(), pos))
 			closestPlayer = player1;
 		else
 			closestPlayer = player2;

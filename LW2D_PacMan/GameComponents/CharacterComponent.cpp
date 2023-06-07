@@ -13,7 +13,7 @@ LW2D::CharacterComponent::CharacterComponent(std::weak_ptr<GameObject> go, const
 
 	m_pOnRespawn = std::make_unique<Event<>>();
 
-	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map")->GetComponent<MapComponent>();
+	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>();
 	if (m_pMap.lock() == nullptr)
 	{
 		throw std::exception("CharacterComponent::CharacterComponent() > Failed to find MapComponent");

@@ -17,7 +17,7 @@ namespace LW2D
 		void Render() const;
 		void OnGUI() const;
 
-		std::shared_ptr<GameObject> FindObjectByName(const std::string& name) const;
+		std::weak_ptr<GameObject> FindObjectByName(const std::string& name) const;
 
 		~Scene();
 		Scene(const Scene& other) = delete;

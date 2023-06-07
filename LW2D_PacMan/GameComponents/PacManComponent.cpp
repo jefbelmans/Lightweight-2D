@@ -12,7 +12,7 @@ LW2D::PacManComponent::PacManComponent(std::weak_ptr<GameObject> go)
 	: Component{ go }
 {
 	// Get cached refs
-	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map")->GetComponent<MapComponent>();
+	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>();
 	if (m_pMap.lock() == nullptr)
 		throw std::exception("PacManComponent::PacManComponent() > Failed to find MapComponent");
 
