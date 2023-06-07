@@ -1,6 +1,6 @@
 #include <SDL.h>
-
 #include <imgui.h>
+#include <algorithm>
 
 #if _DEBUG
 #if __has_include(<vld.h>)
@@ -38,21 +38,35 @@ using namespace std::placeholders;
 int g_windowWidth, g_windowHeight;
 char g_playerName[4];
 
+std::vector<std::pair<std::string, int>> g_highScores{};
+
 void OnGUI()
 {
-	if (!LW2D::SceneManager::GetInstance().GetActiveScene()->FindObjectByName("GameMode").lock()->GetComponent<LW2D::GameModeComponent>()->GetIsGameOver())
+	if (LW2D::SceneManager::GetInstance().GetActiveScene()->FindObjectByName("GameMode").lock()->GetComponent<LW2D::GameModeComponent>()->GetIsGameOver())
 	{
 		ImGui::Begin("Game Menu", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
 		ImGui::SetWindowPos({ 4.f, g_windowHeight - 100.f });
 		ImGui::SetWindowSize({ 252.f, 96.f });
+
 		ImGui::SetNextItemWidth(32.f);
 		ImGui::InputText("Name", g_playerName, IM_ARRAYSIZE(g_playerName));
-		if (ImGui::Button("Save Score", {128.f, 24.f}))
+		if (ImGui::Button("Save Score", { 128.f, 24.f }))
 		{
-
+			g_highScores.push_back({ g_playerName, LW2D::SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 1").lock()->GetComponent<LW2D::ScoreComponent>()->GetScore() });
+			std::sort(g_highScores.begin(), g_highScores.end(), [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) { return a.second > b.second; });
+			LW2D::ResourceManager::GetInstance().SaveHighscores("highscores.bin", g_highScores);
 		}
 		ImGui::End();
 	}
+
+	ImGui::Begin("High scores", nullptr, ImGuiWindowFlags_NoResize);
+	ImGui::BeginListBox("##HighScores", { 96.f, 64.f });
+	for (auto& score : g_highScores)
+	{
+		ImGui::Text("%s: %d", score.first.c_str(), score.second);
+	}
+	ImGui::EndListBox();
+	ImGui::End();
 }
 
 void MenuGUI()
@@ -77,6 +91,8 @@ void MenuGUI()
 
 void load(SDL_Window* pWindow)
 {
+	g_highScores = LW2D::ResourceManager::GetInstance().LoadHighscores("highscores.bin");
+
 #pragma region Audio
 	// Initialize sound system in service locator
 #if _DEBUG

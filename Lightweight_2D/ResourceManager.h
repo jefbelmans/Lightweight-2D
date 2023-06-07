@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <vector>
 #include "Singleton.h"
 
 namespace LW2D
@@ -13,6 +14,10 @@ namespace LW2D
 		void Init(const std::string& data);
 		std::shared_ptr<Texture2D> LoadTexture(const std::string& file) const;
 		std::shared_ptr<Font> LoadFont(const std::string& file, unsigned int size) const;
+
+		// High scores
+		std::vector<std::pair<std::string, int>> LoadHighscores(const std::string& fileName) const;
+		bool SaveHighscores(const std::string& fileName, const std::vector<std::pair<std::string, int>>& data) const;
 
 	private:
 		friend class Singleton<ResourceManager>;
