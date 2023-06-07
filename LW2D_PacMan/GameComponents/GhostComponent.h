@@ -17,6 +17,7 @@ namespace LW2D
 		GhostComponent(std::weak_ptr<GameObject> go, bool isCPU = true);
 		~GhostComponent() = default;
 
+		void Initialize() override;
 		void Update() override;
 
 		// Getters
@@ -27,6 +28,7 @@ namespace LW2D
 		std::shared_ptr<Blackboard> m_pBlackboard;
 
 		// States
+		bool m_IsCPU{};
 		std::shared_ptr<State> m_pCurrentState;
 
 		// Events

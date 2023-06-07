@@ -1,4 +1,5 @@
 #include <SDL.h>
+
 #include <imgui.h>
 
 #if _DEBUG
@@ -12,11 +13,13 @@
 #include "ResourceManager.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "SceneManager.h"
 #include "Scene.h"
 #include "Commands.h"
 #include "Input.h"
 #include "GenericController.h"
 #include "ServiceLocator.h"
+#include "Renderer.h"
 
 // COMPONENTS
 #include "EngineComponents/RenderComponent.h"
@@ -32,10 +35,24 @@
 #include "../GameComponents/GameModeComponent.h"
 
 using namespace std::placeholders;
+int g_windowWidth, g_windowHeight;
+char g_playerName[4];
 
 void OnGUI()
 {
+	if (!LW2D::SceneManager::GetInstance().GetActiveScene()->FindObjectByName("GameMode").lock()->GetComponent<LW2D::GameModeComponent>()->GetIsGameOver())
+	{
+		ImGui::Begin("Game Menu", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
+		ImGui::SetWindowPos({ 4.f, g_windowHeight - 100.f });
+		ImGui::SetWindowSize({ 252.f, 96.f });
+		ImGui::SetNextItemWidth(32.f);
+		ImGui::InputText("Name", g_playerName, IM_ARRAYSIZE(g_playerName));
+		if (ImGui::Button("Save Score", {128.f, 24.f}))
+		{
 
+		}
+		ImGui::End();
+	}
 }
 
 void MenuGUI()
@@ -89,9 +106,12 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetParent(go);
 
 	auto map = go->AddComponent<LW2D::MapComponent>();
+	
+	g_windowWidth = map->GetCellSize() * map->GetCols();
+	g_windowHeight = map->GetCellSize() * map->GetRows() + 144;
 
 	// RESIZE WINDOW TO MAP
-	SDL_SetWindowSize(pWindow, map->GetCellSize() * map->GetCols(), map->GetCellSize() * map->GetRows() + 144);
+	SDL_SetWindowSize(pWindow, g_windowWidth, g_windowHeight);
 
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");
@@ -159,9 +179,6 @@ void load(SDL_Window* pWindow)
 
 	map = go->AddComponent<LW2D::MapComponent>();
 	sceneSolo.Add(go);
-
-	// RESIZE WINDOW TO MAP
-	SDL_SetWindowSize(pWindow, map->GetCellSize() * map->GetCols(), map->GetCellSize() * map->GetRows() + 144);
 
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");
@@ -308,10 +325,16 @@ void load(SDL_Window* pWindow)
 	sceneSolo.Add(ghost);
 #pragma endregion
 
+	int wWidth, wHeight;
+	SDL_GetWindowSize(pWindow, &wWidth, &wHeight);
+
 	// GAMEMODE
 	go = std::make_shared<LW2D::GameObject>("GameMode");
 	go->GetTransform().SetParent(go);
+	go->GetTransform().SetLocalPosition(wWidth * 0.5f - 128.f, wHeight * 0.5f - 96.f);
 
+	auto eorFont = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 24);
+	go->AddComponent<LW2D::TextComponent>(eorFont, "Game Over - You lose! :(", SDL_Color{64, 255, 64});
 	go->AddComponent<LW2D::GameModeComponent>();
 	sceneSolo.Add(go);
 
@@ -333,9 +356,6 @@ void load(SDL_Window* pWindow)
 
 	map = go->AddComponent<LW2D::MapComponent>();
 	sceneVersus.Add(go);
-
-	// RESIZE WINDOW TO MAP
-	SDL_SetWindowSize(pWindow, map->GetCellSize()* map->GetCols(), map->GetCellSize()* map->GetRows() + 144);
 
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");
@@ -510,7 +530,9 @@ void load(SDL_Window* pWindow)
 	// GAMEMODE
 	go = std::make_shared<LW2D::GameObject>("GameMode");
 	go->GetTransform().SetParent(go);
+	go->GetTransform().SetLocalPosition(wWidth * 0.5f - 128.f, wHeight * 0.5f - 96.f);
 
+	go->AddComponent<LW2D::TextComponent>(eorFont, "Game Over - You lose! :(", SDL_Color{ 64, 255, 64 });
 	go->AddComponent<LW2D::GameModeComponent>();
 	sceneVersus.Add(go);
 #pragma endregion
@@ -531,9 +553,6 @@ void load(SDL_Window* pWindow)
 
 	map = go->AddComponent<LW2D::MapComponent>();
 	sceneCoop.Add(go);
-
-	// RESIZE WINDOW TO MAP
-	SDL_SetWindowSize(pWindow, map->GetCellSize()* map->GetCols(), map->GetCellSize()* map->GetRows() + 144);
 
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");
@@ -733,7 +752,9 @@ void load(SDL_Window* pWindow)
 	// GAMEMODE
 	go = std::make_shared<LW2D::GameObject>("GameMode");
 	go->GetTransform().SetParent(go);
+	go->GetTransform().SetLocalPosition(wWidth * 0.5f - 128.f, wHeight * 0.5f - 96.f);
 
+	go->AddComponent<LW2D::TextComponent>(eorFont, "Game Over - You lose! :(", SDL_Color{ 64, 255, 64 });
 	go->AddComponent<LW2D::GameModeComponent>();
 	sceneCoop.Add(go);
 

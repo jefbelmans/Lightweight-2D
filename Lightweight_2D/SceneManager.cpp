@@ -4,10 +4,13 @@
 
 void LW2D::SceneManager::Initialize()
 {
-	for (auto& scene : m_scenes)
+	for (int i = 0; i < m_scenes.size(); i++)
 	{
-		scene->Initialize();
+		m_ActiveSceneIndex = static_cast<uint8_t>(i);
+		m_scenes[i]->Initialize();
 	}
+
+	m_ActiveSceneIndex = 0;
 }
 
 void LW2D::SceneManager::Update()

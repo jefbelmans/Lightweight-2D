@@ -41,6 +41,8 @@ void Scene::Update()
 {
 	for(auto& object : m_objects)
 	{
+		if (!object->IsActive()) continue;
+
 		object->Update();
 	}
 }
@@ -49,6 +51,7 @@ void Scene::Render() const
 {
 	for (const auto& object : m_objects)
 	{
+		if (!object->IsActive()) continue;
 		object->Render();
 	}
 }

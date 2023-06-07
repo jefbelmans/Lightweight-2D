@@ -37,6 +37,10 @@ namespace LW2D
 		// TRANSFORM
 		Transform& GetTransform() { return m_Transform; }
 
+		// Active
+		bool IsActive() const { return m_IsActive; }
+		void SetActive(bool isActive) { m_IsActive = isActive; }
+
 		// SCENEGRAPH
 		std::shared_ptr<GameObject> GetParent() const { return m_pParent.lock(); }
 		void SetParent(std::shared_ptr<GameObject> pParent, bool keepWorldPosition = true);
@@ -51,9 +55,10 @@ namespace LW2D
 
 	private:
 		// GAMEOBJECT PROPERTIES
+		bool m_IsActive{ true };
 		std::string m_Name;
 		Transform m_Transform{};
-
+	
 		// SCENEGRAPH
 		std::weak_ptr<GameObject> m_pParent;
 		std::vector<std::weak_ptr<GameObject>> m_pChildren;

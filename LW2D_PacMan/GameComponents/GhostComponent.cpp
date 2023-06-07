@@ -8,6 +8,7 @@
 #include "../GameComponents/CharacterComponent.h"
 #include "../GameComponents/MapComponent.h"
 #include "../GameComponents/HealthComponent.h"
+#include "../GameComponents/GameModeComponent.h"
 
 #include "../Game Files/State.h"
 #include "../Game Files/WanderState.h"
@@ -16,6 +17,7 @@
 
 LW2D::GhostComponent::GhostComponent(std::weak_ptr<GameObject> go, bool isCPU)
 	: Component(go)
+	, m_IsCPU{ isCPU }
 {
 	m_pOnGhostKilled = std::make_unique<Event<int>>();
 	m_pBlackboard = std::make_shared<Blackboard>();
@@ -24,23 +26,27 @@ LW2D::GhostComponent::GhostComponent(std::weak_ptr<GameObject> go, bool isCPU)
 	// Flee when power pellet is collected
 	MapComponent* map = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>().get();
 	map->GetOnPowerPelletCollected()->AddListener([&](int) {
-			ChangeState(new FleeState());
+		ChangeState(new FleeState());
 		});
 
 	// Kill ghost when player has power pellet
-	go.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener([&](int)
+	m_pGameObject.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener([&](int)
 		{
 			LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)LW2D::Sounds::PacManEatGhost, 64.f);
 			m_pGameObject.lock()->GetComponent<HealthComponent>()->SetLives(2);
 			m_pOnGhostKilled->Invoke(m_GhostKilledScore);
 		});
+}
 
+void LW2D::GhostComponent::Initialize()
+{
 	// Initialize blackboard
-	m_pBlackboard->Set("IsCPU", isCPU);
+	m_pBlackboard->Set("IsCPU", m_IsCPU);
 	m_pBlackboard->Set("Player1", SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 1").lock().get());
 	m_pBlackboard->Set("Player2", SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 2").lock().get());
-	m_pBlackboard->Set("Map", map);
 	m_pBlackboard->Set("Agent", GetGameObject().get());
+	m_pBlackboard->Set("Map", SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>().get());
+	m_pBlackboard->Set("GameMode", SceneManager::GetInstance().GetActiveScene()->FindObjectByName("GameMode").lock()->GetComponent<GameModeComponent>().get());
 }
 
 void LW2D::GhostComponent::Update()

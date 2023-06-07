@@ -90,3 +90,8 @@ void LW2D::Renderer::RenderTexture(const Texture2D& texture, const float x, cons
 }
 
 inline SDL_Renderer* LW2D::Renderer::GetSDLRenderer() const { return m_renderer; }
+
+SDL_Window* LW2D::Renderer::GetSDLWindow() const
+{
+	return m_window;
+}

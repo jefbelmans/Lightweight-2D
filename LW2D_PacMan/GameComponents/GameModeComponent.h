@@ -6,6 +6,7 @@
 namespace LW2D
 {
 	class HealthComponent;
+	class TextComponent;
 	class GameModeComponent final : public Component
 	{
 	public:
@@ -17,9 +18,17 @@ namespace LW2D
 		GameModeComponent& operator=(const GameModeComponent&) = delete;
 		GameModeComponent& operator=(GameModeComponent&&) = delete;
 
+		void Initialize() override;
+
+		bool GetIsGameOver() const { return m_IsGameOver; }
+
 	private:
+		// Cached refs
+		std::weak_ptr<TextComponent> m_pEndOfGameText{};
 		std::weak_ptr<HealthComponent> m_pHealthP1{};
 		std::weak_ptr<HealthComponent> m_pHealthP2{};
+
+		bool m_IsGameOver{};
 
 		int m_RemainingPellets{};
 

@@ -10,6 +10,7 @@
 #include "../GameComponents/GhostComponent.h"
 #include "../GameComponents/MapComponent.h"
 #include "../GameComponents/HealthComponent.h"
+#include "../GameComponents/GameModeComponent.h"
 
 #include "../Game Files/WanderState.h"
 #include "../Game Files/Blackboard.h"
@@ -74,6 +75,8 @@ void LW2D::FleeState::HandleMovement(std::shared_ptr<Blackboard> blackboard)
 
 LW2D::State* LW2D::FleeState::HandlePlayerCollision(std::shared_ptr<Blackboard> blackboard)
 {
+	if (blackboard->Get<GameModeComponent*>("GameMode")->GetIsGameOver()) return nullptr;
+
 	auto go = blackboard->Get<GameObject*>("Agent");
 	const auto map = blackboard->Get<MapComponent*>("Map");
 	const auto player1 = blackboard->Get<GameObject*>("Player1");
