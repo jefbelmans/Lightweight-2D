@@ -24,6 +24,7 @@ namespace LW2D
 		uint8_t GetCellSize() const { return m_CellSize; }
 		uint8_t GetRows() const { return m_Rows; }
 		uint8_t GetCols() const { return m_Cols; }
+		int GetNumPellets() const { return m_NumPellets; }
 
 		Event<int>* GetOnPelletCollected() const { return m_pOnPelletCollected.get(); }
 		Event<int>* GetOnPowerPelletCollected() const { return m_pOnPowerPelletCollected.get(); }
@@ -32,6 +33,7 @@ namespace LW2D
 
 	private:
 		std::vector<std::vector<Cell>> m_Map{};
+		int m_NumPellets{};
 
 		const uint8_t m_CellSize{16u};
 		uint8_t m_Rows{};

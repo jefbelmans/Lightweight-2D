@@ -176,6 +176,7 @@
     <ClCompile Include="GameComponents\PacManComponent.cpp" />
     <ClCompile Include="GameComponents\CharacterComponent.cpp" />
     <ClCompile Include="Game Files\WanderState.cpp" />
+    <ClCompile Include="GameComponents\GameModeComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game Files\Blackboard.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="GameComponents\PacManComponent.h" />
     <ClInclude Include="GameComponents\CharacterComponent.h" />
     <ClInclude Include="GameComponents\GhostComponent.h" />
+    <ClInclude Include="GameComponents\GameModeComponent.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Game Files\Utils.h" />
     <ClInclude Include="Game Files\WanderState.h" />

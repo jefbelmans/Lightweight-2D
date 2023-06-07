@@ -14,6 +14,6 @@ namespace LW2D
 		void OnExit(std::shared_ptr<Blackboard> blackboard) override {};
 
 	private:
-		const float m_ChangeToChaseDist{ 64.f };
+		const float m_ChangeToChaseDist{ 96.f };
 	};
 }

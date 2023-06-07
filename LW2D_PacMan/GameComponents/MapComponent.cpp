@@ -110,12 +110,14 @@ void LW2D::MapComponent::ReadMap(const std::vector<std::string>& map)
 					case '.':
 					{
 						m_Map[currRow].emplace_back(Cell::Pellet);
+						m_NumPellets++;
 						break;
 					}
 
 					case 'o':
 					{
 						m_Map[currRow].emplace_back(Cell::PowerPellet);
+						m_NumPellets++;
 						break;
 					}
 				}

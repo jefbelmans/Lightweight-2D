@@ -18,7 +18,7 @@ namespace LW2D
 		void OnExit(std::shared_ptr<Blackboard> blackboard) override {};
 
 	private:
-		const float m_ChangeToWanderDistance{ 64.f };
+		const float m_ChangeToWanderDistance{ 96.f };
 
 		void HanlePlayerCollision(std::shared_ptr<Blackboard> blackboard);
 		void HandleMovement(std::shared_ptr<Blackboard> blackboard);

@@ -29,12 +29,33 @@
 #include "../GameComponents/PacManComponent.h"
 #include "../GameComponents/GhostComponent.h"
 #include "../GameComponents/CharacterComponent.h"
+#include "../GameComponents/GameModeComponent.h"
 
 using namespace std::placeholders;
 
 void OnGUI()
 {
 
+}
+
+void MenuGUI()
+{
+	ImGui::Begin("Menu", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::SetWindowPos({ 64.f, 128.f });
+	ImGui::SetWindowSize({ 224.f, 175.f });
+	if (ImGui::InvisibleButton("SOLO", { 200.f, 50.f }))
+	{
+		LW2D::SceneManager::GetInstance().LoadSceneByName("Solo");
+	}
+	if (ImGui::InvisibleButton("VERSUS", { 200.f, 50.f }))
+	{
+		LW2D::SceneManager::GetInstance().LoadSceneByName("Versus");
+	}
+	if (ImGui::InvisibleButton("CO-OP", { 200.f, 50.f }))
+	{
+		LW2D::SceneManager::GetInstance().LoadSceneByName("Coop");
+	}
+	ImGui::End();
 }
 
 void load(SDL_Window* pWindow)
@@ -54,7 +75,7 @@ void load(SDL_Window* pWindow)
 
 #pragma region Menu Scene
 
-	auto& sceneMenu = LW2D::SceneManager::GetInstance().CreateScene("Menu", OnGUI);
+	auto& sceneMenu = LW2D::SceneManager::GetInstance().CreateScene("Menu", MenuGUI);
 
 #pragma region Scene
 	// BACKGROUND OBJECT
@@ -87,6 +108,37 @@ void load(SDL_Window* pWindow)
 	sceneMenu.GetOnSceneDeactived()->AddListener([]() {
 		LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)LW2D::Sounds::PacManEat, 64.f);
 		});
+
+	auto SoloPacMan = std::make_shared<LW2D::GameObject>("SoloPacMan");
+	SoloPacMan->AddComponent<LW2D::RenderComponent>()->SetTexture("PacMan.png");
+	SoloPacMan->GetTransform().SetParent(SoloPacMan);
+	SoloPacMan->GetTransform().SetLocalPosition(164.f, 156.f);
+	sceneMenu.Add(SoloPacMan);
+
+	auto VersusPacman = std::make_shared<LW2D::GameObject>("VersusPacMan");
+	VersusPacman->AddComponent<LW2D::RenderComponent>()->SetTexture("PacMan.png");
+	VersusPacman->GetTransform().SetParent(VersusPacman);
+	VersusPacman->GetTransform().SetLocalPosition(156.f, 206.f);
+	sceneMenu.Add(VersusPacman);
+
+	auto VersusGhost = std::make_shared<LW2D::GameObject>("VersusGhost");
+	VersusGhost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
+	VersusGhost->GetTransform().SetParent(VersusGhost);
+	VersusGhost->GetTransform().SetLocalPosition(172.f, 206.f);
+	sceneMenu.Add(VersusGhost);
+
+	auto CoopPacman = std::make_shared<LW2D::GameObject>("CoopPacman");
+	CoopPacman->AddComponent<LW2D::RenderComponent>()->SetTexture("PacMan.png");
+	CoopPacman->GetTransform().SetParent(CoopPacman);
+	CoopPacman->GetTransform().SetLocalPosition(156.f, 260.f);
+	sceneMenu.Add(CoopPacman);
+
+	auto CoopMsPacMan = std::make_shared<LW2D::GameObject>("CoopMsPacMan");
+	CoopMsPacMan->AddComponent<LW2D::RenderComponent>()->SetTexture("MsPacMan.png");
+	CoopMsPacMan->GetTransform().SetParent(CoopMsPacMan);
+	CoopMsPacMan->GetTransform().SetLocalPosition(172.f, 260.f);
+	sceneMenu.Add(CoopMsPacMan);
+
 #pragma endregion
 
 #pragma endregion
@@ -117,7 +169,6 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetLocalPosition(18.f, 1.f);
 
 	go->AddComponent<LW2D::FPSComponent>();
-
 	sceneSolo.Add(go);
 #pragma endregion
 
@@ -130,7 +181,7 @@ void load(SDL_Window* pWindow)
 
 	// Health Component
 	auto healthComponent = p1->AddComponent<LW2D::HealthComponent>();
-	healthComponent->SetLives(3);
+	healthComponent->SetLives(4);
 
 	// Score Component
 	auto scoreComponent = p1->AddComponent<LW2D::ScoreComponent>();
@@ -145,7 +196,7 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetLocalPosition(10.f, 350.f);
 
 	auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
-	auto textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 3", SDL_Color{64, 255, 64});
+	auto textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 4", SDL_Color{64, 255, 64});
 	sceneSolo.Add(go);
 
 	// BIND EVENTS
@@ -257,6 +308,13 @@ void load(SDL_Window* pWindow)
 	sceneSolo.Add(ghost);
 #pragma endregion
 
+	// GAMEMODE
+	go = std::make_shared<LW2D::GameObject>("GameMode");
+	go->GetTransform().SetParent(go);
+
+	go->AddComponent<LW2D::GameModeComponent>();
+	sceneSolo.Add(go);
+
 #pragma endregion
 
 #pragma region Versus Scene
@@ -287,6 +345,7 @@ void load(SDL_Window* pWindow)
 	go->AddComponent<LW2D::FPSComponent>();
 
 	sceneVersus.Add(go);
+
 #pragma endregion
 
 #pragma region Player1
@@ -298,7 +357,7 @@ void load(SDL_Window* pWindow)
 
 	// Health Component
 	healthComponent = p1->AddComponent<LW2D::HealthComponent>();
-	healthComponent->SetLives(3);
+	healthComponent->SetLives(4);
 
 	// Score Component
 	scoreComponent = p1->AddComponent<LW2D::ScoreComponent>();
@@ -313,7 +372,7 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetLocalPosition(10.f, 350.f);
 
 	font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
-	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 3", SDL_Color{ 64, 255, 64 });
+	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 4", SDL_Color{ 64, 255, 64 });
 	sceneVersus.Add(go);
 
 	// BIND EVENTS
@@ -446,6 +505,14 @@ void load(SDL_Window* pWindow)
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_RIGHT, SDL_KEYMAPCHANGED), moveCommand);
 	LW2D::Input::GetInstance().AddCommand(std::make_tuple(1, LW2D::GenericController::ControllerButton::DPadRight, LW2D::KeyState::Down), moveCommand);
 #pragma endregion
+
+
+	// GAMEMODE
+	go = std::make_shared<LW2D::GameObject>("GameMode");
+	go->GetTransform().SetParent(go);
+
+	go->AddComponent<LW2D::GameModeComponent>();
+	sceneVersus.Add(go);
 #pragma endregion
 
 #pragma region Coop Scene
@@ -488,7 +555,7 @@ void load(SDL_Window* pWindow)
 
 	// Health Component
 	healthComponent = p1->AddComponent<LW2D::HealthComponent>();
-	healthComponent->SetLives(3);
+	healthComponent->SetLives(4);
 
 	// Score Component
 	scoreComponent = p1->AddComponent<LW2D::ScoreComponent>();
@@ -502,7 +569,7 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetLocalPosition(10.f, 350.f);
 
 	font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
-	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives P1: 3", SDL_Color{ 64, 255, 64 });
+	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives P1: 4", SDL_Color{ 64, 255, 64 });
 	sceneCoop.Add(go);
 
 	// BIND EVENTS
@@ -559,7 +626,7 @@ void load(SDL_Window* pWindow)
 
 	// Health Component
 	healthComponent = p2->AddComponent<LW2D::HealthComponent>();
-	healthComponent->SetLives(3);
+	healthComponent->SetLives(4);
 
 	auto msPacMan = p2->AddComponent<LW2D::CharacterComponent>(glm::vec2{ 144.f, 240.f });
 	p2->AddComponent<LW2D::PacManComponent>();
@@ -570,7 +637,7 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetLocalPosition(128.f, 350.f);
 
 	font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
-	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives P2: 3", SDL_Color{ 64, 255, 64 });
+	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives P2: 4", SDL_Color{ 64, 255, 64 });
 	sceneCoop.Add(go);
 
 	// BIND EVENTS
@@ -662,6 +729,14 @@ void load(SDL_Window* pWindow)
 	ghost->AddComponent<LW2D::RenderComponent>()->SetTexture("Ghost.png");
 	sceneCoop.Add(ghost);
 #pragma endregion
+
+	// GAMEMODE
+	go = std::make_shared<LW2D::GameObject>("GameMode");
+	go->GetTransform().SetParent(go);
+
+	go->AddComponent<LW2D::GameModeComponent>();
+	sceneCoop.Add(go);
+
 #pragma endregion
 
 	auto loadNextSceneCommand = std::make_shared<LW2D::LoadNextSceneCommand>();
