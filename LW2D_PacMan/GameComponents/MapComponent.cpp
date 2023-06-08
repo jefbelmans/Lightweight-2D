@@ -1,6 +1,9 @@
 #include "MapComponent.h"
 
 #include <algorithm>
+#include "ResourceManager.h"
+#include "SceneManager.h"
+#include "Scene.h"
 #include "Renderer.h"
 
 LW2D::MapComponent::MapComponent(std::weak_ptr<GameObject> go)
@@ -9,30 +12,8 @@ LW2D::MapComponent::MapComponent(std::weak_ptr<GameObject> go)
 	m_pOnPelletCollected = std::make_unique<Event<int>>();
 	m_pOnPowerPelletCollected = std::make_unique<Event<int>>();
 
-	std::vector<std::string> map = {
-		" ################### ",
-		" #........#........# ",
-		" #o##.###.#.###.##o# ",
-		" #.................# ",
-		" #.##.#.#####.#.##.# ",
-		" #....#...#...#....# ",
-		" ####.### # ###.#### ",
-		"    #.#   0   #.#    ",
-		"#####.# ##=## #.#####",
-		"     .  #123#  .     ",
-		"#####.# ##### #.#####",
-		"    #.#       #.#    ",
-		" ####.# ##### #.#### ",
-		" #........#........# ",
-		" #.##.###.#.###.##.# ",
-		" #o.#.....P.....#.o# ",
-		" ##.#.#.#####.#.#.## ",
-		" #....#...#...#....# ",
-		" #.######.#.######.# ",
-		" #.................# ",
-		" ################### "
-	};
-
+	std::string sceneName{ SceneManager::GetInstance().GetActiveScene()->GetName() };
+	std::vector<std::string> map = LW2D::ResourceManager::GetInstance().LoadLevel("Levels.json", sceneName);
 	ReadMap(map);
 }
 

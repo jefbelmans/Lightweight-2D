@@ -10,6 +10,10 @@
 #include "Texture2D.h"
 #include "Font.h"
 
+#include "rapidjson.h"
+#include "document.h"
+#include "istreamwrapper.h"
+
 void LW2D::ResourceManager::Init(const std::string& dataPath)
 {
 	m_dataPath = dataPath;
@@ -93,4 +97,38 @@ bool LW2D::ResourceManager::SaveHighscores(const std::string& fileName, const st
     file.close();
 
     return true;
+}
+
+std::vector<std::string> LW2D::ResourceManager::LoadLevel(const std::string& fileName, const std::string& levelName) const
+{
+    using namespace rapidjson;
+    std::vector<std::string> map;
+    if (std::ifstream is{ m_dataPath + fileName })
+    {
+        IStreamWrapper isw{ is };
+        Document levelDoc;
+        levelDoc.ParseStream(isw);
+
+        if (levelDoc.IsArray())
+        {
+            for (Value::ConstValueIterator it = levelDoc.Begin(); it != levelDoc.End(); ++it)
+            {
+                const Value& data = *it;
+
+                const Value& level = data["level"];
+                if (level.GetString() != levelName) continue;
+
+                const Value& grid = data["grid"];
+                for (int i = 0; i < static_cast<int>(grid.Size()); i++)
+                {
+                    map.emplace_back(grid[i].GetString());
+                }
+                break;
+            }
+        }
+        else
+            std::cerr << "ResourceManager::LoadLevel() >> Error: Level file is not an array" << std::endl;
+    }
+
+    return map;
 }

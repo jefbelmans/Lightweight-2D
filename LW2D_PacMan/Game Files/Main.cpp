@@ -121,14 +121,6 @@ void load(SDL_Window* pWindow)
 	go = std::make_shared<LW2D::GameObject>("Map");
 	go->GetTransform().SetParent(go);
 
-	auto map = go->AddComponent<LW2D::MapComponent>();
-	
-	g_windowWidth = map->GetCellSize() * map->GetCols();
-	g_windowHeight = map->GetCellSize() * map->GetRows() + 144;
-
-	// RESIZE WINDOW TO MAP
-	SDL_SetWindowSize(pWindow, g_windowWidth, g_windowHeight);
-
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");
 	go->GetTransform().SetParent(go);
@@ -145,6 +137,7 @@ void load(SDL_Window* pWindow)
 		LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)LW2D::Sounds::PacManEat, 64.f);
 		});
 
+	// UI buttons
 	auto SoloPacMan = std::make_shared<LW2D::GameObject>("SoloPacMan");
 	SoloPacMan->AddComponent<LW2D::RenderComponent>()->SetTexture("PacMan.png");
 	SoloPacMan->GetTransform().SetParent(SoloPacMan);
@@ -192,9 +185,15 @@ void load(SDL_Window* pWindow)
 	// MAP OBJECT
 	go = std::make_shared<LW2D::GameObject>("Map");
 	go->GetTransform().SetParent(go);
-
-	map = go->AddComponent<LW2D::MapComponent>();
 	sceneSolo.Add(go);
+
+	auto map = go->AddComponent<LW2D::MapComponent>();
+	g_windowWidth = map->GetCellSize() * map->GetCols();
+	g_windowHeight = map->GetCellSize() * map->GetRows() + 144;
+
+	// RESIZE WINDOW TO MAP
+	SDL_SetWindowSize(pWindow, g_windowWidth, g_windowHeight);
+
 
 	// FPS COMPONENT
 	go = std::make_shared<LW2D::GameObject>("FPS Component");

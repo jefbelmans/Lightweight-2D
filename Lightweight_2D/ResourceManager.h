@@ -19,6 +19,9 @@ namespace LW2D
 		std::vector<std::pair<std::string, int>> LoadHighscores(const std::string& fileName) const;
 		bool SaveHighscores(const std::string& fileName, const std::vector<std::pair<std::string, int>>& data) const;
 
+		// Level
+		std::vector<std::string> LoadLevel(const std::string& fileName, const std::string& levelName) const;
+
 	private:
 		friend class Singleton<ResourceManager>;
 		ResourceManager() = default;
