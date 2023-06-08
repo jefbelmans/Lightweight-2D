@@ -99,36 +99,134 @@ bool LW2D::ResourceManager::SaveHighscores(const std::string& fileName, const st
     return true;
 }
 
-std::vector<std::string> LW2D::ResourceManager::LoadLevel(const std::string& fileName, const std::string& levelName) const
+std::vector<std::string> LW2D::ResourceManager::LoadLevel(const std::string& fileName, const std::string& levelName)
 {
-    using namespace rapidjson;
-    std::vector<std::string> map;
-    if (std::ifstream is{ m_dataPath + fileName })
+    if (m_Levels.empty())
+        DeserializeLevels(fileName);
+
+    auto it = std::find_if(begin(m_Levels), end(m_Levels), [&](const auto& level) {
+        return level.name == levelName;
+        });
+
+    if (it != end(m_Levels))
+        return it->data;
+
+    return std::vector<std::string>();
+}
+
+std::vector<std::string> LW2D::ResourceManager::LoadLevelJSON(const std::string& fileName, const std::string& levelName)
+{
+    // Load from file if not already loaded
+    if (m_Levels.empty())
     {
-        IStreamWrapper isw{ is };
-        Document levelDoc;
-        levelDoc.ParseStream(isw);
-
-        if (levelDoc.IsArray())
+        using namespace rapidjson;
+        std::vector<std::string> map;
+        if (std::ifstream is{ m_dataPath + fileName })
         {
-            for (Value::ConstValueIterator it = levelDoc.Begin(); it != levelDoc.End(); ++it)
+            IStreamWrapper isw{ is };
+            Document levelDoc;
+            levelDoc.ParseStream(isw);
+
+            if (levelDoc.IsArray())
             {
-                const Value& data = *it;
-
-                const Value& level = data["level"];
-                if (level.GetString() != levelName) continue;
-
-                const Value& grid = data["grid"];
-                for (int i = 0; i < static_cast<int>(grid.Size()); i++)
+                for (Value::ConstValueIterator it = levelDoc.Begin(); it != levelDoc.End(); ++it)
                 {
-                    map.emplace_back(grid[i].GetString());
+                    const Value& data = *it;
+
+                    const Value& level = data["level"];
+                    const Value& grid = data["grid"];
+                    for (int i = 0; i < static_cast<int>(grid.Size()); i++)
+                    {
+                        map.emplace_back(grid[i].GetString());
+                    }
+
+                    m_Levels.emplace_back(level.GetString(), map);
+                    map.clear();
                 }
-                break;
             }
+            else
+                std::cerr << "ResourceManager::LoadLevel() >> Error: Level file is not an array" << std::endl;
         }
-        else
-            std::cerr << "ResourceManager::LoadLevel() >> Error: Level file is not an array" << std::endl;
     }
 
-    return map;
+    auto it = std::find_if(begin(m_Levels), end(m_Levels), [&](const auto& level) {
+        return level.name == levelName;
+        });
+
+    if (it != end(m_Levels))
+        return it->data;
+
+    return std::vector<std::string>();
+}
+
+bool LW2D::ResourceManager::SerializeLevels(const std::string& fileName) const
+{
+    std::ofstream file(m_dataPath + fileName, std::ios::binary);
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open file: " << fileName << std::endl;
+        return false;
+    }
+
+    uint32_t numLevels = static_cast<uint32_t>(m_Levels.size());
+    file.write(reinterpret_cast<const char*>(&numLevels), sizeof(uint32_t));
+
+    // Serialize each level
+    for (const Level& level : m_Levels)
+    {
+        uint32_t nameLength = static_cast<uint32_t>(level.name.length());
+        file.write(reinterpret_cast<const char*>(&nameLength), sizeof(uint32_t));
+        file.write(level.name.c_str(), nameLength);
+
+        uint32_t numStrings = static_cast<uint32_t>(level.data.size());
+        file.write(reinterpret_cast<const char*>(&numStrings), sizeof(uint32_t));
+
+        for (const std::string& str : level.data)
+        {
+            uint32_t strLength = static_cast<uint32_t>(str.length());
+            file.write(reinterpret_cast<const char*>(&strLength), sizeof(uint32_t));
+            file.write(str.c_str(), strLength);
+        }
+    }
+
+    file.close();
+    return true;
+}
+
+bool LW2D::ResourceManager::DeserializeLevels(const std::string& fileName)
+{
+    std::ifstream file(m_dataPath + fileName, std::ios::binary);
+    if (!file.is_open())
+    {
+        std::cerr << "Failed to open file: " << fileName << std::endl;
+        return false;
+    }
+
+    uint32_t numLevels = 0;
+    file.read(reinterpret_cast<char*>(&numLevels), sizeof(uint32_t));
+    m_Levels.resize(numLevels);
+
+    // Deserialize each level
+    for (Level& level : m_Levels)
+    {
+        uint32_t nameLength = 0;
+        file.read(reinterpret_cast<char*>(&nameLength), sizeof(uint32_t));
+        level.name.resize(nameLength);
+        file.read(&level.name[0], nameLength);
+
+        uint32_t numStrings = 0;
+        file.read(reinterpret_cast<char*>(&numStrings), sizeof(uint32_t));
+        level.data.resize(numStrings);
+
+        for (std::string& str : level.data)
+        {
+            uint32_t strLength = 0;
+            file.read(reinterpret_cast<char*>(&strLength), sizeof(uint32_t));
+            str.resize(strLength);
+            file.read(&str[0], strLength);
+        }
+    }
+
+    file.close();
+    return true;
 }

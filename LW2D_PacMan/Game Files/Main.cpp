@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <imgui.h>
 #include <algorithm>
+#include <chrono>
 
 #if _DEBUG
 #if __has_include(<vld.h>)
@@ -91,6 +92,7 @@ void MenuGUI()
 
 void load(SDL_Window* pWindow)
 {
+	auto begin = std::chrono::high_resolution_clock::now();
 	g_highScores = LW2D::ResourceManager::GetInstance().LoadHighscores("highscores.bin");
 
 #pragma region Audio
@@ -779,6 +781,9 @@ void load(SDL_Window* pWindow)
 	LW2D::Input::GetInstance().AddCommand(std::make_pair(SDL_SCANCODE_F1, SDL_KEYDOWN), loadNextSceneCommand);
 
 	LW2D::SceneManager::GetInstance().LoadSceneByIndex(0);
+
+	auto end = std::chrono::high_resolution_clock::now();
+	std::cout << "Finished loading! Took: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << "ms\n";
 }
 
 int main(int, char* [])

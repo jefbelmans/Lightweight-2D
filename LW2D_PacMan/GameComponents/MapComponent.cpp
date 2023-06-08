@@ -13,7 +13,7 @@ LW2D::MapComponent::MapComponent(std::weak_ptr<GameObject> go)
 	m_pOnPowerPelletCollected = std::make_unique<Event<int>>();
 
 	std::string sceneName{ SceneManager::GetInstance().GetActiveScene()->GetName() };
-	std::vector<std::string> map = LW2D::ResourceManager::GetInstance().LoadLevel("Levels.json", sceneName);
+	std::vector<std::string> map = LW2D::ResourceManager::GetInstance().LoadLevel("Levels.lvl", sceneName);
 	ReadMap(map);
 }
 
