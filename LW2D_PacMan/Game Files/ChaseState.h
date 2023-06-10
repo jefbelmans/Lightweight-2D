@@ -20,7 +20,7 @@ namespace LW2D
 	private:
 		const float m_ChangeToWanderDistance{ 96.f };
 
-		void HanlePlayerCollision(std::shared_ptr<Blackboard> blackboard);
+		void HandlePlayerCollision(std::shared_ptr<Blackboard> blackboard);
 		void HandleMovement(std::shared_ptr<Blackboard> blackboard);
 	};
 }

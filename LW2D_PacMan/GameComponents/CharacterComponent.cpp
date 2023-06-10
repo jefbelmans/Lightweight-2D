@@ -16,7 +16,7 @@ LW2D::CharacterComponent::CharacterComponent(std::weak_ptr<GameObject> go, const
 
 	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>();
 
-	go.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener(std::bind(&CharacterComponent::Respawn, this, std::placeholders::_1));
+	go.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener(std::bind(&CharacterComponent::Respawn, this, std::placeholders::_1, std::placeholders::_1));
 }
 
 void LW2D::CharacterComponent::Update()
@@ -38,12 +38,13 @@ void LW2D::CharacterComponent::Update()
 	}
 }
 
-void LW2D::CharacterComponent::Respawn(int lives)
+void LW2D::CharacterComponent::Respawn(int lives, bool instant)
 {
 	// Only if we have lives left, do we want to respawn
 	if (lives > 0)
 	{
-		m_RespawnTimer = m_RespawnTime;
+		
+		m_RespawnTimer = instant ? 0.f : m_RespawnTime;
 		m_IsRespawning = true;
 		m_DoMove = false;
 	}
@@ -103,7 +104,7 @@ void LW2D::CharacterComponent::CheckForIntersection(const glm::vec2& pos, const 
 	bool isVertical = (m_CurrentDirection == Direction::Up || m_CurrentDirection == Direction::Down);
 	bool isHorizontal = (m_CurrentDirection == Direction::Left || m_CurrentDirection == Direction::Right);
 	m_IsAtIntersection = ((isVertical && static_cast<int>(pos.y) % cellSize == 0 && (!walls[static_cast<int>(Direction::Left)] || !walls[static_cast<int>(Direction::Right)])) ||
-		(isHorizontal && static_cast<int>(pos.x) % cellSize == 0 && (!walls[static_cast<int>(Direction::Up)] || !walls[static_cast<int>(Direction::Down)])) ||
+		(isHorizontal && static_cast<int>(m_PreviousPos.x) % cellSize == 0 && (!walls[static_cast<int>(Direction::Up)] || !walls[static_cast<int>(Direction::Down)])) ||
 		availableDirections.size() == 1);
 
 	if (m_IsAtIntersection)
@@ -134,7 +135,10 @@ void LW2D::CharacterComponent::HandleMovement()
 	// Wait for intersection before changing direction
 	if (m_DoChangeDirection)
 	{
-		// If Pac Man is at an intersection
+		m_CoyoteTimer -= dt;
+		m_DoChangeDirection = m_CoyoteTimer > 0.f;
+
+		// If character is at an intersection
 		if (((m_PendingDirection == Direction::Up || m_PendingDirection == Direction::Down) && static_cast<int>(pos.x) % cellSize == 0 ||
 			(m_PendingDirection == Direction::Left || m_PendingDirection == Direction::Right) && static_cast<int>(pos.y) % cellSize == 0))
 		{
@@ -144,10 +148,7 @@ void LW2D::CharacterComponent::HandleMovement()
 				m_CurrentDirection = m_PendingDirection;
 				m_DoChangeDirection = false;
 			}
-		}
-
-		m_CoyoteTimer -= dt;
-		m_DoChangeDirection = m_CoyoteTimer > 0.f;
+		}	
 	}
 
 	// Update character's position based on the current direction

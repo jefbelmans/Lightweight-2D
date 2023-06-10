@@ -12,9 +12,8 @@ LW2D::MapComponent::MapComponent(std::weak_ptr<GameObject> go)
 	m_pOnPelletCollected = std::make_unique<Event<int>>();
 	m_pOnPowerPelletCollected = std::make_unique<Event<int>>();
 
-	std::string sceneName{ SceneManager::GetInstance().GetActiveScene()->GetName() };
-	std::vector<std::string> map = LW2D::ResourceManager::GetInstance().LoadLevel("Levels.lvl", sceneName);
-	ReadMap(map);
+	m_SceneName = SceneManager::GetInstance().GetActiveScene()->GetName();
+	ReloadMap();
 }
 
 void LW2D::MapComponent::Render() const
@@ -64,15 +63,27 @@ void LW2D::MapComponent::CollectPellet(const glm::vec2& pos)
 	m_Map[rowCol.first][rowCol.second] = Cell::Empty;
 }
 
+void LW2D::MapComponent::ReloadMap()
+{
+#ifdef NDEBUG
+	std::vector<std::string> map = LW2D::ResourceManager::GetInstance().LoadLevel("Levels.lvl", m_SceneName);
+#else
+	std::vector<std::string> map = LW2D::ResourceManager::GetInstance().LoadLevelJSON("Levels.json", m_SceneName);
+#endif // NDEBUG
+
+	ReadMap(map);
+}
+
 void LW2D::MapComponent::ReadMap(const std::vector<std::string>& map)
 {
 	uint8_t currRow{ 0 };
+	m_Map.clear();
 	m_Map.reserve(map.size());
 	std::for_each(begin(map), end(map), [&](const std::string& line)
 		{
 			m_Map.emplace_back(std::vector<Cell>());
 
-			for (int i = 0; i < line.size(); i++)
+			for (int i = 0; i < static_cast<int>(line.size()); i++)
 			{
 				switch (line[i])
 				{

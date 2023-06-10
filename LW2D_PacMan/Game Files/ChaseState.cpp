@@ -16,7 +16,7 @@
 
 LW2D::State* LW2D::ChaseState::Update(std::shared_ptr<Blackboard> blackboard)
 {
-	HanlePlayerCollision(blackboard);
+	HandlePlayerCollision(blackboard);
 	HandleMovement(blackboard);
 
 	const auto go = blackboard->Get<GameObject*>("Agent");
@@ -29,7 +29,7 @@ LW2D::State* LW2D::ChaseState::Update(std::shared_ptr<Blackboard> blackboard)
 	return nullptr;
 }
 
-void LW2D::ChaseState::HanlePlayerCollision(std::shared_ptr<Blackboard> blackboard)
+void LW2D::ChaseState::HandlePlayerCollision(std::shared_ptr<Blackboard> blackboard)
 {
 	if (blackboard->Get<GameModeComponent*>("GameMode")->GetIsGameOver()) return;
 

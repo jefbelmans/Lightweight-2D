@@ -15,7 +15,7 @@ namespace LW2D
 		~CharacterComponent() = default;
 
 		void Update() override;
-		void Respawn(int);
+		void Respawn(int, bool instant = false);
 
 		// GETTERS
 		LW2D::Direction GetDirection() const { return m_CurrentDirection; }

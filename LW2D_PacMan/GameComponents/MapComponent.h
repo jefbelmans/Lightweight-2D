@@ -20,6 +20,8 @@ namespace LW2D
 		Cell GetCellFromPos(const glm::vec2& pos) const;
 		void CollectPellet(const glm::vec2& pos);
 
+		void ReloadMap();
+
 		// GETTERS
 		uint8_t GetCellSize() const { return m_CellSize; }
 		uint8_t GetRows() const { return m_Rows; }
@@ -38,6 +40,8 @@ namespace LW2D
 		const uint8_t m_CellSize{16u};
 		uint8_t m_Rows{};
 		uint8_t m_Cols{};
+		
+		std::string m_SceneName{};
 
 		const int m_PelletScore{ 10 };
 		const int m_PowerPelletScore{ 50 };

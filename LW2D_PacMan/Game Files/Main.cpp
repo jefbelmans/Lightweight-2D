@@ -43,7 +43,8 @@ std::vector<std::pair<std::string, int>> g_highScores{};
 
 void OnGUI()
 {
-	if (LW2D::SceneManager::GetInstance().GetActiveScene()->FindObjectByName("GameMode").lock()->GetComponent<LW2D::GameModeComponent>()->GetIsGameOver())
+	auto activeScene = LW2D::SceneManager::GetInstance().GetActiveScene();
+	if (activeScene->FindObjectByName("GameMode").lock()->GetComponent<LW2D::GameModeComponent>()->GetIsGameOver())
 	{
 		ImGui::Begin("Game Menu", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
 		ImGui::SetWindowPos({ 4.f, g_windowHeight - 100.f });
@@ -53,21 +54,87 @@ void OnGUI()
 		ImGui::InputText("Name", g_playerName, IM_ARRAYSIZE(g_playerName));
 		if (ImGui::Button("Save Score", { 128.f, 24.f }))
 		{
-			g_highScores.push_back({ g_playerName, LW2D::SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Player 1").lock()->GetComponent<LW2D::ScoreComponent>()->GetScore() });
+			g_highScores.push_back({ g_playerName, activeScene->FindObjectByName("Player 1").lock()->GetComponent<LW2D::ScoreComponent>()->GetScore() });
 			std::sort(g_highScores.begin(), g_highScores.end(), [](const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) { return a.second > b.second; });
 			LW2D::ResourceManager::GetInstance().SaveHighscores("highscores.bin", g_highScores);
+		}
+		if (ImGui::Button("Restart level", { 128.f, 24.f }))
+		{
+			// Reload map
+			activeScene->FindObjectByName("Map").lock()->GetComponent<LW2D::MapComponent>()->ReloadMap();
+
+			// Reset players
+			auto p1 = activeScene->FindObjectByName("Player 1");
+			if (!p1.expired())
+			{
+				p1.lock()->GetComponent<LW2D::HealthComponent>()->SetLives(4);
+				p1.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4, true);
+				p1.lock()->GetComponent<LW2D::ScoreComponent>()->SetScore(0);
+				auto healthDisplay = activeScene->FindObjectByName("Health Display P1");
+				if(!healthDisplay.expired())
+					healthDisplay.lock()->GetComponent<LW2D::TextComponent>()->SetText("Lives P1: 4");
+			}
+
+			auto p2 = activeScene->FindObjectByName("Player 2");
+			if (!p2.expired())
+			{
+				p2.lock()->GetComponent<LW2D::HealthComponent>()->SetLives(4);
+				p2.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4, true);
+				auto healthDisplay = activeScene->FindObjectByName("Health Display P2");
+				if (!healthDisplay.expired())
+					healthDisplay.lock()->GetComponent<LW2D::TextComponent>()->SetText("Lives P2: 4");
+			}
+
+			// Reset ghosts
+			auto ghost = activeScene->FindObjectByName("Ghost 1");
+			if (!ghost.expired())
+			{
+				ghost.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4);
+			}
+
+			ghost = activeScene->FindObjectByName("Ghost 2");
+			if (!ghost.expired())
+			{
+				ghost.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4);
+			}
+
+			ghost = activeScene->FindObjectByName("Ghost 3");
+			if (!ghost.expired())
+			{
+				ghost.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4);
+			}
+
+			ghost = activeScene->FindObjectByName("Ghost 4");
+			if (!ghost.expired())
+			{
+				ghost.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4);
+			}
+
 		}
 		ImGui::End();
 	}
 
-	ImGui::Begin("High scores", nullptr, ImGuiWindowFlags_NoResize);
-	ImGui::BeginListBox("##HighScores", { 96.f, 64.f });
-	for (auto& score : g_highScores)
+	if (ImGui::Begin("High score", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
 	{
-		ImGui::Text("%s: %d", score.first.c_str(), score.second);
+		ImGui::SetWindowPos(ImVec2{ g_windowWidth - 128.f, g_windowHeight - 136.f });
+		ImGui::SetWindowSize({ 112.f, 128.f });
+		if (ImGui::BeginListBox("##HighScores", { 96.f, 64.f }))
+		{
+			for (auto& score : g_highScores)
+			{
+				ImGui::Text("%s: %d", score.first.c_str(), score.second);
+			}
+			ImGui::EndListBox();
+		}
+
+		if (ImGui::Button("Reset", { 96.f, 24.f }))
+		{
+			g_highScores.clear();
+			LW2D::ResourceManager::GetInstance().SaveHighscores("highscores.bin", g_highScores);
+		}
+		ImGui::End();
 	}
-	ImGui::EndListBox();
-	ImGui::End();
+	
 }
 
 void MenuGUI()
@@ -230,13 +297,13 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetLocalPosition(10.f, 350.f);
 
 	auto font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
-	auto textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 4", SDL_Color{64, 255, 64});
+	auto textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives P1: 4", SDL_Color{64, 255, 64});
 	sceneSolo.Add(go);
 
 	// BIND EVENTS
 	std::function<void(int)> DecrementHealth = [textComponent](int lives)
 	{
-		textComponent->SetText("Lives: " + std::to_string(lives));
+		textComponent->SetText("Lives P1: " + std::to_string(lives));
 	};
 	healthComponent->GetOnKillEvent()->AddListener(DecrementHealth);
 
@@ -409,13 +476,13 @@ void load(SDL_Window* pWindow)
 	go->GetTransform().SetLocalPosition(10.f, 350.f);
 
 	font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
-	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives: 4", SDL_Color{ 64, 255, 64 });
+	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives P1: 4", SDL_Color{ 64, 255, 64 });
 	sceneVersus.Add(go);
 
 	// BIND EVENTS
 	DecrementHealth = [textComponent](int lives)
 	{
-		textComponent->SetText("Lives: " + std::to_string(lives));
+		textComponent->SetText("Lives P1: " + std::to_string(lives));
 	};
 	healthComponent->GetOnKillEvent()->AddListener(DecrementHealth);
 
