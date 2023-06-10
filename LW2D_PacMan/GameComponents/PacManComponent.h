@@ -17,6 +17,8 @@ namespace LW2D
 
 		void Update() override;
 
+		void Reset() { m_IsDead = false; }
+
 	private:
 		// Cached refs
 		std::weak_ptr<MapComponent> m_pMap;

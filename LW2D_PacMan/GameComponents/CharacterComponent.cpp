@@ -16,7 +16,7 @@ LW2D::CharacterComponent::CharacterComponent(std::weak_ptr<GameObject> go, const
 
 	m_pMap = SceneManager::GetInstance().GetActiveScene()->FindObjectByName("Map").lock()->GetComponent<MapComponent>();
 
-	go.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener(std::bind(&CharacterComponent::Respawn, this, std::placeholders::_1, std::placeholders::_1));
+	go.lock()->GetComponent<HealthComponent>()->GetOnKillEvent()->AddListener(std::bind(&CharacterComponent::Respawn, this, std::placeholders::_1, false));
 }
 
 void LW2D::CharacterComponent::Update()

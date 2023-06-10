@@ -38,6 +38,7 @@
 using namespace std::placeholders;
 int g_windowWidth, g_windowHeight;
 char g_playerName[4];
+bool g_muteAudio{ false };
 
 std::vector<std::pair<std::string, int>> g_highScores{};
 
@@ -60,56 +61,7 @@ void OnGUI()
 		}
 		if (ImGui::Button("Restart level", { 128.f, 24.f }))
 		{
-			// Reload map
-			activeScene->FindObjectByName("Map").lock()->GetComponent<LW2D::MapComponent>()->ReloadMap();
-
-			// Reset players
-			auto p1 = activeScene->FindObjectByName("Player 1");
-			if (!p1.expired())
-			{
-				p1.lock()->GetComponent<LW2D::HealthComponent>()->SetLives(4);
-				p1.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4, true);
-				p1.lock()->GetComponent<LW2D::ScoreComponent>()->SetScore(0);
-				auto healthDisplay = activeScene->FindObjectByName("Health Display P1");
-				if(!healthDisplay.expired())
-					healthDisplay.lock()->GetComponent<LW2D::TextComponent>()->SetText("Lives P1: 4");
-			}
-
-			auto p2 = activeScene->FindObjectByName("Player 2");
-			if (!p2.expired())
-			{
-				p2.lock()->GetComponent<LW2D::HealthComponent>()->SetLives(4);
-				p2.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4, true);
-				auto healthDisplay = activeScene->FindObjectByName("Health Display P2");
-				if (!healthDisplay.expired())
-					healthDisplay.lock()->GetComponent<LW2D::TextComponent>()->SetText("Lives P2: 4");
-			}
-
-			// Reset ghosts
-			auto ghost = activeScene->FindObjectByName("Ghost 1");
-			if (!ghost.expired())
-			{
-				ghost.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4);
-			}
-
-			ghost = activeScene->FindObjectByName("Ghost 2");
-			if (!ghost.expired())
-			{
-				ghost.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4);
-			}
-
-			ghost = activeScene->FindObjectByName("Ghost 3");
-			if (!ghost.expired())
-			{
-				ghost.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4);
-			}
-
-			ghost = activeScene->FindObjectByName("Ghost 4");
-			if (!ghost.expired())
-			{
-				ghost.lock()->GetComponent<LW2D::CharacterComponent>()->Respawn(4);
-			}
-
+			activeScene->FindObjectByName("GameMode").lock()->GetComponent<LW2D::GameModeComponent>()->ResetGame();
 		}
 		ImGui::End();
 	}
@@ -135,6 +87,22 @@ void OnGUI()
 		ImGui::End();
 	}
 	
+	if (ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground))
+	{
+		ImGui::SetWindowPos(ImVec2{ g_windowWidth - 240.f, g_windowHeight - 100.f });
+		ImGui::SetWindowSize({ 128.f, 26.f });
+		if (ImGui::Checkbox("Mute audio", &g_muteAudio))
+		{
+			if (g_muteAudio)
+				LW2D::ServiceLocator::GetSoundSystem().Shutdown();
+			else
+			{
+				LW2D::ServiceLocator::GetSoundSystem().StartUp();
+				LW2D::ServiceLocator::GetSoundSystem().PlaySound((unsigned short)LW2D::Sounds::PacManEat, 64.f);
+			}
+		}
+		ImGui::End();
+	}
 }
 
 void MenuGUI()

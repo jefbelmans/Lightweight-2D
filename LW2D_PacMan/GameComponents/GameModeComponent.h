@@ -21,6 +21,7 @@ namespace LW2D
 		void Initialize() override;
 
 		bool GetIsGameOver() const { return m_IsGameOver; }
+		void ResetGame();
 
 	private:
 		// Cached refs
