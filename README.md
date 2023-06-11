@@ -46,16 +46,16 @@ The Lightweight 2D engine comes with an example project that demonstrates the ca
 ## Engine Library (Static Lib)
 The engine library project is a static library that contains the core functionality of the Lightweight 2D engine. It provides the foundation for building 2D games, including features such as the event pattern, FSM with Blackboard, Singleton Pattern, and Service Locator Pattern. The engine library can be utilized as a dependency for other projects, enabling developers to leverage the engine's capabilities in their own games.
 
-## Pac-Man Game Project
-The Pac-Man game project showcases the usage of the Lightweight 2D engine by implementing a fully playable Pac-Man game. It demonstrates how the engine's components, systems, and design patterns can be utilized to create a complete game experience.
+## Pac-Man Project
+The Pac-Man project showcases the usage of the Lightweight 2D engine by implementing a fully playable Pac-Man game. It demonstrates how the engine's components, systems, and design patterns can be utilized to create a simple but complete game experience.
 
-Within the Pac-Man game project, you will find:
+Within the Pac-Man project, you will find:
 - Game-specific logic: The project contains game-specific scripts, components, and systems that define the behavior of the Pac-Man characters, ghosts, pellets, and other elements of the game.
 - Asset integration: The project demonstrates how to integrate assets, such as sprites, sounds, and level data (binary and JSON), into the game using the Lightweight 2D engine's resource management system.
 - Scene setup: The Pac-Man game project includes pre-built scenes that set up the game environment, including the maze layout, character placement, and initial game state.
 - Input handling: The project showcases how the engine's input system can be utilized to capture player input (Keyboard and Controller) for controlling the different characters.
 - Game loop and update logic: The example project demonstrates how the engine's game loop and update loop can be utilized to drive the game's logic, handle collisions, update AI behavior, and manage game state transitions.
 
-To run the Pac-Man game, simply build and run the Pac-Man game project within the Visual Studio solution. You can customize and extend the game by modifying the classes, components, and systems provided in the project.
+To run the Pac-Man project, simply build and run the Pac-Man project within the Visual Studio solution. You can customize and extend the game by modifying the classes, components, and systems provided in the project.
 
 Enjoy exploring the capabilities of the Lightweight 2D engine and have fun playing Pac-Man!
