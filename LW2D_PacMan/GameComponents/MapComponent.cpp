@@ -79,6 +79,7 @@ void LW2D::MapComponent::ReadMap(const std::vector<std::string>& map)
 	uint8_t currRow{ 0 };
 	m_Map.clear();
 	m_Map.reserve(map.size());
+	m_NumPellets = 0;
 	std::for_each(begin(map), end(map), [&](const std::string& line)
 		{
 			m_Map.emplace_back(std::vector<Cell>());
