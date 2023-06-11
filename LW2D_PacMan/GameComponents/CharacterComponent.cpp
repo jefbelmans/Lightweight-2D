@@ -96,7 +96,7 @@ void LW2D::CharacterComponent::CheckForIntersection(const glm::vec2& pos, const 
 	const int cellSize{ m_pMap.lock()->GetCellSize() };
 	std::vector<LW2D::Direction> availableDirections{};
 
-	for (int i = 0; i < m_DirectionTranslations.size(); i++)
+	for (int i = 0; i < static_cast<int>(m_DirectionTranslations.size()); i++)
 	{
 		if (!walls[i]) availableDirections.emplace_back(static_cast<LW2D::Direction>(i));
 	}
@@ -113,6 +113,7 @@ void LW2D::CharacterComponent::CheckForIntersection(const glm::vec2& pos, const 
 	}
 }
 
+// I took some inspiration on handling movement from following source: https://github.com/Kofybrek/Pacman/tree/Main
 void LW2D::CharacterComponent::HandleMovement()
 {
 	if(!m_DoMove) return;

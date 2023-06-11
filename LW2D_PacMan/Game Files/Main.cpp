@@ -45,6 +45,7 @@ std::vector<std::pair<std::string, int>> g_highScores{};
 void OnGUI()
 {
 	auto activeScene = LW2D::SceneManager::GetInstance().GetActiveScene();
+
 	if (activeScene->FindObjectByName("GameMode").lock()->GetComponent<LW2D::GameModeComponent>()->GetIsGameOver())
 	{
 		ImGui::Begin("Game Menu", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
@@ -64,32 +65,33 @@ void OnGUI()
 			activeScene->FindObjectByName("GameMode").lock()->GetComponent<LW2D::GameModeComponent>()->ResetGame();
 		}
 		ImGui::End();
-	}
 
-	if (ImGui::Begin("High score", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
-	{
-		ImGui::SetWindowPos(ImVec2{ g_windowWidth - 128.f, g_windowHeight - 136.f });
-		ImGui::SetWindowSize({ 112.f, 128.f });
-		if (ImGui::BeginListBox("##HighScores", { 96.f, 64.f }))
+
+		if (ImGui::Begin("High score", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse))
 		{
-			for (auto& score : g_highScores)
+			ImGui::SetWindowPos(ImVec2{ g_windowWidth - 128.f, g_windowHeight - 136.f });
+			ImGui::SetWindowSize({ 112.f, 128.f });
+			if (ImGui::BeginListBox("##HighScores", { 96.f, 64.f }))
 			{
-				ImGui::Text("%s: %d", score.first.c_str(), score.second);
+				for (auto& score : g_highScores)
+				{
+					ImGui::Text("%s: %d", score.first.c_str(), score.second);
+				}
+				ImGui::EndListBox();
 			}
-			ImGui::EndListBox();
-		}
 
-		if (ImGui::Button("Reset", { 96.f, 24.f }))
-		{
-			g_highScores.clear();
-			LW2D::ResourceManager::GetInstance().SaveHighscores("highscores.bin", g_highScores);
+			if (ImGui::Button("Reset", { 96.f, 24.f }))
+			{
+				g_highScores.clear();
+				LW2D::ResourceManager::GetInstance().SaveHighscores("highscores.bin", g_highScores);
+			}
+			ImGui::End();
 		}
-		ImGui::End();
 	}
-	
+
 	if (ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground))
 	{
-		ImGui::SetWindowPos(ImVec2{ g_windowWidth - 240.f, g_windowHeight - 100.f });
+		ImGui::SetWindowPos(ImVec2{ g_windowWidth - 255.f, g_windowHeight - 120.f });
 		ImGui::SetWindowSize({ 128.f, 26.f });
 		if (ImGui::Checkbox("Mute audio", &g_muteAudio))
 		{
@@ -705,7 +707,7 @@ void load(SDL_Window* pWindow)
 	// HEALTH DISPLAY P1
 	go = std::make_shared<LW2D::GameObject>("Health Display P2");
 	go->GetTransform().SetParent(go);
-	go->GetTransform().SetLocalPosition(128.f, 350.f);
+	go->GetTransform().SetLocalPosition(104.f, 350.f);
 
 	font = LW2D::ResourceManager::GetInstance().LoadFont("Lingua.otf", 16);
 	textComponent = go->AddComponent<LW2D::TextComponent>(font, "Lives P2: 4", SDL_Color{ 64, 255, 64 });
@@ -823,8 +825,9 @@ void load(SDL_Window* pWindow)
 
 int main(int, char* [])
 {
-	std::cout << "\n[CONTROLS CONTROLLER]\n[D-Pad]: Change direction\n\n";
-	std::cout << "[CONTROLS KEYBOARDD]\n[WASD]: Change direction\n\n";
+	printf("\n[CONTROLS CONTROLLER]\n[D-Pad]: Change direction\n\n");
+	printf("[CONTROLS KEYBOARD]\n[WASD]: Change direction\n");
+	printf("[F1]: Load next scene\n\n");
 
 	LW2D::Lightweight_2D engine("../Data/");
 	engine.Run(load);
